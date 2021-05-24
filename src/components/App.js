@@ -4,6 +4,7 @@ export default function App() {
     <>
       <h1>Começando</h1>
       <p>bora</p>
+      <p>teste2</p>
       </>
   );
 }
