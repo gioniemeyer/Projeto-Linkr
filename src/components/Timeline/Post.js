@@ -6,7 +6,7 @@ export default function Post({ post }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes} = post;
 
     return(
-        <PostBox>
+        <PostBox href={link} target="_blank">
             <SideMenu>
                 <img src={linkImage} alt={linkTitle} />
                 <AiOutlineHeart className="heart-icon" />
@@ -28,7 +28,7 @@ export default function Post({ post }) {
     );
 }
 
-const PostBox = styled.li`
+const PostBox = styled.a`
     width: 611px;
     background-color: #171717;
     display: flex;
