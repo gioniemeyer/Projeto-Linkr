@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import avatar from "./image-avatar.png";
-import linkimage from "./image-link.png";
 import { AiOutlineHeart } from 'react-icons/ai';
 
 export default function Post({ post }) {

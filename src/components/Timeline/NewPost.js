@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import avatar from "./image-avatar.png";
 
 export default function NewPost() {
     return(
         <NewPostBox>
             <SideMenu>
-                <img src={avatar} alt="oir" />
+                <img src='https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/1/avatar' alt="oir" />
             </SideMenu>
             <Content>
                 <h1>O que você tem pra favoritar hoje?</h1>
