@@ -1,16 +1,15 @@
 import styled from "styled-components"
+import Topic from "./Topic"
 export default function Trending(){
+    const TrendList=['javascript','react','react-native','material','web-dev','mobile','css','html','node','sql']
     return(
         <TrendingBox>
         <h1>
             trending
         </h1>
-        <Topics>
-            # javascript
-        </Topics>
-        <Topics>
-            # javascript
-        </Topics>
+        {TrendList.map((e)=>{
+            return  <Topic item={e}/>
+        })}
         </TrendingBox>
     )
 }
@@ -18,7 +17,7 @@ export default function Trending(){
 const TrendingBox=styled.div`
     background-color: #171717;
     width: 301px;
-    height: 406px;
+    height: 380px;
     border-radius: 16px;
     
     h1{
