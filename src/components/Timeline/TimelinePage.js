@@ -32,6 +32,7 @@ export default function Timeline() {
             ]
         }
     ]);
+    const [enableLoading, setEnableLoading] = useState(true);
 
     console.log(TimelinePosts);
 
@@ -41,6 +42,7 @@ export default function Timeline() {
 
     //     request.then(response => {
     //         setTimelinePosts(response.data);
+    //         setEnableLoading(false);
     //     })
 
     //     request.catch(error => {
@@ -56,6 +58,7 @@ export default function Timeline() {
                     <Title>timeline</Title>
                     {/* <NewPost /> */}
                     {TimelinePosts.length === 0 ? <div className="no-post">Nenhum post encontrado :(</div> : TimelinePosts.map((post, i) => <Post post={post} key={i} />)}
+                    {enableLoading && <Loading />}
                     {/* <Loading /> */}
                 </TimelinePostsContainer>
             </TimelineContainer>
