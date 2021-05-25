@@ -5,8 +5,16 @@ export default function Post({ post }) {
     console.log(post);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes} = post;
 
+    const texto = text.split('#');
+    console.log(texto);
+    const hashtags = texto.filter((item, i) => {
+        item.includes("");
+    });
+    console.log(hashtags);
+    console.log(text.includes("#"));
+
     return(
-        <PostBox href={link} target="_blank">
+        <PostBox>
             <SideMenu>
                 <img src={linkImage} alt={linkTitle} />
                 <AiOutlineHeart className="heart-icon" />
@@ -15,7 +23,7 @@ export default function Post({ post }) {
             <Content>
                 <h1>{user.username}</h1>
                 <h2>{text}</h2>
-                <Snippet>
+                <Snippet href={link} target="_blank">
                     <div>
                         <h3>{linkTitle}</h3>
                         <h4>{linkDescription}</h4>
@@ -28,7 +36,7 @@ export default function Post({ post }) {
     );
 }
 
-const PostBox = styled.a`
+const PostBox = styled.li`
     width: 611px;
     background-color: #171717;
     display: flex;
@@ -80,7 +88,7 @@ const Content = styled.div`
     }
 `;
 
-const Snippet = styled.div`
+const Snippet = styled.a`
     width: 503px;
     height: 155px;
     border-radius: 11px;

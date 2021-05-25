@@ -33,6 +33,7 @@ export default function Timeline() {
         }
     ]);
     const [enableLoading, setEnableLoading] = useState(true);
+    const [HashtagList, setHashtagList] = useState([]);
 
     console.log(TimelinePosts);
 
@@ -41,14 +42,14 @@ export default function Timeline() {
     //     const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
     //     request.then(response => {
-    //         setTimelinePosts(response.data);
+    //         setTimelinePosts(response.data.posts);
     //         setEnableLoading(false);
-    //     })
+    //     });
 
     //     request.catch(error => {
     //         alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
-    //     })
-    // }, [])
+    //     });
+    // }, []);
 
     return(
         <>
