@@ -29,7 +29,10 @@ export default function HomePage() {
             // history.push('/timeline');
             setLoad(false);
             setUser(resp.data);
-            console.log(localStorage.setItem('user', JSON.stringify(resp.data)));
+            console.log(user)
+            localStorage.setItem('user', JSON.stringify(resp.data));
+            const pessoa = JSON.parse(localStorage.getItem("user"));
+            console.log(pessoa);
         })
         request.catch(error => {
             alert("email/senha incorretos");
