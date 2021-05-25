@@ -28,17 +28,6 @@ const TrendingBox=styled.div`
         border-bottom: 1px solid #484848;
         padding-bottom: 12px;
         font-family: 'Oswald', sans-serif;
-    }
-`
-const Topics=styled.ul`
-    color: #ffffff;
-    font-size: 19px;
-    font-family: 'Lato', sans-serif;
-    padding-left: 16px;
-    padding-bottom: 10px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    :first-of-type{
-        padding-top: 22px;
+        margin-bottom: 22px;
     }
 `

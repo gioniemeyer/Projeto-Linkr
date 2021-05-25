@@ -1,9 +1,13 @@
 import styled from "styled-components"
+import { Link } from "react-router-dom";
 export default function Topic({item}){
+
     return(
-        <Topics>
-            # {item}
-        </Topics>
+        <Link to={`/hashtag/:${item}`}>
+            <Topics>
+                # {item}
+            </Topics>
+        </Link>
     )
 }
 
@@ -15,7 +19,9 @@ const Topics=styled.ul`
     padding-bottom: 10px;
     font-weight: 700;
     letter-spacing: 0.05em;
-    :first-of-type{
-        padding-top: 22px;
+    word-break: break-all;
+    :hover {
+        filter: brightness(50%);
+        
     }
 `
