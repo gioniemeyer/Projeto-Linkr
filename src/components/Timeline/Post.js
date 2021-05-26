@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
-import { useState } from "react";
 import Hashtag from "./Hashtag";
 import { Link } from "react-router-dom";
 

@@ -6,6 +6,7 @@ import Loading from "./Loading";
 import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
+import Header from "../Header"; 
 
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
@@ -30,6 +31,7 @@ export default function Timeline() {
 
     return(
         <TimelineBody>
+        <Header />
             <TimelineContainer>
                 <TimelinePostsContainer>
                     <Title>timeline</Title>
