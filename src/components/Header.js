@@ -9,48 +9,48 @@ import { Link } from "react-router-dom";
 export default function Header() {  
   const [open, setOpen] = useState(false);
  
-	function handleClickAway () {
-		setOpen(false);
-	};    
+	   
 
   return (    
    <>
+   <ClickAwayListener onClickAway={() => setOpen(false)}> 
       <Container>      
-        <Title>linkr</Title>        
+        <Title>linkr</Title>                     
         <RightSide>
           {open ? (               
-            <Button>
+            <Button onClick={() => {setOpen(false); console.log("onclick da seta pra baixo funcionou")}}>
               <IoIosArrowDown />
             </Button>            
           ) : (
-            <Button onClick={() => setOpen(true)}>
+            <Button onClick={() => {setOpen(true); console.log("onclick da seta pra cima funcionou")}}>
               <IoIosArrowUp />
             </Button>
           )}
           {open ? (
-            <UserPicture>
+            <UserPicture onClick={() => {setOpen(false); console.log("onclick da imagem do usuario funcionou 1x")}}>
               <img src={logo} alt="userimage"></img>
             </UserPicture>
           ) : (
-            <UserPicture onClick={() => setOpen(true)}>
+            <UserPicture onClick={() => {setOpen(true); console.log("onclick da imagem do usuario funcionou 2x")}}>
               <img src={logo} alt="userimage"></img>
             </UserPicture>
           )}
-        </RightSide>             
-      </Container>
-      {open ? (
-           <ClickAwayListener onClickAway={handleClickAway}>
-                <Menu>
-                <LinksWrapper>
-                <Link to="/my-posts"><span onClick={() => setOpen(false)}>My posts</span></Link>                    
-                <Link to="/my-likes"><span onClick={() => setOpen(false)}>My likes</span></Link>
-                <Link to="/"><span onClick={() => setOpen(false)}>Logout</span></Link>
-                </LinksWrapper>
+        </RightSide>                     
+      
+        {open ? (           
+                <Menu>                   
+                    <LinksWrapper>
+                        <Link to="/my-posts"><span onClick={() => setOpen(false)}>My posts</span></Link>                    
+                        <Link to="/my-likes"><span onClick={() => setOpen(false)}>My likes</span></Link>
+                        <Link to="/"><span onClick={() => setOpen(false)}>Logout</span></Link>
+                    </LinksWrapper>                    
                 </Menu>
-            </ClickAwayListener>
-      ) : (
+            
+        ) : (
         ""
-      )}    
+        )} 
+      </Container>  
+      </ClickAwayListener> 
     </>
   );
 }
