@@ -33,7 +33,6 @@ export default function Timeline() {
             <TimelineContainer>
                 <TimelinePostsContainer>
                     <Title>timeline</Title>
-                    {/* <NewPost /> */}
                     {
                         TimelinePosts.length === 0 && !enableLoading
                         ? <div className="no-post">Nenhum post encontrado :(</div> 
