@@ -28,7 +28,6 @@ export default function Post({ post }) {
                         <h5>{link}</h5>
                     </div>
                     <img src={linkImage} alt={linkDescription} />
-                    {/* <Image style={{ backgroundImage: `url(${linkImage})` }} /> */}
                 </Snippet>
             </Content>
         </PostBox>
@@ -195,11 +194,3 @@ const Snippet = styled.a`
         }
     }
 `;
-
-// const Image = styled.div`
-//     width: 153.44px;
-//     height: 155px;
-//     border-radius: 0px 12px 13px 0px;
-//     background-size: cover;
-//     background-repeat: no-repeat;
-// `;
