@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
+import axios from "axios"
+import UserContext from "../../contexts/UserContext";
+import { useEffect, useState, useContext } from "react";
 
 export default function Post({ post }) {
-    console.log(post);
+    const { userData } = useContext(UserContext);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
-
     const texto = text.split(' ');
     let hashtags = [];
     for(let i = 0; i < texto.length; i++) {
@@ -13,13 +15,11 @@ export default function Post({ post }) {
         }
     }
 
-    console.log(hashtags);
-
     return(
         <PostBox>
             <SideMenu>
                 <img src={linkImage} alt={linkTitle} />
-                <AiOutlineHeart className="heart-icon" />
+                <AiOutlineHeart className="heart-icon"/>
                 <span>{likes.length} {likes.length === 1 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
