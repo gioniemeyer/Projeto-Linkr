@@ -3,15 +3,17 @@ import { AiOutlineHeart } from 'react-icons/ai';
 
 export default function Post({ post }) {
     console.log(post);
-    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes} = post;
+    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
 
-    const texto = text.split('#');
-    console.log(texto);
-    const hashtags = texto.filter((item, i) => {
-        item.includes("");
-    });
+    const texto = text.split(' ');
+    let hashtags = [];
+    for(let i = 0; i < texto.length; i++) {
+        if (texto[i].includes('#')) {
+            hashtags.push(texto[i]);
+        }
+    }
+
     console.log(hashtags);
-    console.log(text.includes("#"));
 
     return(
         <PostBox>
