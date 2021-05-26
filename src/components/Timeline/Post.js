@@ -3,12 +3,12 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import axios from "axios"
 import UserContext from "../../contexts/UserContext";
 import { useEffect, useState, useContext } from "react";
-
-export default function Post({ post,LikedsIds}) {
+import {AiFillHeart} from 'react-icons/ai';
+export default function Post({ post,handleLikes,TimelinePosts,LikedPosts}) {
     const { userData } = useContext(UserContext);
-    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
+    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes,isLiked } = post;
     const texto = text.split(' ');
-   
+    let enabled=''
     const pessoa = JSON.parse(localStorage.getItem("user"));
   
     
@@ -24,15 +24,23 @@ export default function Post({ post,LikedsIds}) {
             const body=[]
             const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
             const request=axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,body, config)
-            request.then(()=>console.log('post curtido'))
+            request.then(()=>{
+            console.log('post curtido')
+            })
             
+            console.log(TimelinePosts)
+            console.log(LikedPosts)
     }
-    
+    handleLikes()
+    console.log(TimelinePosts)
+    console.log(LikedPosts)
     return(
         <PostBox>
-            <SideMenu>
+            <SideMenu enabled={isLiked}>
                 <img src={linkImage} alt={linkTitle} />
-                <AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>
+                {isLiked?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
+                
+
                 <span>{likes.length} {likes.length === 1 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
@@ -76,7 +84,7 @@ const SideMenu = styled.div`
     .heart-icon {
         width: 20px;
         height: 18px;
-        color: #FFFFFF;
+        color: ${(props) => (props.enabled ? "red" : "#BABABA")};
         margin-bottom: 4px;
     }
 
