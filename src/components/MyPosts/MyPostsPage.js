@@ -36,8 +36,7 @@ export default function MyPostsPage() {
         <Header />
             <MyPostsContainer>
                 <PostsContainer>
-                    <Title>my posts</Title>
-                    {/* <NewPost /> */}
+                    <Title>my posts</Title>                    
                     {MyPosts.length === 0 ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <Post post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>

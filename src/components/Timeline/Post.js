@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 export default function Post({ post }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
 
-    console.log(post);
 
     return(
         <PostBox>

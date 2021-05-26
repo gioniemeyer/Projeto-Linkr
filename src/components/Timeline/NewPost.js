@@ -14,12 +14,10 @@ export default function NewPost({ getPosts }) {
         e.preventDefault();
         setDisabled(true);
         const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
-        const body = { text, link};
-        console.log(body);
+        const body = { text, link};       
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts', body, config);
 
-        request.then(response => {
-            console.log("deu certo");
+        request.then(response => {            
             setDisabled(false);
             setLink("");
             setText("");
