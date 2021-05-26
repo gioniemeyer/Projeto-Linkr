@@ -12,13 +12,6 @@ export default function HomePage() {
     const [password, setPassword] = useState('');   
     const [load, setLoad] = useState(false);
 
-
-    useEffect(() => {
-        setEmail("");
-        setPassword("");
-    }, [])
-
-
     function login(e) {
         e.preventDefault();
 
@@ -36,7 +29,9 @@ export default function HomePage() {
             setLoad(false);
             setUser(resp.data);            
             localStorage.setItem('user', JSON.stringify(resp.data));
-            const pessoa = JSON.parse(localStorage.getItem("user"));            
+            const pessoa = JSON.parse(localStorage.getItem("user"));
+            setEmail("");
+            setPassword("");
         })
         request.catch(error => {
             alert("email/senha incorretos");
