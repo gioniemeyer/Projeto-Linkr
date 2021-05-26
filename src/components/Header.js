@@ -170,9 +170,10 @@ const LinksWrapper = styled.div`
     height: 20px;
     color: #ffffff;
     size: 17px;
-    padding: 15px;
+    padding: 3px;
     font-family: 'Lato';
     line-height: 20.4px;
+    margin: 5px;    
 
     @media (max-width: 600px) {
       font-size: 15px;    
