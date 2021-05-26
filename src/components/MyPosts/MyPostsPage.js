@@ -2,61 +2,60 @@ import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import Post from "./Post";
-import Loading from "././Loading";
-import NewPost from "./NewPost";
+import Loading from "../Timeline/Loading"
+
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
 
-export default function Timeline() {
-    const [TimelinePosts, setTimelinePosts] = useState([]);
+export default function MyPostsPage() {
+    const [MyPosts, setMyPosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(true);
     const [HashtagList, setHashtagList] = useState([]);
     const { user } = useContext(UserContext);
     const pessoa = JSON.parse(localStorage.getItem("user"));
-
-    console.log(TimelinePosts);
-    console.log(user);
+  
 
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${user.token || pessoa.token}` } };
-        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
+        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${pessoa.user.id || user.user.id}/posts`, config);
 
         request.then(response => {
-            setTimelinePosts(response.data.posts);
+            setMyPosts(response.data.posts);
             setEnableLoading(false);
             console.log(response.data);
         });
 
         request.catch(error => {
-            alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+            alert("Houve uma falha ao obter os seus posts, por favor, atualize a página.");
         });
     }, []);
 
     return(
         <>
         <Header />
-            <TimelineContainer>
-                <TimelinePostsContainer>
-                    <Title>timeline</Title>
+            <MyPostsContainer>
+                <PostsContainer>
+                    <Title>my posts</Title>
                     {/* <NewPost /> */}
-                    {TimelinePosts.length === 0 ? <div className="no-post">Nenhum post encontrado :(</div> : TimelinePosts.map((post, i) => <Post post={post} key={i} />)}
+                    {MyPosts.length === 0 ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <Post post={post} key={i} />)}
                     {enableLoading && <Loading />}
-                </TimelinePostsContainer>
+                </PostsContainer>
                 <div className="trending">
                     <Trending />
                 </div>
-            </TimelineContainer>
+            </MyPostsContainer>
         </>
     );
 }
 
-const TimelineContainer = styled.div`
+const MyPostsContainer = styled.div`
     background-color: #333333;
     display: flex;
     justify-content: center;
     font-family: 'Lato';
     margin-top: 60px;
+    height: 100vh;
 
     .no-post {
         font-size: 25px;
@@ -68,7 +67,7 @@ const TimelineContainer = styled.div`
     }
 `;
 
-const TimelinePostsContainer = styled.ul`
+const PostsContainer = styled.ul`
     width: 611px;
     display: flex;
     flex-direction: column;

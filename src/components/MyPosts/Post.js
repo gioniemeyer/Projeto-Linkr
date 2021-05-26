@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
 
-export default function Post({ post }) {    
+export default function Post({ post }) {
+    console.log(post);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
 
     const texto = text.split(' ');
@@ -11,6 +12,8 @@ export default function Post({ post }) {
             hashtags.push(texto[i]);
         }
     }
+
+    console.log(hashtags);
 
     return(
         <PostBox>
