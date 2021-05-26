@@ -5,7 +5,6 @@ import Hashtag from "./Hashtag";
 import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
-    console.log(post);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
 
     //tratar o zero
