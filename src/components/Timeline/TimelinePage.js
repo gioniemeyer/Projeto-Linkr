@@ -6,6 +6,7 @@ import Loading from "./Loading";
 import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
+import Header from "../Header"; 
 
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
@@ -14,17 +15,13 @@ export default function Timeline() {
     const { user } = useContext(UserContext);
     const pessoa = JSON.parse(localStorage.getItem("user"));
 
-    console.log(TimelinePosts);
-    console.log(user);
-
     useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${user.token || pessoa}` } };
+        const config = { headers: { Authorization: `Bearer ${user.token || pessoa.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
         request.then(response => {
             setTimelinePosts(response.data.posts);
-            setEnableLoading(false);
-            console.log(response.data);
+            setEnableLoading(false);            
         });
 
         request.catch(error => {
@@ -34,6 +31,7 @@ export default function Timeline() {
 
     return(
         <>
+        <Header />
             <TimelineContainer>
                 <TimelinePostsContainer>
                     <Title>timeline</Title>

@@ -1,17 +1,23 @@
 import styled from "styled-components"
 import logo from '../../images/logo.png'
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 import UserContext from "../../contexts/UserContext";
 
 export default function HomePage() {
     let history = useHistory();
-    const { user, setUser } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext); 
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
+    const [password, setPassword] = useState('');   
     const [load, setLoad] = useState(false);
+
+
+    useEffect(() => {
+        setEmail("");
+        setPassword("");
+    }, [])
+
 
     function login(e) {
         e.preventDefault();
@@ -28,11 +34,9 @@ export default function HomePage() {
         request.then(resp => {
             history.push('/timeline');
             setLoad(false);
-            setUser(resp.data);
-            console.log(user)
+            setUser(resp.data);           
             localStorage.setItem('user', JSON.stringify(resp.data));
-            const pessoa = JSON.parse(localStorage.getItem("user"));
-            console.log(pessoa);
+            const pessoa = JSON.parse(localStorage.getItem("user"));            
         })
         request.catch(error => {
             alert("email/senha incorretos");

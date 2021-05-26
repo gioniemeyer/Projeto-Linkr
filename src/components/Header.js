@@ -1,15 +1,16 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import logo from "../images/logo.png";
 import ClickAwayListener from 'react-click-away-listener';
 import { Link } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 
 export default function Header() {  
   const [open, setOpen] = useState(false);
- 
-	   
+  const { user } = useContext(UserContext);	  
+  const pessoa = JSON.parse(localStorage.getItem("user")); 
+
 
   return (    
    <>
@@ -17,22 +18,22 @@ export default function Header() {
       <Container>      
         <Title>linkr</Title>                     
         <RightSide>
-          {open ? (               
-            <Button onClick={() => {setOpen(false); console.log("onclick da seta pra baixo funcionou")}}>
+          {open ? (          
+            <Button onClick={() => setOpen(false)}>
               <IoIosArrowDown />
             </Button>            
           ) : (
-            <Button onClick={() => {setOpen(true); console.log("onclick da seta pra cima funcionou")}}>
+            <Button onClick={() => setOpen(true)}>
               <IoIosArrowUp />
             </Button>
           )}
           {open ? (
-            <UserPicture onClick={() => {setOpen(false); console.log("onclick da imagem do usuario funcionou 1x")}}>
-              <img src={logo} alt="userimage"></img>
+            <UserPicture onClick={() => setOpen(false)}>
+              <img src={pessoa.user.avatar || user.user.avatar} alt="userimage"></img>
             </UserPicture>
           ) : (
-            <UserPicture onClick={() => {setOpen(true); console.log("onclick da imagem do usuario funcionou 2x")}}>
-              <img src={logo} alt="userimage"></img>
+            <UserPicture onClick={() => setOpen(true)}>
+              <img src={pessoa.user.avatar || user.user.avatar} alt="userimage"></img>
             </UserPicture>
           )}
         </RightSide>                     
@@ -89,6 +90,7 @@ const RightSide = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 110px;
+  margin-right: 15px;
 `;
 
 const Title = styled.div`
