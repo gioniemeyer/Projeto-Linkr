@@ -4,22 +4,35 @@ import axios from "axios"
 import UserContext from "../../contexts/UserContext";
 import { useEffect, useState, useContext } from "react";
 
-export default function Post({ post }) {
+export default function Post({ post,LikedsIds}) {
     const { userData } = useContext(UserContext);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
     const texto = text.split(' ');
+   
+    const pessoa = JSON.parse(localStorage.getItem("user"));
+  
+    
     let hashtags = [];
     for(let i = 0; i < texto.length; i++) {
         if (texto[i].includes('#')) {
             hashtags.push(texto[i]);
         }
     }
+   
 
+    function LikeOrDeslike(){
+            const body=[]
+            const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
+            const request=axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,body, config)
+            request.then(()=>console.log('post curtido'))
+            
+    }
+    
     return(
         <PostBox>
             <SideMenu>
                 <img src={linkImage} alt={linkTitle} />
-                <AiOutlineHeart className="heart-icon"/>
+                <AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>
                 <span>{likes.length} {likes.length === 1 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
