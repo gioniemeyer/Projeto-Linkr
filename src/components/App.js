@@ -14,15 +14,15 @@ export default function App() {
     <BrowserRouter>
       <UserContext.Provider value={{user, setUser}}>
         <Switch>
-        <Route path='/' exact>
+          <Route path='/' exact>
             <HomePage/>
           </Route>
           <Route path='/sign-up' exact>
             <SignInPage />
           </Route>    
-        <Route path='/timeline' exact>
-          <TimelinePage />
-        </Route>
+          <Route path='/timeline' exact>
+            <TimelinePage />
+          </Route>
       </Switch>
       </UserContext.Provider>
     </BrowserRouter>
