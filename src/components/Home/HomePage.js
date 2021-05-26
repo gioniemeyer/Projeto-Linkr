@@ -1,36 +1,41 @@
 import styled from "styled-components"
 import logo from '../../images/logo.png'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
+import UserContext from "../../contexts/UserContext";
 
-export default function SignInPage() {
+export default function HomePage() {
     let history = useHistory();
-
+    const { user, setUser } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-    const [picture, setPicture] = useState('');
+
     const [load, setLoad] = useState(false);
 
-    function subscribe(e) {
+    function login(e) {
         e.preventDefault();
 
-        if(!(email && password && username && picture)) {
+        if(!(email && password)) {
             alert('Favor, preencha todos os campos')
             return '';
         }
         
         setLoad(true);
 
-        const body = {email: email, password: password, username: username, pictureUrl: picture};        
-        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-up', body)
-        request.then(() => {
-            history.push('/');
+        const body = {email, password};        
+        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body)
+        request.then(resp => {
+            // history.push('/timeline');
             setLoad(false);
+            setUser(resp.data);
+            console.log(user)
+            localStorage.setItem('user', JSON.stringify(resp.data));
+            const pessoa = JSON.parse(localStorage.getItem("user"));
+            console.log(pessoa);
         })
         request.catch(error => {
-            alert("O email inserido já está cadastrado");
+            alert("email/senha incorretos");
             setLoad(false);
         })
     }
@@ -41,17 +46,14 @@ export default function SignInPage() {
                 <img src={logo} alt='logo'/>
                 <P>save, share and discover the best links on the web</P>
             </Container>
-            <Form onSubmit={e => subscribe(e)}>
+            <Form onSubmit={e => login(e)}>
                 <input disabled={load} type='email' placeholder='email' value={email} onChange={e => setEmail(e.target.value)}/>
 
                 <input disabled={load} type='password' placeholder='password' value={password} onChange={e => setPassword(e.target.value)}/>
                     
-                <input disabled={load} type='text' placeholder='username' value={username} onChange={e => setUsername(e.target.value)}/>
-
-                <input disabled={load} type='url' placeholder='picture url' value={picture} onChange={e => setPicture(e.target.value)}/>
-                <Button disabled={load} type='submit'>Sign Up</Button>
-                <Link to='/'>
-                    <A>Switch back to log in</A>
+                <Button disabled={load} type='submit'>Log In</Button>
+                <Link to='/sign-up'>
+                    <A>First time? Create an account!</A>
                 </Link>
             </Form>
  
