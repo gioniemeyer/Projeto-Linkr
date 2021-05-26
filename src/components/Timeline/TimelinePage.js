@@ -13,11 +13,23 @@ export default function Timeline() {
     const [enableLoading, setEnableLoading] = useState(true);
     const [HashtagList, setHashtagList] = useState([]);
     const { userData } = useContext(UserContext);
+    const [LikedPosts,setLikedPosts]=useState([])
     const pessoa = JSON.parse(localStorage.getItem("user"));
+    const [LikedsIds,setLikedsIds]=useState([])
     console.log(userData.token)
    
     
-
+    function RenderLikes(){
+        const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
+        const requestLikeds=axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked',config)
+        requestLikeds.then((response)=>{setLikedPosts(response.data.posts)
+            LikedPosts.forEach(element => {
+                setLikedsIds([...LikedsIds,element.id])
+            });
+            console.log(LikedsIds)})
+        requestLikeds.catch(()=>console.log('erro'))
+        
+    }
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
@@ -31,6 +43,7 @@ export default function Timeline() {
             alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
             setEnableLoading(false);
         });
+      
     }, []);
 
     return(
