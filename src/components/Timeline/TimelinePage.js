@@ -36,7 +36,7 @@ export default function Timeline() {
             <TimelineContainer>
                 <TimelinePostsContainer>
                     <Title>timeline</Title>
-                    {/* <NewPost /> */}
+                    <NewPost />
                     {TimelinePosts.length === 0 ? <div className="no-post">Nenhum post encontrado :(</div> : TimelinePosts.map((post, i) => <Post post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </TimelinePostsContainer>
