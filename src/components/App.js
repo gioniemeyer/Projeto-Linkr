@@ -6,6 +6,7 @@ import HomePage from './Home/HomePage'
 import Header from './Header';
 import Trending from "./Trending/Trending";
 import UserContext from '../contexts/UserContext';
+import LikesPage from './LikesPage';
 
 export default function App() {
   const [user, setUser] = useState('');
@@ -27,6 +28,10 @@ export default function App() {
           <Route path='/trending' exact>
             <Header />
             <Trending />
+          </Route>
+          <Route path='/my-likes' exact>
+            <Header />
+            <LikesPage />
           </Route>
         </Switch>
       </UserContext.Provider>
