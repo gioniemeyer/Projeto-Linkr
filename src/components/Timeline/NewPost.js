@@ -101,7 +101,6 @@ const Content = styled.div`
 
         ::-webkit-input-placeholder {
             color: #949494;
-            border: none;
         }
     }
 
@@ -115,6 +114,11 @@ const Content = styled.div`
         font-size: 15px;
         font-weight: 300;
         color: #707070;
+
+        ::-webkit-input-placeholder {
+            color: #949494;
+            font-family: 'Lato';
+        }
     }
 
     button {
