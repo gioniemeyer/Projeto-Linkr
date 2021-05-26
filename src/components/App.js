@@ -6,12 +6,10 @@ import { useState } from "react";
 import TimelinePage from "./Timeline/TimelinePage";
 import Header from './Header';
 import Trending from "./Trending/Trending";
-import UserContext from '../contexts/UserContext';
 import LikesPage from './LikesPage';
 
 export default function App() {
   const [user, setUser] = useState('');
-  
 
   return (
     <BrowserRouter>
