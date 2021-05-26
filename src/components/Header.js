@@ -80,7 +80,8 @@ const Menu = styled.div`
   border-radius: 0px 0px 0px 20px;
 
   @media (max-width: 600px) {
-    height: 97px;
+    height: 97px;    
+    padding: 0px;
   }
 `;
 
@@ -178,6 +179,6 @@ const LinksWrapper = styled.div`
 
     @media (max-width: 600px) {
       font-size: 15px;    
-      padding: 13px;  
+      padding: 0px;  
     }
   }`;
