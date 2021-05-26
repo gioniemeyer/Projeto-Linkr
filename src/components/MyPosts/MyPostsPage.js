@@ -1,61 +1,58 @@
 import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import Post from "./Post";
-import Loading from "./Loading";
-import NewPost from "./NewPost";
+
+import Loading from "../Timeline/Loading"
+
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
+import Post from "./Post";
 
-export default function Timeline() {
-    const [TimelinePosts, setTimelinePosts] = useState([]);
+export default function MyPostsPage() {
+    const [MyPosts, setMyPosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(true);
+    const [HashtagList, setHashtagList] = useState([]);
     const { user } = useContext(UserContext);
-    const localUser = JSON.parse(localStorage.getItem("user"));
+    const pessoa = JSON.parse(localStorage.getItem("user"));
+    
+  
 
-    function getPosts() {
-        const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
-        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
+    useEffect(() => {
+        const config = { headers: { Authorization: `Bearer ${user.token || pessoa.token}` } };
+        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${pessoa.user.id || user.user.id}/posts`, config);
 
         request.then(response => {
-            setTimelinePosts(response.data.posts);
-            setEnableLoading(false);
+            setMyPosts(response.data.posts);
+            setEnableLoading(false);            
         });
 
         request.catch(error => {
-            alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
-            setEnableLoading(false);
+            alert("Houve uma falha ao obter os seus posts, por favor, atualize a página.");
         });
-    }
+    }, []);
 
-    useEffect(getPosts,[]);
-    
     return(
         <>
-            <Header />
-            <TimelineBody>
-                <TimelineContainer>
-                    <TimelinePostsContainer>
-                        <Title>timeline</Title>
-                        <NewPost getPosts={getPosts} />
-                        {
-                            TimelinePosts.length === 0 && !enableLoading
-                            ? <div className="no-post">Nenhum post encontrado :(</div> 
-                            : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
-                        }
-                        {enableLoading && <Loading />}
-                    </TimelinePostsContainer>
-                    <div className="trending">
-                        <Trending />
-                    </div>
-                </TimelineContainer>
-            </TimelineBody>
+        <Header />
+        <MyPostsBody>
+            <MyPostsContainer>
+                <PostsContainer>
+                    <Title>my posts</Title>                    
+                    {MyPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <Post post={post} key={i} />)}
+                    {enableLoading && <Loading />}
+                </PostsContainer>
+                <div className="trending">
+                    <Trending />
+                </div>
+            </MyPostsContainer>
+        </MyPostsBody>
         </>
     );
 }
 
-const TimelineBody = styled.div`
+
+const MyPostsBody = styled.div`
     display: flex;
     justify-content: center;
     background-color: #333333;
@@ -66,12 +63,13 @@ const TimelineBody = styled.div`
     }
 `;
 
-const TimelineContainer = styled.div`
+const MyPostsContainer = styled.div`
     width: 937px;
     display: flex;
     justify-content: space-between;
     font-family: 'Lato';
     margin-top: 60px;
+    height: 100vh;
 
     @media (max-width: 614px){
         width: 100%;
@@ -95,7 +93,7 @@ const TimelineContainer = styled.div`
     }
 `;
 
-const TimelinePostsContainer = styled.ul`
+const PostsContainer = styled.ul`
     width: 611px;
     display: flex;
     flex-direction: column;

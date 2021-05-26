@@ -6,6 +6,7 @@ import { useState } from "react";
 import TimelinePage from "./Timeline/TimelinePage";
 import Header from './Header';
 import Trending from "./Trending/Trending";
+import MyPostsPage from './MyPosts/MyPostsPage';
 
 
 export default function App() {
@@ -28,6 +29,10 @@ export default function App() {
           <Route path='/trending' exact>
             <Header />
             <Trending />
+          </Route>
+          <Route path='/my-posts' exact>
+            <Header />            
+            <MyPostsPage />
           </Route>
         </Switch>
       </UserContext.Provider>
