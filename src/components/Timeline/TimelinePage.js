@@ -28,7 +28,9 @@ export default function Timeline() {
             alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
             setEnableLoading(false);
         });
-    }, []);
+    })
+
+    useEffect(getPosts,[]);
     
     return(
         <>
@@ -37,7 +39,7 @@ export default function Timeline() {
                 <TimelineContainer>
                     <TimelinePostsContainer>
                         <Title>timeline</Title>
-                        <NewPost />
+                        <NewPost getPosts={getPosts} />
                         {
                             TimelinePosts.length === 0 && !enableLoading
                             ? <div className="no-post">Nenhum post encontrado :(</div> 
@@ -110,11 +112,13 @@ const TimelinePostsContainer = styled.ul`
 
 const Title = styled.h1`
     font-family: 'Oswald';
+    font-weight: 700;
     font-size: 43px;
     color: #FFFFFF;
     margin: 60px 0 45px 0;
 
     @media (max-width: 614px){
-        margin-left: 17px;
+        margin: 25px 0 19px 17px;
+        font-size: 33px;
     }
 `;

@@ -7,11 +7,13 @@ import { Link } from "react-router-dom";
 export default function Post({ post }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
 
+    console.log(post);
+
     return(
         <PostBox>
             <SideMenu>
                 <Link to={`user/:${user.id}`}>
-                    <img src={linkImage} alt={linkTitle} />
+                    <img src={user.avatar} alt="Imagem de avatar do usuário" />
                 </Link>
                 <AiOutlineHeart className="heart-icon" />
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
