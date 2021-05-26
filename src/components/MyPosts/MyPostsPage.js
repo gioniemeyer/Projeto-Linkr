@@ -22,8 +22,7 @@ export default function MyPostsPage() {
 
         request.then(response => {
             setMyPosts(response.data.posts);
-            setEnableLoading(false);
-            console.log(response.data);
+            setEnableLoading(false);            
         });
 
         request.catch(error => {

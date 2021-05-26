@@ -34,11 +34,9 @@ export default function HomePage() {
         request.then(resp => {
             history.push('/timeline');
             setLoad(false);
-            setUser(resp.data);
-            console.log(user)
+            setUser(resp.data);            
             localStorage.setItem('user', JSON.stringify(resp.data));
-            const pessoa = JSON.parse(localStorage.getItem("user"));
-            console.log(pessoa);
+            const pessoa = JSON.parse(localStorage.getItem("user"));            
         })
         request.catch(error => {
             alert("email/senha incorretos");
