@@ -1,30 +1,28 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
+import { useState } from "react";
+import Hashtag from "./Hashtag";
+import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
     console.log(post);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
 
-    const texto = text.split(' ');
-    let hashtags = [];
-    for(let i = 0; i < texto.length; i++) {
-        if (texto[i].includes('#')) {
-            hashtags.push(texto[i]);
-        }
-    }
-
-    console.log(hashtags);
-
+    //tratar o zero
     return(
         <PostBox>
             <SideMenu>
-                <img src={linkImage} alt={linkTitle} />
+                <Link to={`user/:${user.id}`}>
+                    <img src={linkImage} alt={linkTitle} />
+                </Link>
                 <AiOutlineHeart className="heart-icon" />
                 <span>{likes.length} {likes.length === 1 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
-                <h1>{user.username}</h1>
-                <h2>{text}</h2>
+                <Link to={`user/:${user.id}`}>
+                    <h1>{user.username}</h1>
+                </Link>
+                <h2><Hashtag text={text} /></h2>
                 <Snippet href={link} target="_blank">
                     <div>
                         <h3>{linkTitle}</h3>

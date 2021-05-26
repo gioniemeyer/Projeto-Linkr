@@ -18,7 +18,7 @@ export default function Timeline() {
     console.log(user);
 
     useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${user.token || pessoa}` } };
+        const config = { headers: { Authorization: `Bearer ${user.token || pessoa.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
         request.then(response => {
@@ -32,13 +32,21 @@ export default function Timeline() {
         });
     }, []);
 
+    // tratar a questão do loading e daquele texto juntos
+    // organizar container corretamente na pagina
+    // fazer layout mobile
+
     return(
         <>
             <TimelineContainer>
                 <TimelinePostsContainer>
                     <Title>timeline</Title>
                     {/* <NewPost /> */}
-                    {TimelinePosts.length === 0 ? <div className="no-post">Nenhum post encontrado :(</div> : TimelinePosts.map((post, i) => <Post post={post} key={i} />)}
+                    {
+                        TimelinePosts.length === 0 
+                        ? <div className="no-post">Nenhum post encontrado :(</div> 
+                        : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
+                    }
                     {enableLoading && <Loading />}
                 </TimelinePostsContainer>
                 <div className="trending">
