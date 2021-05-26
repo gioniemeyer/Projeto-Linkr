@@ -6,6 +6,7 @@ import Loading from "./Loading";
 import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
+import Header from "../Header"; 
 
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
@@ -32,23 +33,26 @@ export default function Timeline() {
     }, []);
     
     return(
-        <TimelineBody>
-            <TimelineContainer>
-                <TimelinePostsContainer>
-                    <Title>timeline</Title>
-                    <NewPost />
-                    {
-                        TimelinePosts.length === 0 && !enableLoading
-                        ? <div className="no-post">Nenhum post encontrado :(</div> 
-                        : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
-                    }
-                    {enableLoading && <Loading />}
-                </TimelinePostsContainer>
-                <div className="trending">
-                    <Trending />
-                </div>
-            </TimelineContainer>
-        </TimelineBody>
+        <>
+            <Header />
+            <TimelineBody>
+                <TimelineContainer>
+                    <TimelinePostsContainer>
+                        <Title>timeline</Title>
+                        <NewPost />
+                        {
+                            TimelinePosts.length === 0 && !enableLoading
+                            ? <div className="no-post">Nenhum post encontrado :(</div> 
+                            : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
+                        }
+                        {enableLoading && <Loading />}
+                    </TimelinePostsContainer>
+                    <div className="trending">
+                        <Trending />
+                    </div>
+                </TimelineContainer>
+            </TimelineBody>
+        </>
     );
 }
 

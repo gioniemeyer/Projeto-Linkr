@@ -1,17 +1,23 @@
 import styled from "styled-components"
 import logo from '../../images/logo.png'
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 import UserContext from "../../contexts/UserContext";
 
 export default function HomePage() {
     let history = useHistory();
-    const { user, setUser } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext); 
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
+    const [password, setPassword] = useState('');   
     const [load, setLoad] = useState(false);
+
+
+    useEffect(() => {
+        setEmail("");
+        setPassword("");
+    }, [])
+
 
     function login(e) {
         e.preventDefault();

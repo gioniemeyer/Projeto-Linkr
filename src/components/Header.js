@@ -1,25 +1,25 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import logo from "../images/logo.png";
 import ClickAwayListener from 'react-click-away-listener';
 import { Link } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 
 export default function Header() {  
   const [open, setOpen] = useState(false);
- 
-	function handleClickAway () {
-		setOpen(false);
-	};    
+  const { user } = useContext(UserContext);	  
+  const pessoa = JSON.parse(localStorage.getItem("user")); 
+
 
   return (    
    <>
+   <ClickAwayListener onClickAway={() => setOpen(false)}> 
       <Container>      
-        <Title>linkr</Title>        
+        <Title>linkr</Title>                     
         <RightSide>
-          {open ? (               
-            <Button>
+          {open ? (          
+            <Button onClick={() => setOpen(false)}>
               <IoIosArrowDown />
             </Button>            
           ) : (
@@ -28,29 +28,30 @@ export default function Header() {
             </Button>
           )}
           {open ? (
-            <UserPicture>
-              <img src={logo} alt="userimage"></img>
+            <UserPicture onClick={() => setOpen(false)}>
+              <img src={pessoa.user.avatar || user.user.avatar} alt="userimage"></img>
             </UserPicture>
           ) : (
             <UserPicture onClick={() => setOpen(true)}>
-              <img src={logo} alt="userimage"></img>
+              <img src={pessoa.user.avatar || user.user.avatar} alt="userimage"></img>
             </UserPicture>
           )}
-        </RightSide>             
-      </Container>
-      {open ? (
-           <ClickAwayListener onClickAway={handleClickAway}>
-                <Menu>
-                <LinksWrapper>
-                <Link to="/my-posts"><span onClick={() => setOpen(false)}>My posts</span></Link>                    
-                <Link to="/my-likes"><span onClick={() => setOpen(false)}>My likes</span></Link>
-                <Link to="/"><span onClick={() => setOpen(false)}>Logout</span></Link>
-                </LinksWrapper>
+        </RightSide>                     
+      
+        {open ? (           
+                <Menu>                   
+                    <LinksWrapper>
+                        <Link to="/my-posts"><span onClick={() => setOpen(false)}>My posts</span></Link>                    
+                        <Link to="/my-likes"><span onClick={() => setOpen(false)}>My likes</span></Link>
+                        <Link to="/"><span onClick={() => setOpen(false)}>Logout</span></Link>
+                    </LinksWrapper>                    
                 </Menu>
-            </ClickAwayListener>
-      ) : (
+            
+        ) : (
         ""
-      )}    
+        )} 
+      </Container>  
+      </ClickAwayListener> 
     </>
   );
 }
@@ -89,6 +90,7 @@ const RightSide = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 110px;
+  margin-right: 15px;
 `;
 
 const Title = styled.div`
