@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import Post from "./Post";
-import Loading from "././Loading";
+import Loading from "./Loading";
 import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
@@ -14,8 +14,7 @@ export default function Timeline() {
     const { user } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
 
-  
-    useEffect(() => {
+    function getPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
@@ -28,7 +27,7 @@ export default function Timeline() {
             alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
             setEnableLoading(false);
         });
-    })
+    }
 
     useEffect(getPosts,[]);
     
