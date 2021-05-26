@@ -7,7 +7,7 @@ import UserContext from "../../contexts/UserContext";
 
 export default function HomePage() {
     let history = useHistory();
-    const { user, setUser } = useContext(UserContext);
+    const { userData, setUserData } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -26,13 +26,13 @@ export default function HomePage() {
         const body = {email, password};        
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body)
         request.then(resp => {
-            // history.push('/timeline');
+            history.push('/timeline');
             setLoad(false);
-            setUser(resp.data);
-            console.log(user)
+            setUserData(resp.data);
+            
             localStorage.setItem('user', JSON.stringify(resp.data));
             const pessoa = JSON.parse(localStorage.getItem("user"));
-            console.log(pessoa);
+        
         })
         request.catch(error => {
             alert("email/senha incorretos");
