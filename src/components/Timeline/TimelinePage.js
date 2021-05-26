@@ -1,67 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import Post from "./Post";
 import Loading from "./Loading";
 import NewPost from "./NewPost";
+import Trending from "../Trending/Trending";
+import UserContext from "../../contexts/UserContext";
 
 export default function Timeline() {
-    const [TimelinePosts, setTimelinePosts] = useState([
-        {
-            "id": 2,
-            "text": "Never Gonna Give You Up #rickroll",
-            "link": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            "linkTitle": "Rick Astley - Never Gonna Give You Up (Video)",
-            "linkDescription": "Rick Astley's official music video for “Never Gonna Give You Up” Listen to Rick Astley: https://RickAstley.lnk.to/_listenYDSubscribe to the official Rick Ast...",
-            "linkImage": "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-            "user": {
-                "id": 1,
-                "username": "teste",
-                "avatar": "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/1/avatar"
-            },
-            "likes": [
-                {
-                    "id": 1,
-                    "userId": 1,
-                    "postId": 2,
-                    "createdAt": "2021-05-24T18:55:37.544Z",
-                    "updatedAt": "2021-05-24T18:55:37.544Z",
-                    "user.id": 1,
-                    "user.username": "teste"
-                }
-            ]
-        }
-    ]);
+    const [TimelinePosts, setTimelinePosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(true);
     const [HashtagList, setHashtagList] = useState([]);
+    const { user } = useContext(UserContext);
+    const pessoa = JSON.parse(localStorage.getItem("user"));
 
     console.log(TimelinePosts);
+    console.log(user);
 
-    // useEffect(() => {
-    //     const config = { headers: { Authorization: "Bearer token" } };
-    //     const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
+    useEffect(() => {
+        const config = { headers: { Authorization: `Bearer ${user.token || pessoa}` } };
+        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
-    //     request.then(response => {
-    //         setTimelinePosts(response.data.posts);
-    //         setEnableLoading(false);
-    //     });
+        request.then(response => {
+            setTimelinePosts(response.data.posts);
+            setEnableLoading(false);
+            console.log(response.data);
+        });
 
-    //     request.catch(error => {
-    //         alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
-    //     });
-    // }, []);
+        request.catch(error => {
+            alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+        });
+    }, []);
 
     return(
         <>
-            <Header />
             <TimelineContainer>
                 <TimelinePostsContainer>
                     <Title>timeline</Title>
                     {/* <NewPost /> */}
                     {TimelinePosts.length === 0 ? <div className="no-post">Nenhum post encontrado :(</div> : TimelinePosts.map((post, i) => <Post post={post} key={i} />)}
                     {enableLoading && <Loading />}
-                    {/* <Loading /> */}
                 </TimelinePostsContainer>
+                <div className="trending">
+                    <Trending />
+                </div>
             </TimelineContainer>
         </>
     );
@@ -72,10 +54,15 @@ const TimelineContainer = styled.div`
     display: flex;
     justify-content: center;
     font-family: 'Lato';
+    margin-top: 60px;
 
     .no-post {
         font-size: 25px;
         color: #FFFFFF;
+    }
+
+    .trending {
+        margin-top: 148px;
     }
 `;
 
@@ -84,12 +71,7 @@ const TimelinePostsContainer = styled.ul`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-`;
-
-const Header = styled.header`
-    width: 100%;
-    height: 72px;
-    background-color: #151515;
+    margin-right: 25px;
 `;
 
 const Title = styled.h1`
