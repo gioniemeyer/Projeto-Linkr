@@ -11,13 +11,14 @@ export default function Header() {
   const { user } = useContext(UserContext);	  
   const pessoa = JSON.parse(localStorage.getItem("user")); 
 
+
   return (    
    <>
    <ClickAwayListener onClickAway={() => setOpen(false)}> 
       <Container>      
         <Title>linkr</Title>                     
         <RightSide>
-          {open ? (               
+          {open ? (          
             <Button onClick={() => setOpen(false)}>
               <IoIosArrowDown />
             </Button>            
