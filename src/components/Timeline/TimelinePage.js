@@ -14,11 +14,8 @@ export default function Timeline() {
     const { user } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
 
-    console.log(user);
-    console.log(localUser);
-
     useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${user.token || localUser.token}` } };
+        const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
         request.then(response => {

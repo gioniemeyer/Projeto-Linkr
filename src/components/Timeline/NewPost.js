@@ -1,28 +1,47 @@
 import styled from "styled-components";
-import { useContext } from "react";
+import { useState, useContext } from "react";
+import axios from "axios";
 import UserContext from "../../contexts/UserContext";
 
 export default function NewPost() {
     const { user } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
-    
-    if(user.length === 0) {
-        return(
-            <div></div>
-        );
+    const [link, setLink] = useState("");
+    const [text, setText] = useState("");
+    const [disabled, setDisabled] = useState(false);
+
+    function makePost(e) {
+        e.preventDefault();
+        setDisabled(true);
+        const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
+        const body = { text, link};
+        console.log(body);
+        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts', body, config);
+
+        request.then(response => {
+            console.log("deu certo");
+            setDisabled(false);
+            setLink("");
+            setText("");
+        })
+
+        request.catch(error => {
+            alert("Houve um erro ao publicar sue link.");
+            setDisabled(false);
+        })
     }
 
     return(
         <NewPostBox>
             <SideMenu>
-                <img src={user.user.avatar || localUser.user.token} alt="Imagem do avatar do usuário" />
+                <img src={localUser.user.avatar || user.user.avatar} alt="Imagem do avatar do usuário" />
             </SideMenu>
             <Content>
                 <h1>O que você tem pra favoritar hoje?</h1>
-                <form>
-                    <input type="email" placeholder="http:// ..." />
-                    <textarea placeholder ="Muito irado esse link falando de #javascript"></textarea>
-                    <button>Publicar</button>
+                <form onSubmit={makePost}>
+                    <input disabled={disabled} type="url" placeholder="http:// ..." required onChange={(e) => setLink(e.target.value)} value={link} />
+                    <textarea disabled={disabled} placeholder ="Muito irado esse link falando de #javascript" onChange={(e) => setText(e.target.value)} value={text} />
+                    <button disabled={disabled} type="submit">{disabled ? 'Publishing...' : 'Publicar'}</button>
                 </form>
             </Content>
         </NewPostBox>
@@ -96,5 +115,19 @@ const Content = styled.div`
         font-size: 15px;
         font-weight: 300;
         color: #707070;
+    }
+
+    button {
+        width: 112px;
+        height: 31px;
+        background-color: #1877F2;
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 5px;
+        margin-top: 5px;
+        border: none;
+        cursor: pointer;
+        font-family: 'Lato'
     }
 `;
