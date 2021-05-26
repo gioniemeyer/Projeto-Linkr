@@ -9,11 +9,9 @@ export default function Post({ post }) {
     return(
         <PostBox>
             <SideMenu>
-                <Link to={`user/:${user.id}`}>
-                    <img src={linkImage} alt={linkTitle} />
-                </Link>
-                <AiOutlineHeart className="heart-icon" />
-                <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
+                <img src={linkImage} alt={linkTitle} />
+                <AiOutlineHeart className="heart-icon"/>
+                <span>{likes.length} {likes.length === 1 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
                 <Link to={`user/:${user.id}`}>

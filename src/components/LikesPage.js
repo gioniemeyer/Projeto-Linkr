@@ -7,20 +7,19 @@ import Post from "./Timeline/Post";
 import UserContext from "../contexts/UserContext";
 
 export default function LikesPage() {
-    const [TimelinePosts, setTimelinePosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(false);
     const [likedPosts, setLikedPosts] = useState([]);
 
     const localUser = JSON.parse(localStorage.getItem("user"));
-    const {user} = useContext(UserContext)
+    const {userData} = useContext(UserContext)
     useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${user.token || localUser.token}` } };
-        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
 
         request.then(response => {
-            setTimelinePosts(response.data.posts);
+            setLikedPosts(response.data.posts);
             setEnableLoading(false);
-            console.log(user);
+            console.log(userData);
             LikedPosts();
         });
 
@@ -31,7 +30,7 @@ export default function LikesPage() {
     }, []);
 
     function LikedPosts() {
-        const array = TimelinePosts.filter(p => p.likes.user.id === user.token || localUser.token);
+        const array = likedPosts.filter(p => p.likes.user.id === userData.token || localUser.token);
         setLikedPosts(array);
         console.log(likedPosts);
     }
@@ -42,9 +41,9 @@ export default function LikesPage() {
                 <TimelinePostsContainer>
                     <Title>my likes</Title>
                     {
-                        TimelinePosts.length === 0 && !enableLoading
+                        likedPosts.length === 0 && !enableLoading
                         ? <div className="no-post">Nenhum post encontrado :(</div> 
-                        : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
+                        : likedPosts.map((post, i) => <Post post={post} key={i} />)
                     }
                     {enableLoading && <Loading />}
                 </TimelinePostsContainer>

@@ -10,12 +10,16 @@ import Header from "../Header";
 
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
-    const [enableLoading, setEnableLoading] = useState(false);
-    const { user } = useContext(UserContext);
-    const localUser = JSON.parse(localStorage.getItem("user"));
+    const [enableLoading, setEnableLoading] = useState(true);
+    const [HashtagList, setHashtagList] = useState([]);
+    const { userData } = useContext(UserContext);
+    const pessoa = JSON.parse(localStorage.getItem("user"));
+    console.log(userData.token)
+   
+    
 
     useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${user.token || localUser.token}` } };
+        const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
         request.then(response => {
@@ -35,11 +39,8 @@ export default function Timeline() {
             <TimelineContainer>
                 <TimelinePostsContainer>
                     <Title>timeline</Title>
-                    {
-                        TimelinePosts.length === 0 && !enableLoading
-                        ? <div className="no-post">Nenhum post encontrado :(</div> 
-                        : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
-                    }
+                    {/* <NewPost /> */}
+                    {TimelinePosts.length === 0 ? <div className="no-post">Nenhum post encontrado :(</div> : TimelinePosts.map((post, i) => <Post post={post} key={post.id} />)}
                     {enableLoading && <Loading />}
                 </TimelinePostsContainer>
                 <div className="trending">
