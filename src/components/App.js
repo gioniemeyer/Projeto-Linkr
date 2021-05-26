@@ -4,6 +4,7 @@ import Header from './Header';
 import HomePage from './Home/HomePage'
 import { useState } from 'react';
 import UserContext from '../contexts/UserContext';
+import TimelinePage from "./Timeline/TimelinePage";
 
 export default function App() {
 
@@ -18,8 +19,11 @@ export default function App() {
           </Route>
           <Route path='/sign-up' exact>
             <SignInPage />
-          </Route>
-        </Switch>
+          </Route>    
+        <Route path='/timeline' exact>
+          <TimelinePage />
+        </Route>
+      </Switch>
       </UserContext.Provider>
     </BrowserRouter>
   );
