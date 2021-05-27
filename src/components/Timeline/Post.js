@@ -17,6 +17,7 @@ export default function Post({ post, TimelinePosts, LikedPosts, RenderLikes, Ren
   const localUser = JSON.parse(localStorage.getItem("user"));
   let enabled = false;
   const [modalOpen, setModalOpen] = useState(false);
+  const history = useHistory();
   
   function LikeOrDeslike() {
     const body = [];
@@ -52,7 +53,7 @@ export default function Post({ post, TimelinePosts, LikedPosts, RenderLikes, Ren
   return (
     <PostBox>
       <SideMenu enabled={enabled}>
-        <Link to={`user/${user.id}`}>
+        <Link to={`user/${user.id}`} className="link-user-name">
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
         {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
@@ -73,9 +74,7 @@ export default function Post({ post, TimelinePosts, LikedPosts, RenderLikes, Ren
         <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>
       <Content>
-        <Link to={`user/${user.id}`}>
-          <h1>{user.username}</h1>
-        </Link>
+        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
         <h2>
           <Hashtag text={text} />
         </h2>
@@ -172,7 +171,7 @@ const Content = styled.div`
     @media (max-width: 614px){
         width: calc(100% - 69px);
     }
-
+    
     h1 {
         width: fit-content;
         font-size: 19px;
