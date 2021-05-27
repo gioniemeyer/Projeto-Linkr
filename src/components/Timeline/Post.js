@@ -29,6 +29,7 @@ export default function Post({ post }) {
                         <h4>{linkDescription}</h4>
                         <h5>{link}</h5>
                     </div>
+                    {/* <SnippetImage style={{ backgroundImage: `url(${linkImage})` }} /> */}
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
@@ -99,8 +100,8 @@ const Content = styled.div`
     width: 503px;
 
     @media (max-width: 614px){
-            width: 100%;
-        }
+        width: calc(100% - 69px);
+    }
 
     h1 {
         font-size: 19px;
@@ -132,53 +133,70 @@ const Snippet = styled.a`
     border-radius: 11px;
     border: 1px solid #4D4D4D;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 
     @media (max-width: 614px){
         width: 100%;
-        min-height: 115px;
+        height: 115px;
     }
 
     .snippet-text {
-        padding-left: 20px;
+        width: 350px;
+        height: 100%;
+        padding: 10px 10px 10px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
         @media (max-width: 614px){
-            padding-left: 11px;
+            width: calc(100% - 95px);
+            padding: 7px 7px 8px 11px;
         }
     }
 
     h3 {
+        height: 38px;
         font-size: 16px;
         line-height: 19px;
         color: #CECECE;
         margin-bottom: 5px;
         word-break: break-all;
+        overflow: hidden !important;
 
         @media (max-width: 614px){
+            height: 26px;
             font-size: 11px;
         }
     }
 
-    h4 {
+    h4 {      
+        height: 39px;                                       
         font-size: 11px;
         line-height: 13px;
         color: #9B9595;
         margin-bottom: 13px;
         word-break: break-all;
+        overflow: hidden !important;
 
         @media (max-width: 614px){
+            height: 42px;
             font-size: 9px;
         }
     }
 
     h5 {
+        height: 13px;
         font-size: 11px;
         line-height: 13px;
         color: #CECECE;
         word-break: break-all;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
 
         @media (max-width: 614px){
+            height: 15px;
             font-size: 9px;
         }
     }
@@ -187,12 +205,20 @@ const Snippet = styled.a`
         width: 153.44px;
         height: 155px;
         border-radius: 0px 12px 13px 0px;
-        margin-left: 20px;
+        object-fit: cover;
 
         @media (max-width: 614px){
-            min-width: 95px;
-            min-height: 115px;
-            margin-left: 0;
+            width: 95px;
+            height: 115px;
+            object-fit: cover;
         }
     }
 `;
+
+// const SnippetImage = styled.div`
+//     width: 153.44px;
+//     height: 155px;
+//     border-radius: 0px 12px 13px 0px;
+//     background-size: cover;
+//     background-position: center;
+// `;

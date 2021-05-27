@@ -67,6 +67,10 @@ const Container = styled.div`
   top: 0;
   left: 0;
   z-index: 6;
+
+  @media (max-width: 600px) {
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  }
 `;
 
 const Menu = styled.div`
