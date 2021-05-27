@@ -7,8 +7,8 @@ import UserContext from "../../contexts/UserContext";
 
 export default function HomePage() {
     let history = useHistory();
-
     const { userData, setUserData } = useContext(UserContext);
+
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -30,7 +30,9 @@ export default function HomePage() {
             history.push('/timeline');
             setLoad(false);
 
+
             setUserData(resp.data);
+=
             localStorage.setItem('user', JSON.stringify(resp.data));
             const pessoa = JSON.parse(localStorage.getItem("user"));  
             setEmail("");

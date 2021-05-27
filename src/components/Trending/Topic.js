@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function Topic({item}){
 
     return(
-        <Link to={`/hashtag/:${item.name}`}>
+        <Link to={`/hashtag/${item.name}`}>         
             <Topics>
                 # {item.name}
             </Topics>
