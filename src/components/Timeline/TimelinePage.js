@@ -65,7 +65,7 @@ export default function Timeline() {
                         {
                             TimelinePosts.length === 0 && !enableLoading
                             ? <div className="no-post">Nenhum post encontrado :(</div> 
-                            : TimelinePosts.map((post, i) => <Post post={post} handleLikes={handleLikes} TimelinePosts={TimelinePosts} setLikedPosts={setLikedPosts} LikedPosts={LikedPosts} key={i} />)
+                            : TimelinePosts.map((post, i) => <Post post={post} RenderPosts={RenderPosts} handleLikes={handleLikes} TimelinePosts={TimelinePosts} setLikedPosts={setLikedPosts} LikedPosts={LikedPosts} key={i} />)
                         }
                         {enableLoading && <Loading />}
                     </TimelinePostsContainer>

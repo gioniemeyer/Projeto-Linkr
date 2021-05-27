@@ -8,22 +8,14 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import Modal from "../Modal";
 
-export default function Post({ post }) {
+export default function Post({ post, RenderPosts }) {
     const history = useHistory();
     const { userData } = useContext(UserContext);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
     const [modalOpen, setModalOpen] = useState(false);
 
-    console.log(userData.user.id); //userData.user.id
-    console.log(user.id);  // user.id;
-
     function goToUser() {
         history.push(`user/${user.id}`);
-    }
-
-    function deletePost() {
-        console.log("entrou");
-        setModalOpen(true);
     }
 
     return(
@@ -45,8 +37,8 @@ export default function Post({ post }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
-            {userData.user.id === user.id && <FaTrash onClick={deletePost} className="trash-icon" />}
-            <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+            {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+            <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
         </PostBox>
     );
 }
