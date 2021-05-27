@@ -10,18 +10,20 @@ import Header from "../Header";
 
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
-    const [enableLoading, setEnableLoading] = useState(false);
-
-    const { user } = useContext(UserContext);
+    const [enableLoading, setEnableLoading] = useState(true);
+    const [HashtagList, setHashtagList] = useState([]);
+    const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
 
     function getPosts() {
-        const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
+        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
+
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
         request.then(response => {
             setTimelinePosts(response.data.posts);
             setEnableLoading(false);
+
         });
 
         request.catch(error => {
@@ -34,6 +36,7 @@ export default function Timeline() {
     
     return(
         <>
+
             <Header />
             <TimelineBody>
                 <TimelineContainer>
