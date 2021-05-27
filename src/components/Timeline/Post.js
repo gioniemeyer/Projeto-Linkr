@@ -32,7 +32,7 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
     
    
   }
-//   handleLikes();
+   handleLikes();
   
   return (
     <PostBox>
@@ -45,18 +45,17 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
           likes.length !== 1 ?
             likes.length >= 3 ?
               likes.id === post.likes.id ? 
-              `Você, ${user.username} e outras ${likes.length-2} pessoas` : 
-              `${user.username}, ${user.username} e outras ${likes.length-2} pessoas` :
-              likes.id === post.likes.id ? 
-                `Você e ${likes.length-1} pessoas` : 
-                `${likes.length} pessoas` :
-            likes.id === (post.likes.id) ? 
-              `Você curtiu` :
-              `${likes[0]} pessoas`}>
+                `Você, ${user.username} e outras ${likes.length-2} pessoas` : 
+                `${user.username}, ${user.username} e outras ${likes.length-2} pessoas` :
+            likes.id === post.likes.id ? 
+              `Você e ${likes.length-1} pessoas` : 
+              `${likes.length} pessoas` :
+          likes.id === (post.likes.id) ? 
+            `Você curtiu` :
+            `${likes[0]} pessoas`}>
 
         {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
         <ReactTooltip place="bottom" type="light" effect="float"/>
-        {console.log(user.username)}
       </SideMenu>
       <Content>
         <Link to={`user/${user.id}`}>
