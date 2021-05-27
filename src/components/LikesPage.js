@@ -20,7 +20,6 @@ export default function LikesPage() {
             setLikedPosts(response.data.posts);
             setEnableLoading(false);
             console.log(userData);
-            LikedPosts();
         });
 
         request.catch(error => {
@@ -28,12 +27,6 @@ export default function LikesPage() {
             setEnableLoading(false);
         });
     }, []);
-
-    function LikedPosts() {
-        const array = likedPosts.filter(p => p.likes.user.id === userData.token || localUser.token);
-        setLikedPosts(array);
-        console.log(likedPosts);
-    }
 
     return(
         <TimelineBody>
