@@ -14,9 +14,11 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   let enabled=false
-
+  
   function LikeOrDeslike() {
     const body = [];
+   
+   
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
@@ -45,11 +47,11 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
       enabled=true
     }
   });
-
+  
   
   return (
     <PostBox>
-      <SideMenu>
+      <SideMenu enabled={enabled}>
         <Link to={`user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
@@ -57,15 +59,15 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
         <span data-tip={likes.length === 0 ? '' :
           likes.length !== 1 ?
             likes.length >= 3 ?
-              likes.id === post.likes.id ? 
-                `Você, ${user.username} e outras ${likes.length-2} pessoas` : 
-                `${user.username}, ${user.username} e outras ${likes.length-2} pessoas` :
-            likes.id === post.likes.id ? 
-              `Você e ${likes.length-1} pessoas` : 
-              `${likes.length} pessoas` :
-          likes.id === (post.likes.id) ? 
+              enabled ? 
+                `Você, ${likes[0]['user.username']} e outras ${likes.length-2} pessoas` : 
+                `${likes[0]['user.username']}, ${likes[1]['user.username']} e outras ${likes.length-2} pessoas` :
+            enabled ? 
+              `Você e ${localUser.user.username===likes[0]['user.username']?likes[1]['user.username']:likes[0]['user.username']} curtiram` : 
+              `${likes[0]['user.username']} e ${likes[1]['user.username']} curtiram` :
+          enabled ? 
             `Você curtiu` :
-            `${likes[0]} pessoas`}>
+            `${likes[0]['user.username']} curtiu`}>
 
         {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
         <ReactTooltip place="bottom" type="light" effect="float"/>
@@ -123,7 +125,7 @@ const SideMenu = styled.div`
   .heart-icon {
     width: 20px;
     height: 18px;
-    color: ${(props) => (props.enabled ? "red" : "#BABABA")};
+    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
     margin-bottom: 4px;
     @media (max-width: 614px) {
       width: 17px;
