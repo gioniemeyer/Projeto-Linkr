@@ -8,45 +8,45 @@ import Hashtag from "./Hashtag";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 
-export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
+export default function PostMyLikes({ post,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   let enabled=false
   
-  function LikeOrDeslike() {
-    const body = [];
+  // function LikeOrDeslike() {
+  //   const body = [];
    
    
-    const config = {
-      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
-    };
-    if(enabled===false){
-    const request = axios.post(
-      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
-      body,
-      config
-    );
+  //   const config = {
+  //     headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+  //   };
+  //   if(enabled===false){
+  //   const request = axios.post(
+  //     `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
+  //     body,
+  //     config
+  //   );
    
     
-    }else{
-      const request = axios.post(
-        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
-        body,
-        config
-      );
+  //   }else{
+  //     const request = axios.post(
+  //       `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
+  //       body,
+  //       config
+  //     );
       
-    }
-    RenderLikes()
-    RenderPosts()
-  }
+  //   }
+  //   RenderLikes()
+  //   RenderPosts()
+  // }
 
-  likes.forEach(element => {
-    if(element.userId===localUser.user.id){
-      enabled=true
-    }
-  });
+  // likes.forEach(element => {
+  //   if(element.userId===localUser.user.id){
+  //     enabled=true
+  //   }
+  // });
   
   
   return (
@@ -124,7 +124,7 @@ const SideMenu = styled.div`
   .heart-icon {
     width: 20px;
     height: 18px;
-    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+    color: "#AC0000"};
     margin-bottom: 4px;
     @media (max-width: 614px) {
       width: 17px;

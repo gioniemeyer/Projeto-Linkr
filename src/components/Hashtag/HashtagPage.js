@@ -6,31 +6,40 @@ import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
 import { useParams } from 'react-router-dom';
-import PostClickedUser from "../MyPosts/PostClickedUser";
+import PostClickedHashtag from "./PostClickedHashtag";
 
-export default function UserPage() {
+
+export default function HashtagPage() {
     const [UserPosts, setUserPosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(true);    
     const { userData } = useContext(UserContext);
-    const localUser = JSON.parse(localStorage.getItem("user"));  
-    const params = useParams();  
-    const [name, setName] = useState(""); 
+    const localUser = JSON.parse(localStorage.getItem("user"));    
+    const params = useParams(); 
+    const [name, setName] = useState("");
 
-    
-    useEffect(() => {
+    if (name !== params.hashtag) {
+
+       getHashtagPosts(); 
+    } 
+
+
+    function getHashtagPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
-        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts`, config);
+        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${params.hashtag}/posts`, config);
         
         request.then(response => {
             setUserPosts(response.data.posts);
-            setEnableLoading(false);      
-            setName(response.data.posts[0].user.username);                                        
+            setEnableLoading(false);               
+            setName(params.hashtag);                                        
         });    
         
         request.catch(error => {
-            alert("Houve uma falha ao obter os posts desse usuário, por favor, atualize a página.");
+            alert("Houve uma falha ao obter os posts dessa hashtag, por favor, atualize a página.");
         });
-    }, []);    
+
+    }
+    
+    useEffect(getHashtagPosts, []);
 
 
     return(
@@ -39,12 +48,14 @@ export default function UserPage() {
         <UserPostsBody>
             <UserPostsContainer>
                 <PostsContainer>
-                    <Title>{name}'s posts</Title>                    
-                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedUser post={post} key={i} />)}
+                    <Title># {name}</Title>                   
+
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">
-                    <Trending />
+                    <Trending getHashtagPosts={getHashtagPosts} />
+
                 </div>
             </UserPostsContainer>
         </UserPostsBody>

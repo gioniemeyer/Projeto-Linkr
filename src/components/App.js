@@ -6,9 +6,10 @@ import { useState } from "react";
 import TimelinePage from "./Timeline/TimelinePage";
 import Header from './Header';
 import Trending from "./Trending/Trending";
-import LikesPage from './LikesPage';
 import MyPostsPage from './MyPosts/MyPostsPage';
 import UserPage from './UserPage/UserPage';
+import HashtagPage from './Hashtag/HashtagPage';
+import LikesPage from './my-likes/LikesPage';
 
 
 export default function App() {
@@ -42,7 +43,11 @@ export default function App() {
           <Route path='/user/:id' exact>
             <Header />            
             <UserPage />
-          </Route>         
+          </Route>   
+          <Route path='/hashtag/:hashtag' exact>
+            <Header />            
+            <HashtagPage />
+          </Route>       
         </Switch>
       </UserContext.Provider>
     </BrowserRouter>
