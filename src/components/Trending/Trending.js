@@ -1,15 +1,34 @@
 import styled from "styled-components"
 import Topic from "./Topic"
+import UserContext from "../../contexts/UserContext";
+import { useEffect, useState, useContext } from "react";
+import axios from "axios"
 export default function Trending(){
+    const { userData } = useContext(UserContext);
+    const [topicList, setTopicList]=useState(0)
+    const pessoa = JSON.parse(localStorage.getItem("user"));
     const TrendList=['javascript','react','react-native','material','web-dev','mobile','css','html','node','sql']
+    useEffect(() => {
+        const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
+        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/trending`, config);
+       
+        request.then(response => {
+            setTopicList(response.data.hashtags);
+           
+        });
+
+        request.catch(error => {
+            
+        });
+    }, []);
+    
     return(
         <TrendingBox>
         <h1>
             trending
         </h1>
-        {TrendList.map((e)=>{
-            return  <Topic item={e}/>
-        })}
+        {topicList? topicList.map((e,i)=><Topic item={e} key={i}/>):''}
+        
         </TrendingBox>
     )
 }
@@ -17,7 +36,7 @@ export default function Trending(){
 const TrendingBox=styled.div`
     background-color: #171717;
     width: 301px;
-    height: 380px;
+    padding-bottom: 14px;
     border-radius: 16px;
     
     h1{

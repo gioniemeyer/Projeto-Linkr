@@ -11,25 +11,60 @@ import Header from "../Header";
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(true);
-    const { user } = useContext(UserContext);
+    const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
+    const [LikedPosts, setLikedPosts] = useState([]);
 
     function getPosts() {
-        const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
+        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };        
+        console.log(userData.token)
+    }
+   
+    
+    function RenderLikes(){
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+        const requestLikeds=axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked',config)
+        requestLikeds.then((response)=>setLikedPosts(response.data.posts));           
+        requestLikeds.catch(()=>console.log('erro'))
+        
+    }
+
+    function RenderPosts(){
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
         request.then(response => {
             setTimelinePosts(response.data.posts);
             setEnableLoading(false);
+            
         });
 
-        request.catch(error => {
+        request.catch(() => {
             alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
             setEnableLoading(false);
         });
     }
 
     useEffect(getPosts,[]);
+
+
+    function handleLikes(){
+        for(let i=0; i<TimelinePosts.length;i++){
+            for(let j=0;j<LikedPosts.length;j++){
+                if(TimelinePosts[i].id===LikedPosts[j].id){
+                    TimelinePosts[i].isLiked=true
+                }
+            }
+        }
+    }
+
+    useEffect(() => {
+        RenderPosts();
+        RenderLikes();
+        handleLikes()
+        ;
+        
+    }, []); 
     
     return(
         <>
@@ -42,7 +77,7 @@ export default function Timeline() {
                         {
                             TimelinePosts.length === 0 && !enableLoading
                             ? <div className="no-post">Nenhum post encontrado :(</div> 
-                            : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
+                            : TimelinePosts.map((post, i) => <Post post={post} handleLikes={handleLikes} TimelinePosts={TimelinePosts} setLikedPosts={setLikedPosts} LikedPosts={LikedPosts} key={i} />)
                         }
                         {enableLoading && <Loading />}
                     </TimelinePostsContainer>
@@ -52,7 +87,8 @@ export default function Timeline() {
                 </TimelineContainer>
             </TimelineBody>
         </>
-    );
+    )
+   
 }
 
 const TimelineBody = styled.div`
@@ -117,7 +153,7 @@ const Title = styled.h1`
     margin: 60px 0 45px 0;
 
     @media (max-width: 614px){
-        margin: 25px 0 19px 17px;
+        margin: 35px 0 19px 17px;
         font-size: 33px;
     }
-`;
+`

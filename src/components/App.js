@@ -7,15 +7,15 @@ import TimelinePage from "./Timeline/TimelinePage";
 import Header from './Header';
 import Trending from "./Trending/Trending";
 import MyPostsPage from './MyPosts/MyPostsPage';
+import UserPage from './UserPage/UserPage';
 
 
 export default function App() {
-  const [user, setUser] = useState('');
-  
+  const [userData, setUserData] = useState('');
 
   return (
     <BrowserRouter>
-      <UserContext.Provider value={{user, setUser}}>
+      <UserContext.Provider value={{userData, setUserData}}>
         <Switch>
           <Route path='/' exact>
             <HomePage />
@@ -33,7 +33,11 @@ export default function App() {
           <Route path='/my-posts' exact>
             <Header />            
             <MyPostsPage />
-          </Route>
+          </Route> 
+          <Route path='/user/:id' exact>
+            <Header />            
+            <UserPage />
+          </Route>         
         </Switch>
       </UserContext.Provider>
     </BrowserRouter>
