@@ -18,7 +18,6 @@ export default function Timeline() {
     const config = {
       headers: { Authorization: `Bearer ${localUser.token || userData.token}` },
     };
-   
   }
 
   function RenderLikes() {
@@ -29,9 +28,8 @@ export default function Timeline() {
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked",
       config
     );
-    requestLikeds.then((response) => setLikedPosts(response.data.posts));
+    requestLikeds.then(response => setLikedPosts(response.data.posts));
     requestLikeds.catch(() => console.log("erro"));
-    
   }
 
   function RenderPosts() {
