@@ -29,7 +29,7 @@ export default function HomePage() {
             setLoad(false);
             setUserData(resp.data);            
             localStorage.setItem('user', JSON.stringify(resp.data));
-            const pessoa = JSON.parse(localStorage.getItem("user"));
+            const pessoa = JSON.parse(localStorage.getItem("user"));  
             setEmail("");
             setPassword("");
         })
