@@ -10,10 +10,10 @@ import Modal from "../Modal";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 
-export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
+export default function Post({ post, TimelinePosts, LikedPosts, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
-  const texto = text.split(" ");
+  const texto = text.split("");
   const localUser = JSON.parse(localStorage.getItem("user"));
   let enabled = false;
   const [modalOpen, setModalOpen] = useState(false);
