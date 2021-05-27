@@ -33,21 +33,6 @@ export default function MyPostsPage() {
 
   useEffect(RenderPosts, []);
 
-    // useEffect(() => {
-    //     // const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
-    //     // const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${localUser.user.id || userData.user.id}/posts`, config);
-
-    //     // request.then(response => {
-    //     //     setMyPosts(response.data.posts);
-    //     //     setEnableLoading(false);            
-    //     // });
-
-    //     // request.catch(error => {
-    //     //     alert("Houve uma falha ao obter os seus posts, por favor, atualize a página.");
-    //     // });
-        
-    // // }, []);
-
     return(
         <>
         <Header />

@@ -1,13 +1,18 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Hashtag from "../Timeline/Hashtag";
 import { Link, useHistory, useParams } from "react-router-dom";
+import UserContext from "../../contexts/UserContext";
+import { FaTrash } from 'react-icons/fa';
+import Modal from "../Modal";
 
-export default function PostClickedHashtag({ post }) {
+export default function PostClickedHashtag({ post, RenderPosts }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;  
     const history = useHistory();
     const params = useParams();
+    const { userData } = useContext(UserContext);
+    const [modalOpen, setModalOpen] = useState(false);
     
     return(
         <PostBox>
@@ -32,6 +37,8 @@ export default function PostClickedHashtag({ post }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
+            {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+            <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
         </PostBox>
     );
 }
@@ -44,11 +51,22 @@ const PostBox = styled.li`
     padding: 17px 21px 20px 18px;
     border-radius: 16px;
     margin-bottom: 16px;    
+    position: relative;
 
     @media (max-width: 614px){
         width: 100%;
         border-radius: 0;
         padding: 9px 18px 15px 15px;
+    }
+
+    .trash-icon {
+      position: absolute;
+      top: 23px;
+      right: 23px;
+      color: #FFFFFF;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
     }
 `;
 
