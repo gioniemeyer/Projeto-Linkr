@@ -3,16 +3,18 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Hashtag from "./Hashtag";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 
-export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
+export default function Post({ post,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
+  const [LikedPosts, setLikedPosts] = useState([]);
+  const [TimelinePosts, setTimelinePosts] = useState([]);
 
   function LikeOrDeslike() {
     const body = [];
@@ -30,30 +32,41 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
     RenderLikes()
     RenderPosts()
     
-   
   }
-   handleLikes();
-  
+
+  function handleLikes() {
+    for (let i = 0; i < TimelinePosts.length; i++) {
+      for (let j = 0; j < LikedPosts.length; j++) {
+        if (TimelinePosts[i].id === LikedPosts[j].id) {
+          TimelinePosts[i].isLiked = true;
+          
+        }
+      }
+    }
+  }
+
+  handleLikes();
+   
   return (
     <PostBox>
       <SideMenu>
         <Link to={`user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
-        {isLiked?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
+        {likes.userId === userData.id?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
         <span data-tip={likes.length === 0 ? '' :
           likes.length !== 1 ?
             likes.length >= 3 ?
               likes.id === post.likes.id ? 
-                `Você, ${user.username} e outras ${likes.length-2} pessoas` : 
-                `${user.username}, ${user.username} e outras ${likes.length-2} pessoas` :
+                `Você, ${likes[0].user.username} e outras ${likes.length-2} pessoas` : 
+                `${likes[0].user.username}, ${likes[0].user.username} e outras ${likes.length-2} pessoas` :
             likes.id === post.likes.id ? 
               `Você e ${likes.length-1} pessoas` : 
               `${likes.length} pessoas` :
           likes.id === (post.likes.id) ? 
             `Você curtiu` :
             `${likes[0]} pessoas`}>
-
+              {console.log(likes)}
         {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
         <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>

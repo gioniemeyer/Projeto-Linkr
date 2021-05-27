@@ -28,8 +28,10 @@ export default function Timeline() {
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked",
       config
     );
-    requestLikeds.then(response => setLikedPosts(response.data.posts));
-    requestLikeds.catch(() => console.log("erro"));
+    requestLikeds.then(response => {
+      setLikedPosts(response.data.posts)
+      });
+    requestLikeds.catch(() => alert("erro ao curtir"));
   }
 
   function RenderPosts() {
@@ -51,17 +53,6 @@ export default function Timeline() {
   }
 
   useEffect(getPosts, []);
-
-  function handleLikes() {
-    for (let i = 0; i < TimelinePosts.length; i++) {
-      for (let j = 0; j < LikedPosts.length; j++) {
-        if (TimelinePosts[i].id === LikedPosts[j].id) {
-          TimelinePosts[i].isLiked = true;
-          
-        }
-      }
-    }
-  }
   
   useEffect(() => {
     RenderPosts();
@@ -83,10 +74,7 @@ export default function Timeline() {
               TimelinePosts.map((post, i) => (
                 <Post
                   post={post}
-                  handleLikes={handleLikes}
-                  TimelinePosts={TimelinePosts}
                   setLikedPosts={setLikedPosts}
-                  LikedPosts={LikedPosts}
                   key={i}
                   RenderLikes={RenderLikes}
                   RenderPosts={RenderPosts}
