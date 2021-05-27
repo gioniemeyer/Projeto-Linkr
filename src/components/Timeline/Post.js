@@ -6,9 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes, LikedPosts, setLikedPosts } = post;
-    const usernameClickedUser = user.username;
-    console.log(usernameClickedUser)
-
+    
     return(
         <PostBox>
             <SideMenu>
@@ -18,9 +16,8 @@ export default function Post({ post }) {
                 <AiOutlineHeart className="heart-icon" />
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
-            <Content>
-            <Link to={{pathname: `user/${user.id}`, usernameClickedUser }}>
-                {/* <Link to={`user/${user.id}`}> */}
+            <Content>           
+                <Link to={`user/${user.id}`}> 
                     <h1>{user.username}</h1>
                 </Link>
                 <h2><Hashtag text={text} /></h2>

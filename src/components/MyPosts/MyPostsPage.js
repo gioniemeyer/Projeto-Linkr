@@ -55,11 +55,12 @@ export default function MyPostsPage() {
 const MyPostsBody = styled.div`
     display: flex;
     justify-content: center;
-    background-color: #333333;
+    background-color: #333333; 
+       
 
     @media (max-width: 614px){
         flex-direction: column;
-        align-items: center;
+        align-items: center;        
     }
 `;
 
@@ -68,8 +69,8 @@ const MyPostsContainer = styled.div`
     display: flex;
     justify-content: space-between;
     font-family: 'Lato';
-    margin-top: 60px;
-    height: 100vh;
+    margin-top: 60px;   
+    min-height: 100vh;     
 
     @media (max-width: 614px){
         width: 100%;
@@ -98,7 +99,7 @@ const PostsContainer = styled.ul`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-right: 25px;
+    margin-right: 25px;   
 
     @media (max-width: 614px){
         width: 100%;

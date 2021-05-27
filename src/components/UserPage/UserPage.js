@@ -69,8 +69,9 @@ const UserPostsContainer = styled.div`
     display: flex;
     justify-content: space-between;
     font-family: 'Lato';
-    margin-top: 60px;    
-    height: 100vh;
+    margin-top: 60px; 
+    
+    min-height: 100vh;
 
     @media (max-width: 614px){
         width: 100%;
