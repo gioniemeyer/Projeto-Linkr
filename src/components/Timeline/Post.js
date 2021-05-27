@@ -1,29 +1,32 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
 import { FaTrash } from 'react-icons/fa';
-import axios from "axios"
 import UserContext from "../../contexts/UserContext";
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import Hashtag from "./Hashtag";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 export default function Post({ post }) {
+    const history = useHistory();
     const { userData } = useContext(UserContext);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
+
+    console.log(userData.user.id); //userData.user.id
+    console.log(user.id);  // user.id;
+
+    function goToUser() {
+        history.push(`user/${user.id}`);
+    }
 
     return(
         <PostBox>
             <SideMenu>
-                <Link to={`user/:${user.id}`}>
-                    <img src={user.avatar} alt="Imagem de avatar do usuário" />
-                </Link>
+                <img onClick={goToUser} src={user.avatar} alt="Imagem de avatar do usuário" />
                 <AiOutlineHeart className="heart-icon" />
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>           
-                <Link to={`user/${user.id}`}> 
-                    <h1>{user.username}</h1>
-                </Link>
+                 <h1 onClick={goToUser}>{user.username}</h1>
                 <h2><Hashtag text={text} /></h2>
                 <Snippet href={link} target="_blank">
                     <div className="snippet-text">
@@ -34,7 +37,7 @@ export default function Post({ post }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
-            <FaTrash className="trash-icon" />
+            {userData.user.id === user.id && <FaTrash className="trash-icon" />}
         </PostBox>
     );
 }
@@ -79,6 +82,7 @@ const SideMenu = styled.div`
         height: 50px;
         border-radius: 26.5px;
         margin-bottom: 19px;
+        cursor: pointer;
 
         @media (max-width: 614px){
             width: 40px;
@@ -116,10 +120,12 @@ const Content = styled.div`
     }
 
     h1 {
+        width: fit-content;
         font-size: 19px;
         color: #FFFFFF;
         margin-bottom: 7px;
         word-break: break-all;
+        cursor: pointer;
 
         @media (max-width: 614px){
             font-size: 17px;
