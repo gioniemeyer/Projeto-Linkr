@@ -5,8 +5,9 @@ import Hashtag from "./Hashtag";
 import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
-    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
-
+    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes, LikedPosts, setLikedPosts } = post;
+    const usernameClickedUser = user.username;
+    console.log(usernameClickedUser)
 
     return(
         <PostBox>
@@ -18,7 +19,7 @@ export default function Post({ post }) {
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
-            <Link to={{pathname: `user/${user.id}`, user }}>
+            <Link to={{pathname: `user/${user.id}`, usernameClickedUser }}>
                 {/* <Link to={`user/${user.id}`}> */}
                     <h1>{user.username}</h1>
                 </Link>
@@ -76,7 +77,7 @@ const SideMenu = styled.div`
     .heart-icon {
         width: 20px;
         height: 18px;
-        color: #FFFFFF;
+        color: ${(props) => (props.enabled ? "red" : "#BABABA")};
         margin-bottom: 4px;
 
         @media (max-width: 614px){

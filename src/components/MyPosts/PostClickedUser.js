@@ -4,8 +4,8 @@ import { useState } from "react";
 import Hashtag from "../Timeline/Hashtag";
 import { Link } from "react-router-dom";
 
-export default function Post({ post }) {
-    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
+export default function PostClickedUser({ post }) {
+    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
     
 
     return(

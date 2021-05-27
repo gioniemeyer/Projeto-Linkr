@@ -11,11 +11,11 @@ import UserPage from './UserPage/UserPage';
 
 
 export default function App() {
-  const [user, setUser] = useState('');  
+  const [userData, setUserData] = useState('');
 
   return (
     <BrowserRouter>
-      <UserContext.Provider value={{user, setUser}}>
+      <UserContext.Provider value={{userData, setUserData}}>
         <Switch>
           <Route path='/' exact>
             <HomePage />

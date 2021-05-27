@@ -7,20 +7,20 @@ import Loading from "../Timeline/Loading"
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
-import Post from "./Post";
+import Post from "./PostClickedUser";
 
 export default function MyPostsPage() {
     const [MyPosts, setMyPosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(true);
     const [HashtagList, setHashtagList] = useState([]);
-    const { user } = useContext(UserContext);
-    const pessoa = JSON.parse(localStorage.getItem("user"));
+    const { userData } = useContext(UserContext);
+    const localUser = JSON.parse(localStorage.getItem("user"));
     
   
 
     useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${user.token || pessoa.token}` } };
-        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${pessoa.user.id || user.user.id}/posts`, config);
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${localUser.user.id || userData.user.id}/posts`, config);
 
         request.then(response => {
             setMyPosts(response.data.posts);
