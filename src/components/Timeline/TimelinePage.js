@@ -16,17 +16,17 @@ export default function Timeline() {
     const [LikedPosts, setLikedPosts] = useState([]);
 
     function getPosts() {
-        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };      
-       
+        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };              
+
     }
    
     
     function RenderLikes(){
         const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const requestLikeds=axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked',config)
-        requestLikeds.then((response)=>setLikedPosts(response.data.posts));           
-        requestLikeds.catch()
-        
+        requestLikeds.then((response)=>setLikedPosts(response.data.posts));         
+        requestLikeds.catch();        
+
     }
 
     function RenderPosts(){

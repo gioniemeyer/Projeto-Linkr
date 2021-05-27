@@ -12,11 +12,11 @@ export default function UserPage() {
     const [UserPosts, setUserPosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(true);    
     const { userData } = useContext(UserContext);
-    const localUser = JSON.parse(localStorage.getItem("user"));    
-    const params = useParams();    
-    
-    const [name, setName] = useState("");
+    const localUser = JSON.parse(localStorage.getItem("user"));  
+    const params = useParams();  
+    const [name, setName] = useState(""); 
 
+    
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts`, config);
@@ -116,7 +116,7 @@ const Title = styled.h1`
     margin: 60px 0 45px 0;
 
     @media (max-width: 614px){
-        margin: 25px 0 19px 17px;
+        margin: 50px 0 19px 17px;
         font-size: 33px;
     }
 `;
