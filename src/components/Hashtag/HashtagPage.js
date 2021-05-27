@@ -18,7 +18,6 @@ export default function HashtagPage() {
     const [name, setName] = useState("");
 
     if (name !== params.hashtag) {
-
        getHashtagPosts(); 
     } 
 
