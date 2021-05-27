@@ -6,15 +6,17 @@ import Loading from "./Loading";
 import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
+import Header from "../Header"; 
 
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(false);
+
     const { user } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
 
-    useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${user.token || localUser.token}` } };
+    function getPosts() {
+        const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts", config);
 
         request.then(response => {
@@ -26,25 +28,31 @@ export default function Timeline() {
             alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
             setEnableLoading(false);
         });
-    }, []);
+    }
 
+    useEffect(getPosts,[]);
+    
     return(
-        <TimelineBody>
-            <TimelineContainer>
-                <TimelinePostsContainer>
-                    <Title>timeline</Title>
-                    {
-                        TimelinePosts.length === 0 && !enableLoading
-                        ? <div className="no-post">Nenhum post encontrado :(</div> 
-                        : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
-                    }
-                    {enableLoading && <Loading />}
-                </TimelinePostsContainer>
-                <div className="trending">
-                    <Trending />
-                </div>
-            </TimelineContainer>
-        </TimelineBody>
+        <>
+            <Header />
+            <TimelineBody>
+                <TimelineContainer>
+                    <TimelinePostsContainer>
+                        <Title>timeline</Title>
+                        <NewPost getPosts={getPosts} />
+                        {
+                            TimelinePosts.length === 0 && !enableLoading
+                            ? <div className="no-post">Nenhum post encontrado :(</div> 
+                            : TimelinePosts.map((post, i) => <Post post={post} key={i} />)
+                        }
+                        {enableLoading && <Loading />}
+                    </TimelinePostsContainer>
+                    <div className="trending">
+                        <Trending />
+                    </div>
+                </TimelineContainer>
+            </TimelineBody>
+        </>
     );
 }
 
@@ -104,11 +112,13 @@ const TimelinePostsContainer = styled.ul`
 
 const Title = styled.h1`
     font-family: 'Oswald';
+    font-weight: 700;
     font-size: 43px;
     color: #FFFFFF;
     margin: 60px 0 45px 0;
 
     @media (max-width: 614px){
-        margin-left: 17px;
+        margin: 25px 0 19px 17px;
+        font-size: 33px;
     }
 `;
