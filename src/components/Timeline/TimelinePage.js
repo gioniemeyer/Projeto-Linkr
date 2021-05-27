@@ -10,7 +10,8 @@ import Header from "../Header";
 
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
-    const [enableLoading, setEnableLoading] = useState(true);
+    const [enableLoading, setEnableLoading] = useState(false);
+
     const { user } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
 
