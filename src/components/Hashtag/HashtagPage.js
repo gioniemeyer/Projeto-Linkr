@@ -1,76 +1,80 @@
 import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
 import Loading from "../Timeline/Loading"
-
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
-import Post from "./PostClickedUser";
+import { useParams } from 'react-router-dom';
+import PostClickedUser from "../MyPosts/PostClickedUser";
 
-export default function MyPostsPage() {
-    const [MyPosts, setMyPosts] = useState([]);
-    const [enableLoading, setEnableLoading] = useState(true);
-    const [HashtagList, setHashtagList] = useState([]);
+export default function HashtagPage() {
+    const [UserPosts, setUserPosts] = useState([]);
+    const [enableLoading, setEnableLoading] = useState(true);    
     const { userData } = useContext(UserContext);
-    const localUser = JSON.parse(localStorage.getItem("user"));
-    
-  
+    const localUser = JSON.parse(localStorage.getItem("user"));    
+    const params = useParams(); 
+    const [name, setName] = useState("");
 
-    useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
-        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${localUser.user.id || userData.user.id}/posts`, config);
+    if (name !== params.hashtag) {
+        
+    }
 
+    function getHashtagPosts() {
+        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
+        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${params.hashtag}/posts`, config);
+        
         request.then(response => {
-            setMyPosts(response.data.posts);
-            setEnableLoading(false);            
-        });
-
+            setUserPosts(response.data.posts);
+            setEnableLoading(false);                 
+            setName(params.hashtag);                                        
+        });    
+        
         request.catch(error => {
-            alert("Houve uma falha ao obter os seus posts, por favor, atualize a página.");
+            alert("Houve uma falha ao obter os posts dessa hashtag, por favor, atualize a página.");
         });
-    }, []);
+    }
+
+    useEffect(getHashtagPosts, []);
 
     return(
         <>
         <Header />
-        <MyPostsBody>
-            <MyPostsContainer>
+        <UserPostsBody>
+            <UserPostsContainer>
                 <PostsContainer>
-                    <Title>my posts</Title>                    
-                    {MyPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <Post post={post} key={i} />)}
+                    <Title># {name}</Title>                    
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedUser post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">
                     <Trending />
                 </div>
-            </MyPostsContainer>
-        </MyPostsBody>
+            </UserPostsContainer>
+        </UserPostsBody>
         </>
     );
 }
 
-
-const MyPostsBody = styled.div`
+const UserPostsBody = styled.div`
     display: flex;
     justify-content: center;
-    background-color: #333333; 
-       
+    background-color: #333333;  
 
     @media (max-width: 614px){
         flex-direction: column;
-        align-items: center;        
+        align-items: center;
     }
 `;
 
-const MyPostsContainer = styled.div`
+const UserPostsContainer = styled.div`
     width: 937px;
     display: flex;
     justify-content: space-between;
     font-family: 'Lato';
-    margin-top: 60px;   
-    min-height: 100vh;     
+    margin-top: 60px; 
+    
+    min-height: 100vh;
 
     @media (max-width: 614px){
         width: 100%;
@@ -99,7 +103,7 @@ const PostsContainer = styled.ul`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-right: 25px;   
+    margin-right: 25px;
 
     @media (max-width: 614px){
         width: 100%;

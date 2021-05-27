@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
-
 import axios from "axios"
 import UserContext from "../../contexts/UserContext";
 import { useEffect, useState, useContext } from "react";
@@ -10,23 +9,18 @@ import { Link } from "react-router-dom";
 export default function Post({ post }) {
     const { userData } = useContext(UserContext);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
-   
- 
-
 
     return(
         <PostBox>
             <SideMenu>
-
                 <Link to={`user/:${user.id}`}>
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
                 </Link>
                 <AiOutlineHeart className="heart-icon" />
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
-
             </SideMenu>
-            <Content>
-                <Link to={`user/:${user.id}`}>
+            <Content>           
+                <Link to={`user/${user.id}`}> 
                     <h1>{user.username}</h1>
                 </Link>
                 <h2><Hashtag text={text} /></h2>
@@ -83,7 +77,7 @@ const SideMenu = styled.div`
     .heart-icon {
         width: 20px;
         height: 18px;
-        color: #FFFFFF;
+        color: ${(props) => (props.enabled ? "red" : "#BABABA")};
         margin-bottom: 4px;
 
         @media (max-width: 614px){

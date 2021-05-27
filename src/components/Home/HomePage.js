@@ -7,9 +7,7 @@ import UserContext from "../../contexts/UserContext";
 
 export default function HomePage() {
     let history = useHistory();
-
     const { userData, setUserData } = useContext(UserContext);
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [load, setLoad] = useState(false);
@@ -18,29 +16,29 @@ export default function HomePage() {
         e.preventDefault();
 
         if(!(email && password)) {
-            alert('Favor, preencha todos os campos')
+            alert('Favor, preencha todos os campos');
             return '';
         }
         
         setLoad(true);
 
         const body = {email, password};        
-        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body)
+        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body);
+        
         request.then(resp => {
             history.push('/timeline');
             setLoad(false);
-
-            setUserData(resp.data);
+            setUserData(resp.data);            
             localStorage.setItem('user', JSON.stringify(resp.data));
-            const pessoa = JSON.parse(localStorage.getItem("user"));  
+            const pessoa = JSON.parse(localStorage.getItem("user"));
             setEmail("");
             setPassword("");
+        });
 
-        })
         request.catch(error => {
             alert("email/senha incorretos");
             setLoad(false);
-        })
+        });
     }
 
     return(
@@ -59,7 +57,6 @@ export default function HomePage() {
                     <A>First time? Create an account!</A>
                 </Link>
             </Form>
- 
         </Body>
     )
 }

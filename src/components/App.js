@@ -7,12 +7,11 @@ import TimelinePage from "./Timeline/TimelinePage";
 import Header from './Header';
 import Trending from "./Trending/Trending";
 import MyPostsPage from './MyPosts/MyPostsPage';
+import UserPage from './UserPage/UserPage';
 
 
 export default function App() {
-
   const [userData, setUserData] = useState('');
-
 
   return (
     <BrowserRouter>
@@ -34,7 +33,11 @@ export default function App() {
           <Route path='/my-posts' exact>
             <Header />            
             <MyPostsPage />
-          </Route>
+          </Route> 
+          <Route path='/user/:id' exact>
+            <Header />            
+            <UserPage />
+          </Route>         
         </Switch>
       </UserContext.Provider>
     </BrowserRouter>
