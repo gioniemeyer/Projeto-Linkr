@@ -8,8 +8,7 @@ export default function PostClickedHashtag({ post }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;  
     const history = useHistory();
     const params = useParams();
-    console.log(params);
-
+    
     return(
         <PostBox>
             <SideMenu>

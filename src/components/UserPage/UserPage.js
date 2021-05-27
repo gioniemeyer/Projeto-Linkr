@@ -14,13 +14,8 @@ export default function UserPage() {
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));    
     const params = useParams();  
-    const [name, setName] = useState("");
-    console.log(params)
-
-    if (name == params.id) {
-        console.log("entrou")
-    } 
-
+    const [name, setName] = useState(""); 
+    
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts`, config);
