@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import UserContext from "../../contexts/UserContext";
 
-export default function NewPost({ getPosts }) {
+export default function NewPost({ RenderPosts }) {
     const { user } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [link, setLink] = useState("");
@@ -21,7 +21,7 @@ export default function NewPost({ getPosts }) {
             setDisabled(false);
             setLink("");
             setText("");
-            getPosts();
+            RenderPosts();
         })
 
         request.catch(error => {

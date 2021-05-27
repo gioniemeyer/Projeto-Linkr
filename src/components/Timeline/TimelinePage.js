@@ -14,13 +14,6 @@ export default function Timeline() {
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [LikedPosts, setLikedPosts] = useState([]);
 
-  function getPosts() {
-    const config = {
-      headers: { Authorization: `Bearer ${localUser.token || userData.token}` },
-    };
-   
-  }
-
   function RenderLikes() {
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
@@ -30,8 +23,6 @@ export default function Timeline() {
       config
     );
     requestLikeds.then((response) => setLikedPosts(response.data.posts));
-  
-    
   }
 
   function RenderPosts() {
@@ -52,18 +43,9 @@ export default function Timeline() {
     ;
   }
 
-  useEffect(getPosts, []);
+  
 
-  function handleLikes() {
-    for (let i = 0; i < TimelinePosts.length; i++) {
-      for (let j = 0; j < LikedPosts.length; j++) {
-        if (TimelinePosts[i].id === LikedPosts[j].id) {
-          TimelinePosts[i].isLiked = true;
-          
-        }
-      }
-    }
-  }
+ 
   
   useEffect(() => {
     RenderPosts();
@@ -78,14 +60,13 @@ export default function Timeline() {
         <TimelineContainer>
           <TimelinePostsContainer>
             <Title>timeline</Title>
-            <NewPost getPosts={getPosts} />
+            <NewPost RenderPosts={RenderPosts} />
             {TimelinePosts.length === 0 && !enableLoading ? (
               <div className="no-post">Nenhum post encontrado :(</div>
             ) : (
               TimelinePosts.map((post, i) => (
                 <Post
                   post={post}
-                  handleLikes={handleLikes}
                   TimelinePosts={TimelinePosts}
                   setLikedPosts={setLikedPosts}
                   LikedPosts={LikedPosts}
@@ -152,13 +133,14 @@ const TimelinePostsContainer = styled.ul`
   }
 `;
 const Title = styled.h1`
-  font-family: "Oswald";
-  font-weight: 700;
-  font-size: 43px;
-  color: #ffffff;
-  margin: 60px 0 45px 0;
-  @media (max-width: 614px) {
-    margin: 25px 0 19px 17px;
-    font-size: 33px;
-  }
-`;
+    font-family: 'Oswald';
+    font-weight: 700;
+    font-size: 43px;
+    color: #FFFFFF;
+    margin: 60px 0 45px 0;
+
+    @media (max-width: 614px){
+        margin: 35px 0 19px 17px;
+        font-size: 33px;
+    }
+`

@@ -8,7 +8,7 @@ import Hashtag from "./Hashtag";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 
-export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
+export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
   const texto = text.split(" ");
@@ -141,19 +141,23 @@ const SideMenu = styled.div`
   }
 `;
 const Content = styled.div`
-  width: 503px;
-  @media (max-width: 614px) {
-    width: 100%;
-  }
-  h1 {
-    font-size: 19px;
-    color: #ffffff;
-    margin-bottom: 7px;
-    word-break: break-all;
-    @media (max-width: 614px) {
-      font-size: 17px;
+    width: 503px;
+
+    @media (max-width: 614px){
+        width: calc(100% - 69px);
     }
-  }
+
+    h1 {
+        font-size: 19px;
+        color: #FFFFFF;
+        margin-bottom: 7px;
+        word-break: break-all;
+
+        @media (max-width: 614px){
+            font-size: 17px;
+        }
+    }
+  
   h2 {
     font-size: 17px;
     line-height: 20px;
@@ -166,61 +170,89 @@ const Content = styled.div`
   }
 `;
 const Snippet = styled.a`
-  width: 503px;
-  height: 155px;
-  border-radius: 11px;
-  border: 1px solid #4d4d4d;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @media (max-width: 614px) {
-    width: 100%;
-    min-height: 115px;
-  }
-  .snippet-text {
-    padding-left: 20px;
-    @media (max-width: 614px) {
-      padding-left: 11px;
-    }
-  }
-  h3 {
-    font-size: 16px;
-    line-height: 19px;
-    color: #cecece;
-    margin-bottom: 5px;
-    word-break: break-all;
-    @media (max-width: 614px) {
-      font-size: 11px;
-    }
-  }
-  h4 {
-    font-size: 11px;
-    line-height: 13px;
-    color: #9b9595;
-    margin-bottom: 13px;
-    word-break: break-all;
-    @media (max-width: 614px) {
-      font-size: 9px;
-    }
-  }
-  h5 {
-    font-size: 11px;
-    line-height: 13px;
-    color: #cecece;
-    word-break: break-all;
-    @media (max-width: 614px) {
-      font-size: 9px;
-    }
-  }
-  img {
-    width: 153.44px;
+    width: 503px;
     height: 155px;
-    border-radius: 0px 12px 13px 0px;
-    margin-left: 20px;
-    @media (max-width: 614px) {
-      min-width: 95px;
-      min-height: 115px;
-      margin-left: 0;
+    border-radius: 11px;
+    border: 1px solid #4D4D4D;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media (max-width: 614px){
+        width: 100%;
+        height: 115px;
     }
-  }
+
+    .snippet-text {
+        width: 350px;
+        height: 100%;
+        padding: 10px 10px 10px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        @media (max-width: 614px){
+            width: calc(100% - 95px);
+            padding: 7px 7px 8px 11px;
+        }
+    }
+
+    h3 {
+        height: 38px;
+        font-size: 16px;
+        line-height: 19px;
+        color: #CECECE;
+        margin-bottom: 5px;
+        word-break: break-all;
+        overflow: hidden !important;
+
+        @media (max-width: 614px){
+            height: 26px;
+            font-size: 11px;
+        }
+    }
+
+    h4 {      
+        height: 39px;                                       
+        font-size: 11px;
+        line-height: 13px;
+        color: #9B9595;
+        margin-bottom: 13px;
+        word-break: break-all;
+        overflow: hidden !important;
+
+        @media (max-width: 614px){
+            height: 42px;
+            font-size: 9px;
+        }
+    }
+
+    h5 {
+        height: 13px;
+        font-size: 11px;
+        line-height: 13px;
+        color: #CECECE;
+        word-break: break-all;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+
+        @media (max-width: 614px){
+            height: 15px;
+            font-size: 9px;
+        }
+    }
+
+    img {
+        width: 153.44px;
+        height: 155px;
+        border-radius: 0px 12px 13px 0px;
+        object-fit: cover;
+
+        @media (max-width: 614px){
+            width: 95px;
+            height: 115px;
+            object-fit: cover;
+        }
+    }
 `;
