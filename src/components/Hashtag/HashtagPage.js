@@ -22,9 +22,6 @@ export default function HashtagPage() {
        getHashtagPosts(); 
     } 
 
-        
-    }
-
 
     function getHashtagPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
@@ -40,7 +37,8 @@ export default function HashtagPage() {
             alert("Houve uma falha ao obter os posts dessa hashtag, por favor, atualize a página.");
         });
 
-
+    }
+    
     useEffect(getHashtagPosts, []);
 
 
