@@ -30,7 +30,7 @@ export default function Timeline() {
       config
     );
     requestLikeds.then((response) => setLikedPosts(response.data.posts));
-    requestLikeds.catch(() => console.log("erro"));
+  
     
   }
 

@@ -13,26 +13,39 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
+  let enabled=false
 
   function LikeOrDeslike() {
     const body = [];
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
+    if(enabled===false){
     const request = axios.post(
       `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
       body,
       config
     );
-    request.then(() => console.log("post curtido"));
-    console.log(TimelinePosts)
-    console.log(LikedPosts)
+   
+    
+    }else{
+      const request = axios.post(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
+        body,
+        config
+      );
+      
+    }
     RenderLikes()
     RenderPosts()
-    
-   
   }
-   handleLikes();
+
+  likes.forEach(element => {
+    if(element.userId===localUser.user.id){
+      enabled=true
+    }
+  });
+
   
   return (
     <PostBox>
@@ -40,7 +53,7 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
         <Link to={`user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
-        {isLiked?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
+        {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
         <span data-tip={likes.length === 0 ? '' :
           likes.length !== 1 ?
             likes.length >= 3 ?
