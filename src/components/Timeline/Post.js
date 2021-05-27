@@ -6,9 +6,11 @@ import UserContext from "../../contexts/UserContext";
 import { useContext } from "react";
 import Hashtag from "./Hashtag";
 import {AiFillHeart} from 'react-icons/ai';
+import ReactTooltip from 'react-tooltip';
+
 export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes,isLiked } =post;
+  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
 
@@ -30,7 +32,7 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
     
    
   }
-  handleLikes();
+   handleLikes();
   
   return (
     <PostBox>
@@ -39,9 +41,21 @@ export default function Post({ post,handleLikes,TimelinePosts,LikedPosts,RenderL
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
         {isLiked?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
-        <span>
-          {likes.length} {likes.length === 1 ? "like" : "likes"}
-        </span>
+        <span data-tip={likes.length === 0 ? '' :
+          likes.length !== 1 ?
+            likes.length >= 3 ?
+              likes.id === post.likes.id ? 
+                `Você, ${user.username} e outras ${likes.length-2} pessoas` : 
+                `${user.username}, ${user.username} e outras ${likes.length-2} pessoas` :
+            likes.id === post.likes.id ? 
+              `Você e ${likes.length-1} pessoas` : 
+              `${likes.length} pessoas` :
+          likes.id === (post.likes.id) ? 
+            `Você curtiu` :
+            `${likes[0]} pessoas`}>
+
+        {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
+        <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>
       <Content>
         <Link to={`user/${user.id}`}>
