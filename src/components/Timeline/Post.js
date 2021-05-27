@@ -2,20 +2,28 @@ import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
 import { FaTrash } from 'react-icons/fa';
 import UserContext from "../../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Hashtag from "./Hashtag";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
+import Modal from "../Modal";
 
 export default function Post({ post }) {
     const history = useHistory();
     const { userData } = useContext(UserContext);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
+    const [modalOpen, setModalOpen] = useState(false);
 
     console.log(userData.user.id); //userData.user.id
     console.log(user.id);  // user.id;
 
     function goToUser() {
         history.push(`user/${user.id}`);
+    }
+
+    function deletePost() {
+        console.log("entrou");
+        setModalOpen(true);
     }
 
     return(
@@ -37,7 +45,8 @@ export default function Post({ post }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
-            {userData.user.id === user.id && <FaTrash className="trash-icon" />}
+            {userData.user.id === user.id && <FaTrash onClick={deletePost} className="trash-icon" />}
+            <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
         </PostBox>
     );
 }
@@ -65,6 +74,7 @@ const PostBox = styled.li`
         color: #FFFFFF;
         width: 14px;
         height: 14px;
+        cursor: pointer;
     }
 `;
 
