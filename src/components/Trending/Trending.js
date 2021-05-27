@@ -9,23 +9,20 @@ export default function Trending({ getHashtagPosts }){
     const [topicList, setTopicList]=useState(0)
     const pessoa = JSON.parse(localStorage.getItem("user"));
     const TrendList=['javascript','react','react-native','material','web-dev','mobile','css','html','node','sql']
-    
-   
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/trending`, config);
        
         request.then(response => {
-            setTopicList(response.data.hashtags);                      
+
+            setTopicList(response.data.hashtags);
+
         });
 
         request.catch(error => {
             
         });
     }, []);
-
-    
-
     return(
         <TrendingBox>
         <h1>

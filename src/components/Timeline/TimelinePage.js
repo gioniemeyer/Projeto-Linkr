@@ -16,6 +16,7 @@ export default function Timeline() {
     const [LikedPosts, setLikedPosts] = useState([]);
 
     function getPosts() {
+
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };              
 
     }
@@ -36,7 +37,6 @@ export default function Timeline() {
         request.then(response => {
             setTimelinePosts(response.data.posts);
             setEnableLoading(false);
-            
         });
 
         request.catch(() => {
@@ -68,6 +68,7 @@ export default function Timeline() {
     
     return(
         <>
+
             <Header />
             <TimelineBody>
                 <TimelineContainer>

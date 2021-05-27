@@ -1,10 +1,15 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
-import { useState } from "react";
+
+import axios from "axios"
+import UserContext from "../../contexts/UserContext";
+import { useEffect, useState, useContext } from "react";
 import Hashtag from "./Hashtag";
 import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
+
+    const { userData } = useContext(UserContext);
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes, LikedPosts, setLikedPosts } = post;
     
     return(
@@ -15,6 +20,7 @@ export default function Post({ post }) {
                 </Link>
                 <AiOutlineHeart className="heart-icon" />
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
+
             </SideMenu>
             <Content>           
                 <Link to={`user/${user.id}`}> 
