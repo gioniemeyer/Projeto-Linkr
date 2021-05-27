@@ -6,8 +6,8 @@ import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
 import { useParams } from 'react-router-dom';
-import PostClickedUser from "../MyPosts/PostClickedUser";
 import PostClickedHashtag from "./PostClickedHashtag";
+
 
 export default function HashtagPage() {
     const [UserPosts, setUserPosts] = useState([]);
@@ -18,8 +18,10 @@ export default function HashtagPage() {
     const [name, setName] = useState("");
 
     if (name !== params.hashtag) {
+
        getHashtagPosts(); 
     } 
+
 
     function getHashtagPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
@@ -27,15 +29,16 @@ export default function HashtagPage() {
         
         request.then(response => {
             setUserPosts(response.data.posts);
-            setEnableLoading(false);                  
+            setEnableLoading(false);               
             setName(params.hashtag);                                        
         });    
         
         request.catch(error => {
             alert("Houve uma falha ao obter os posts dessa hashtag, por favor, atualize a página.");
         });
-    }
 
+    }
+    
     useEffect(getHashtagPosts, []);
 
     return(
@@ -44,7 +47,8 @@ export default function HashtagPage() {
         <UserPostsBody>
             <UserPostsContainer>
                 <PostsContainer>
-                    <Title># {name}</Title>                    
+                    <Title># {name}</Title>                   
+
                     {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>

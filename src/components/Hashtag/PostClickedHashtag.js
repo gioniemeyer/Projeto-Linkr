@@ -12,14 +12,14 @@ export default function PostClickedHashtag({ post }) {
     return(
         <PostBox>
             <SideMenu>
-                <Link onClick={() => history.push(`/user/${user.id}`)} >
+                <Link to={`/user/${user.id}`} > 
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
                 </Link>
                 <AiOutlineHeart className="heart-icon" />
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
-                <Link onClick={() => history.push(`/user/${user.id}`)} >
+                <Link to={`/user/${user.id}`} >
                     <h1>{user.username}</h1>
                 </Link>
                 <h2><Hashtag text={text} /></h2>
