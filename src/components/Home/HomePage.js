@@ -9,7 +9,7 @@ export default function HomePage() {
     let history = useHistory();
     const { userData, setUserData } = useContext(UserContext);
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');   
+    const [password, setPassword] = useState('');
     const [load, setLoad] = useState(false);
 
     function login(e) {

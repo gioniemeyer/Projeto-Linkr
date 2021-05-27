@@ -12,9 +12,10 @@ export default function UserPage() {
     const [UserPosts, setUserPosts] = useState([]);
     const [enableLoading, setEnableLoading] = useState(true);    
     const { userData } = useContext(UserContext);
-    const localUser = JSON.parse(localStorage.getItem("user"));    
+    const localUser = JSON.parse(localStorage.getItem("user"));  
     const params = useParams();  
     const [name, setName] = useState(""); 
+
     
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
