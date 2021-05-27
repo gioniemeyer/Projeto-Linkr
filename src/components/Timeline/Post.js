@@ -5,7 +5,7 @@ import axios from 'axios';
 import UserContext from "../../contexts/UserContext";
 import { useContext } from "react";
 import Hashtag from "./Hashtag";
-
+import ReactTooltip from "react-tooltip";
 
 export default function Post({ post,LikedsIds}) {
     const { userData } = useContext(UserContext);
@@ -31,7 +31,9 @@ export default function Post({ post,LikedsIds}) {
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
                 </Link>
                 <AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>
-                <span>{likes.length} {likes.length === 1 ? "like" : "likes"}</span>
+                <span data-tip={ likes.length}>{likes.length} {likes.length === 1 ? "like" : "likes"}</span>
+                <ReactTooltip place="bottom" type="light" effect="float"/>
+                {console.log(likes)}
             </SideMenu>
             <Content>
                 <Link to={`user/${user.id}`}>
