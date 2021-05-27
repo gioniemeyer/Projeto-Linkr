@@ -29,7 +29,6 @@ export default function Post({ post }) {
                         <h4>{linkDescription}</h4>
                         <h5>{link}</h5>
                     </div>
-                    {/* <SnippetImage style={{ backgroundImage: `url(${linkImage})` }} /> */}
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
@@ -214,11 +213,3 @@ const Snippet = styled.a`
         }
     }
 `;
-
-// const SnippetImage = styled.div`
-//     width: 153.44px;
-//     height: 155px;
-//     border-radius: 0px 12px 13px 0px;
-//     background-size: cover;
-//     background-position: center;
-// `;
