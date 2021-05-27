@@ -13,9 +13,7 @@ export default function UserPage() {
     const [enableLoading, setEnableLoading] = useState(true);    
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));    
-    const params = useParams();
-    console.log(params.id)
-    
+    const params = useParams();  
     const [name, setName] = useState("");
 
     useEffect(() => {
