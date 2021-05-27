@@ -15,6 +15,11 @@ export default function UserPage() {
     const localUser = JSON.parse(localStorage.getItem("user"));    
     const params = useParams();  
     const [name, setName] = useState("");
+    console.log(params)
+
+    if (name == params.id) {
+        console.log("entrou")
+    } 
 
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
@@ -115,7 +120,7 @@ const Title = styled.h1`
     margin: 60px 0 45px 0;
 
     @media (max-width: 614px){
-        margin: 25px 0 19px 17px;
+        margin: 50px 0 19px 17px;
         font-size: 33px;
     }
 `;
