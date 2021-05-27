@@ -8,6 +8,7 @@ import Header from './Header';
 import Trending from "./Trending/Trending";
 import MyPostsPage from './MyPosts/MyPostsPage';
 import UserPage from './UserPage/UserPage';
+import HashtagPage from './Hashtag/HashtagPage';
 
 
 export default function App() {
@@ -37,7 +38,11 @@ export default function App() {
           <Route path='/user/:id' exact>
             <Header />            
             <UserPage />
-          </Route>         
+          </Route>   
+          <Route path='/hashtag/:hashtag' exact>
+            <Header />            
+            <HashtagPage />
+          </Route>       
         </Switch>
       </UserContext.Provider>
     </BrowserRouter>

@@ -3,20 +3,24 @@ import { useState, useContext } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import ClickAwayListener from 'react-click-away-listener';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 
 export default function Header() {  
   const [open, setOpen] = useState(false);
   const { user } = useContext(UserContext);	  
-  const pessoa = JSON.parse(localStorage.getItem("user")); 
-
+  const pessoa = JSON.parse(localStorage.getItem("user"));   
+  const history = useHistory();
+  
+  function goToTimeline() {   
+    history.push("/timeline")
+  }
 
   return (    
    <>
    <ClickAwayListener onClickAway={() => setOpen(false)}> 
       <Container>      
-        <Title>linkr</Title>                     
+        <Title onClick={goToTimeline}>linkr</Title>                     
         <RightSide>
           {open ? (          
             <Button onClick={() => setOpen(false)}>
@@ -106,6 +110,7 @@ const Title = styled.div`
   padding-left: 28px;
   font-family: 'Passion One';
   line-height: 53.95px;
+  cursor: pointer;
 
   @media (max-width: 600px) {
     width: 99px;

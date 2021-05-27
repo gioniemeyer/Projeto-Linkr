@@ -3,31 +3,35 @@ import Topic from "./Topic"
 import UserContext from "../../contexts/UserContext";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios"
-export default function Trending(){
+
+export default function Trending({ getHashtagPosts }){
     const { userData } = useContext(UserContext);
     const [topicList, setTopicList]=useState(0)
     const pessoa = JSON.parse(localStorage.getItem("user"));
     const TrendList=['javascript','react','react-native','material','web-dev','mobile','css','html','node','sql']
+    
+   
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/trending`, config);
        
         request.then(response => {
-            setTopicList(response.data.hashtags);
-           
+            setTopicList(response.data.hashtags);                      
         });
 
         request.catch(error => {
             
         });
     }, []);
+
     
+
     return(
         <TrendingBox>
         <h1>
             trending
         </h1>
-        {topicList? topicList.map((e,i)=><Topic item={e} key={i}/>):''}
+        {topicList? topicList.map((e,i)=><Topic onClick={getHashtagPosts} item={e} key={i}/>):''}
         
         </TrendingBox>
     )

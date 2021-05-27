@@ -2,23 +2,24 @@ import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
 import { useState } from "react";
 import Hashtag from "../Timeline/Hashtag";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
-export default function PostClickedUser({ post }) {
-    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
+export default function PostClickedHashtag({ post }) {
+    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;  
     const history = useHistory();
-
+    const params = useParams();
+    
     return(
         <PostBox>
             <SideMenu>
-                <Link onClick={() => history.push(`/user/${user.id}`)}>
+                <Link onClick={() => history.push(`/user/${user.id}`)} >
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
                 </Link>
                 <AiOutlineHeart className="heart-icon" />
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
-                <Link onClick={() => history.push(`/user/${user.id}`)}>
+                <Link onClick={() => history.push(`/user/${user.id}`)} >
                     <h1>{user.username}</h1>
                 </Link>
                 <h2><Hashtag text={text} /></h2>

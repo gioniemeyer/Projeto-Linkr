@@ -17,8 +17,7 @@ export default function Timeline() {
     const [LikedPosts, setLikedPosts] = useState([]);
 
     function getPosts() {
-        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };      
-       
+        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };                
     }
    
     
@@ -26,8 +25,7 @@ export default function Timeline() {
         const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const requestLikeds=axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked',config)
         requestLikeds.then((response)=>setLikedPosts(response.data.posts));           
-        requestLikeds.catch()
-        
+        requestLikeds.catch();        
     }
 
     function RenderPosts(){

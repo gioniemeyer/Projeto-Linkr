@@ -7,6 +7,7 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
 import { useParams } from 'react-router-dom';
 import PostClickedUser from "../MyPosts/PostClickedUser";
+import PostClickedHashtag from "./PostClickedHashtag";
 
 export default function HashtagPage() {
     const [UserPosts, setUserPosts] = useState([]);
@@ -17,8 +18,8 @@ export default function HashtagPage() {
     const [name, setName] = useState("");
 
     if (name !== params.hashtag) {
-        
-    }
+       getHashtagPosts(); 
+    } 
 
     function getHashtagPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
@@ -26,7 +27,7 @@ export default function HashtagPage() {
         
         request.then(response => {
             setUserPosts(response.data.posts);
-            setEnableLoading(false);                 
+            setEnableLoading(false);                  
             setName(params.hashtag);                                        
         });    
         
@@ -44,11 +45,11 @@ export default function HashtagPage() {
             <UserPostsContainer>
                 <PostsContainer>
                     <Title># {name}</Title>                    
-                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedUser post={post} key={i} />)}
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">
-                    <Trending />
+                    <Trending getHashtagPosts={getHashtagPosts} />
                 </div>
             </UserPostsContainer>
         </UserPostsBody>
@@ -120,7 +121,7 @@ const Title = styled.h1`
     margin: 60px 0 45px 0;
 
     @media (max-width: 614px){
-        margin: 25px 0 19px 17px;
+        margin: 50px 0 19px 17px;
         font-size: 33px;
     }
 `;
