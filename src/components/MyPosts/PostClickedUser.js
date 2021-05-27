@@ -1,37 +1,21 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
+import { useState } from "react";
+import Hashtag from "../Timeline/Hashtag";
 import { Link } from "react-router-dom";
-import axios from 'axios';
-import UserContext from "../../contexts/UserContext";
-import { useContext } from "react";
-import Hashtag from "./Hashtag";
 
+export default function PostClickedUser({ post }) {
+    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
+    
 
-export default function Post({ post,LikedsIds}) {
-    const { userData } = useContext(UserContext);
-    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
-    const texto = text.split(' ');
-   
-    const pessoa = JSON.parse(localStorage.getItem("user"));
-  
-    
-  
-    function LikeOrDeslike(){
-            const body=[]
-            const config = { headers: { Authorization: `Bearer ${userData.token || pessoa.token}` } };
-            const request=axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,body, config)
-            request.then(()=>console.log('post curtido'))
-            
-    }
-    
     return(
         <PostBox>
             <SideMenu>
                 <Link to={`user/${user.id}`}>
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
                 </Link>
-                <AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>
-                <span>{likes.length} {likes.length === 1 ? "like" : "likes"}</span>
+                <AiOutlineHeart className="heart-icon" />
+                <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
                 <Link to={`user/${user.id}`}>
@@ -91,7 +75,7 @@ const SideMenu = styled.div`
     .heart-icon {
         width: 20px;
         height: 18px;
-        color: ${(props) => (props.enabled ? "red" : "#BABABA")};
+        color: #FFFFFF;
         margin-bottom: 4px;
 
         @media (max-width: 614px){

@@ -7,6 +7,9 @@ import TimelinePage from "./Timeline/TimelinePage";
 import Header from './Header';
 import Trending from "./Trending/Trending";
 import LikesPage from './LikesPage';
+import MyPostsPage from './MyPosts/MyPostsPage';
+import UserPage from './UserPage/UserPage';
+
 
 export default function App() {
   const [userData, setUserData] = useState('');
@@ -32,6 +35,14 @@ export default function App() {
             <Header />
             <LikesPage />
           </Route>
+          <Route path='/my-posts' exact>
+            <Header />            
+            <MyPostsPage />
+          </Route> 
+          <Route path='/user/:id' exact>
+            <Header />            
+            <UserPage />
+          </Route>         
         </Switch>
       </UserContext.Provider>
     </BrowserRouter>
