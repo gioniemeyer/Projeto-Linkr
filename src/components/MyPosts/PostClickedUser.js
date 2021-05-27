@@ -43,6 +43,7 @@ const PostBox = styled.li`
     padding: 17px 21px 20px 18px;
     border-radius: 16px;
     margin-bottom: 16px;
+    
 
     @media (max-width: 614px){
         width: 100%;
