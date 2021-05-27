@@ -17,8 +17,8 @@ export default function HashtagPage() {
     const [name, setName] = useState("");
 
     if (name !== params.hashtag) {
-        
-    }
+       getHashtagPosts(); 
+    } 
 
     function getHashtagPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
@@ -26,17 +26,14 @@ export default function HashtagPage() {
         
         request.then(response => {
             setUserPosts(response.data.posts);
-            setEnableLoading(false); 
-            console.log(response.data)     
+            setEnableLoading(false);                  
             setName(params.hashtag);                                        
         });    
         
         request.catch(error => {
             alert("Houve uma falha ao obter os posts dessa hashtag, por favor, atualize a página.");
         });
-    }
-
-    useEffect(getHashtagPosts, []);
+    }        
 
     return(
         <>
@@ -49,7 +46,7 @@ export default function HashtagPage() {
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">
-                    <Trending />
+                    <Trending getHashtagPosts={getHashtagPosts} />
                 </div>
             </UserPostsContainer>
         </UserPostsBody>
