@@ -31,7 +31,7 @@ export default function UserPage() {
         request.catch(error => {
             alert("Houve uma falha ao obter os posts desse usuário, por favor, atualize a página.");
         });
-    }, []);   
+    }, []);    
 
 
     return(
@@ -51,13 +51,12 @@ export default function UserPage() {
         </UserPostsBody>
         </>
     );
-
 }
 
 const UserPostsBody = styled.div`
     display: flex;
     justify-content: center;
-    background-color: #333333;    
+    background-color: #333333;  
 
     @media (max-width: 614px){
         flex-direction: column;
@@ -70,8 +69,8 @@ const UserPostsContainer = styled.div`
     display: flex;
     justify-content: space-between;
     font-family: 'Lato';
-    margin-top: 60px;
-    
+    margin-top: 60px;    
+    height: 100vh;
 
     @media (max-width: 614px){
         width: 100%;

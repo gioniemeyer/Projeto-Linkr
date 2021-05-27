@@ -42,8 +42,7 @@ const PostBox = styled.li`
     justify-content: space-between;
     padding: 17px 21px 20px 18px;
     border-radius: 16px;
-    margin-bottom: 16px;
-    
+    margin-bottom: 16px;    
 
     @media (max-width: 614px){
         width: 100%;
@@ -96,7 +95,7 @@ const SideMenu = styled.div`
 `;
 
 const Content = styled.div`
-    width: 503px;
+    width: 503px;    
 
     @media (max-width: 614px){
             width: 100%;
