@@ -6,7 +6,7 @@ import Loading from "./Loading";
 import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
-import Header from "../Header"; 
+import Header from "../Header";
 
 export default function Timeline() {
     const [TimelinePosts, setTimelinePosts] = useState([]);
@@ -15,11 +15,6 @@ export default function Timeline() {
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [LikedPosts, setLikedPosts] = useState([]);
-
-    function getPosts() {
-        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };                
-    }
-   
     
     function RenderLikes(){
         const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
@@ -42,8 +37,6 @@ export default function Timeline() {
             setEnableLoading(false);
         });
     }
-
-    useEffect(getPosts,[]);
 
     function handleLikes(){
         for(let i=0; i<TimelinePosts.length;i++){
@@ -68,7 +61,7 @@ export default function Timeline() {
                 <TimelineContainer>
                     <TimelinePostsContainer>
                         <Title>timeline</Title>
-                        <NewPost getPosts={getPosts} />
+                        <NewPost RenderPosts={RenderPosts} />
                         {
                             TimelinePosts.length === 0 && !enableLoading
                             ? <div className="no-post">Nenhum post encontrado :(</div> 

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
+import { FaTrash } from 'react-icons/fa';
 import axios from "axios"
 import UserContext from "../../contexts/UserContext";
 import { useEffect, useState, useContext } from "react";
@@ -33,6 +34,7 @@ export default function Post({ post }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
+            <FaTrash className="trash-icon" />
         </PostBox>
     );
 }
@@ -45,11 +47,21 @@ const PostBox = styled.li`
     padding: 17px 21px 20px 18px;
     border-radius: 16px;
     margin-bottom: 16px;
+    position: relative;
 
     @media (max-width: 614px){
         width: 100%;
         border-radius: 0;
         padding: 9px 18px 15px 15px;
+    }
+
+    .trash-icon {
+        position: absolute;
+        top: 23px;
+        right: 23px;
+        color: #FFFFFF;
+        width: 14px;
+        height: 14px;
     }
 `;
 
