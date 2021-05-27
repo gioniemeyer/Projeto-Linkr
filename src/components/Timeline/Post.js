@@ -111,13 +111,17 @@ const PostBox = styled.li`
   }
 
   .trash-icon {
-      position: absolute;
-      top: 23px;
-      right: 23px;
-      color: #FFFFFF;
-      width: 14px;
-      height: 14px;
-      cursor: pointer;
+        position: absolute;
+        top: 23px;
+        right: 23px;
+        color: #FFFFFF;
+        width: 14px;
+        height: 14px;
+        cursor: pointer;
+
+        @media (max-width: 614px) {
+            top: 13px;
+        }
     }
 
 `;
@@ -133,7 +137,6 @@ const SideMenu = styled.div`
         width: 50px;
         height: 50px;
         border-radius: 26.5px;
-        margin-bottom: 19px;
         cursor: pointer;
 
         @media (max-width: 614px){
@@ -147,6 +150,8 @@ const SideMenu = styled.div`
     height: 18px;
     color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
     margin-bottom: 4px;
+    margin-top: 19px;
+
     @media (max-width: 614px) {
       width: 17px;
       height: 15px;

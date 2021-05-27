@@ -66,6 +66,10 @@ const PostBox = styled.li`
       width: 14px;
       height: 14px;
       cursor: pointer;
+
+      @media (max-width: 614px) {
+            top: 13px;
+        }
     }
 `;
 
@@ -82,7 +86,6 @@ const SideMenu = styled.div`
         width: 50px;
         height: 50px;
         border-radius: 26.5px;
-        margin-bottom: 19px;
 
         @media (max-width: 614px){
             width: 40px;
@@ -95,6 +98,7 @@ const SideMenu = styled.div`
         height: 18px;
         color: #FFFFFF;
         margin-bottom: 4px;
+        margin-top: 19px;
 
         @media (max-width: 614px){
             width: 17px;
@@ -120,6 +124,7 @@ const Content = styled.div`
     }
 
     h1 {
+        width: fit-content;
         font-size: 19px;
         color: #FFFFFF;
         margin-bottom: 7px;
