@@ -7,7 +7,7 @@ import Loading from "../Timeline/Loading"
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
-import Post from "./PostClickedUser";
+import PostClickedUser from "./PostClickedUser";
 
 export default function MyPostsPage() {
     const [MyPosts, setMyPosts] = useState([]);
@@ -16,21 +16,22 @@ export default function MyPostsPage() {
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     
-  
+    
+  function RenderPosts() {
+    const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+    const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${localUser.user.id || userData.user.id}/posts`, config);
 
-    useEffect(() => {
-        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
-        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${localUser.user.id || userData.user.id}/posts`, config);
+    request.then(response => {
+        setMyPosts(response.data.posts);
+        setEnableLoading(false);            
+    });
 
-        request.then(response => {
-            setMyPosts(response.data.posts);
-            setEnableLoading(false);            
-        });
+    request.catch(error => {
+        alert("Houve uma falha ao obter os seus posts, por favor, atualize a página.");
+    });
+  }
 
-        request.catch(error => {
-            alert("Houve uma falha ao obter os seus posts, por favor, atualize a página.");
-        });
-    }, []);
+  useEffect(RenderPosts, []);
 
     return(
         <>
@@ -39,7 +40,7 @@ export default function MyPostsPage() {
             <MyPostsContainer>
                 <PostsContainer>
                     <Title>my posts</Title>                    
-                    {MyPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <Post post={post} key={i} />)}
+                    {MyPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <PostClickedUser RenderPosts={RenderPosts} post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">

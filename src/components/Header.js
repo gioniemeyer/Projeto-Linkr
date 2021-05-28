@@ -8,7 +8,7 @@ import UserContext from "../contexts/UserContext";
 
 export default function Header() {  
   const [open, setOpen] = useState(false);
-  const { user } = useContext(UserContext);	  
+  const { userData } = useContext(UserContext);	  
   const pessoa = JSON.parse(localStorage.getItem("user"));   
   const history = useHistory();
   
@@ -33,11 +33,11 @@ export default function Header() {
           )}
           {open ? (
             <UserPicture onClick={() => setOpen(false)}>
-              <img src={pessoa.user.avatar || user.user.avatar} alt="userimage"></img>
+              <img src={pessoa.user.avatar || userData.user.avatar} alt="userimage"></img>
             </UserPicture>
           ) : (
             <UserPicture onClick={() => setOpen(true)}>
-              <img src={pessoa.user.avatar || user.user.avatar} alt="userimage"></img>
+              <img src={pessoa.user.avatar || userData.user.avatar} alt="userimage"></img>
             </UserPicture>
           )}
         </RightSide>                     

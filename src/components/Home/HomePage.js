@@ -16,34 +16,36 @@ export default function HomePage() {
         e.preventDefault();
 
         if(!(email && password)) {
-            alert('Favor, preencha todos os campos')
+            alert('Favor, preencha todos os campos');
             return '';
         }
         
         setLoad(true);
 
         const body = {email, password};        
-        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body)
+        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body);
+        
         request.then(resp => {
-            history.push('/timeline');
             setLoad(false);
             setUserData(resp.data);            
             localStorage.setItem('user', JSON.stringify(resp.data));
             const pessoa = JSON.parse(localStorage.getItem("user"));  
             setEmail("");
             setPassword("");
-        })
+            history.push('/timeline');
+        });
+
         request.catch(error => {
             alert("email/senha incorretos");
             setLoad(false);
-        })
+        });
     }
 
     return(
         <Body>
             <Container>
                 <img src={logo} alt='logo'/>
-                <P>save, share and discover the best links on the web</P>
+                <Subtitle>save, share and discover the best links on the web</Subtitle>
             </Container>
             <Form onSubmit={e => login(e)}>
                 <input disabled={load} type='email' placeholder='email' value={email} onChange={e => setEmail(e.target.value)}/>
@@ -52,10 +54,9 @@ export default function HomePage() {
                     
                 <Button disabled={load} type='submit'>Log In</Button>
                 <Link to='/sign-up'>
-                    <A>First time? Create an account!</A>
+                    <Redirect>First time? Create an account!</Redirect>
                 </Link>
             </Form>
- 
         </Body>
     )
 }
@@ -93,7 +94,7 @@ const Container = styled.div`
     }
 `
 
-const P = styled.p`
+const Subtitle = styled.p`
     width: 35vw;
     font-size: 43px;
 
@@ -158,7 +159,7 @@ const Button = styled.button`
     }
 `
 
-const A = styled.p`
+const Redirect = styled.p`
     font-family: 'Lato', sans-serif;
     color: #fff;
     text-decoration: underline;

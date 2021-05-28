@@ -7,6 +7,7 @@ import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
+
 export default function Timeline() {
   const [TimelinePosts, setTimelinePosts] = useState([]);
   const [enableLoading, setEnableLoading] = useState(true);
@@ -43,14 +44,26 @@ export default function Timeline() {
     ;
   }
 
-  
+  function CreateLikedPosts() {
+    const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+    const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
 
- 
+    request.then(response => {
+        setLikedPosts(response.data.posts);
+
+        RenderPosts();
+    });
+
+    request.catch(error => {
+        alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+        setEnableLoading(false);
+    });
+}
   
   useEffect(() => {
     RenderPosts();
     RenderLikes();
-   
+    CreateLikedPosts()
   }, []);
 
   return (

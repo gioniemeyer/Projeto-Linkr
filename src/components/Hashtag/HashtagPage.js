@@ -18,12 +18,10 @@ export default function HashtagPage() {
     const [name, setName] = useState("");
 
     if (name !== params.hashtag) {
-
-       getHashtagPosts(); 
+       RenderPosts(); 
     } 
 
-
-    function getHashtagPosts() {
+    function RenderPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${params.hashtag}/posts`, config);
         
@@ -39,8 +37,7 @@ export default function HashtagPage() {
 
     }
     
-    useEffect(getHashtagPosts, []);
-
+    useEffect(RenderPosts, []);
 
     return(
         <>
@@ -50,12 +47,11 @@ export default function HashtagPage() {
                 <PostsContainer>
                     <Title># {name}</Title>                   
 
-                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag post={post} key={i} />)}
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag RenderPosts={RenderPosts} post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">
-                    <Trending getHashtagPosts={getHashtagPosts} />
-
+                    <Trending RenderPosts={RenderPosts} />
                 </div>
             </UserPostsContainer>
         </UserPostsBody>
