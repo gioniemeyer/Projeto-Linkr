@@ -18,10 +18,8 @@ export default function HashtagPage() {
     const [name, setName] = useState("");
 
     if (name !== params.hashtag) {
-
        RenderPosts(); 
     } 
-
 
     function RenderPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
