@@ -17,7 +17,6 @@ export default function Modal({ modalOpen, setModalOpen, postID, RenderPosts }) 
         setEnableLoading(true);
         setDisabled(true);
         const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
-        console.log(postID);
         
         const request = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${postID}`, config);
 

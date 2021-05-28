@@ -4,7 +4,7 @@ import axios from "axios";
 import UserContext from "../../contexts/UserContext";
 
 export default function NewPost({ RenderPosts }) {
-    const { user } = useContext(UserContext);
+    const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [link, setLink] = useState("");
     const [text, setText] = useState("");
@@ -13,7 +13,7 @@ export default function NewPost({ RenderPosts }) {
     function makePost(e) {
         e.preventDefault();
         setDisabled(true);
-        const config = { headers: { Authorization: `Bearer ${localUser.token || user.token}` } };
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const body = { text, link};       
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts', body, config);
 
@@ -33,7 +33,7 @@ export default function NewPost({ RenderPosts }) {
     return(
         <NewPostBox>
             <SideMenu>
-                <img src={localUser.user.avatar || user.user.avatar} alt="Imagem do avatar do usuário" />
+                <img src={localUser.user.avatar || userData.user.avatar} alt="Imagem do avatar do usuário" />
             </SideMenu>
             <Content>
                 <h1>O que você tem pra favoritar hoje?</h1>

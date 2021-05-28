@@ -26,13 +26,13 @@ export default function HomePage() {
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body);
         
         request.then(resp => {
-            history.push('/timeline');
             setLoad(false);
             setUserData(resp.data);            
             localStorage.setItem('user', JSON.stringify(resp.data));
             const pessoa = JSON.parse(localStorage.getItem("user"));  
             setEmail("");
             setPassword("");
+            history.push('/timeline');
         });
 
         request.catch(error => {
