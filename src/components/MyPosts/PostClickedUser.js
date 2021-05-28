@@ -1,12 +1,17 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Hashtag from "../Timeline/Hashtag";
 import { Link, useHistory } from "react-router-dom";
+import Modal from "../Modal";
+import { FaTrash } from 'react-icons/fa';
+import UserContext from "../../contexts/UserContext";
 
-export default function PostClickedUser({ post }) {
+export default function PostClickedUser({ post, RenderPosts }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
     const history = useHistory();
+    const { userData } = useContext(UserContext);
+    const [modalOpen, setModalOpen] = useState(false);
 
     return(
         <PostBox>
@@ -31,6 +36,8 @@ export default function PostClickedUser({ post }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
+            {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+            <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
         </PostBox>
     );
 }
@@ -42,12 +49,27 @@ const PostBox = styled.li`
     justify-content: space-between;
     padding: 17px 21px 20px 18px;
     border-radius: 16px;
-    margin-bottom: 16px;    
+    margin-bottom: 16px;
+    position: relative;    
 
     @media (max-width: 614px){
         width: 100%;
         border-radius: 0;
         padding: 9px 18px 15px 15px;
+    }
+
+    .trash-icon {
+      position: absolute;
+      top: 23px;
+      right: 23px;
+      color: #FFFFFF;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+
+      @media (max-width: 614px) {
+            top: 13px;
+        }
     }
 `;
 
@@ -64,7 +86,6 @@ const SideMenu = styled.div`
         width: 50px;
         height: 50px;
         border-radius: 26.5px;
-        margin-bottom: 19px;
 
         @media (max-width: 614px){
             width: 40px;
@@ -77,6 +98,7 @@ const SideMenu = styled.div`
         height: 18px;
         color: #FFFFFF;
         margin-bottom: 4px;
+        margin-top: 19px;
 
         @media (max-width: 614px){
             width: 17px;
@@ -102,6 +124,7 @@ const Content = styled.div`
     }
 
     h1 {
+        width: fit-content;
         font-size: 19px;
         color: #FFFFFF;
         margin-bottom: 7px;
