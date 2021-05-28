@@ -2,59 +2,49 @@ import styled from "styled-components";
 import { AiOutlineHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import UserContext from "../../contexts/UserContext";
 import { useContext, useState } from "react";
-import Hashtag from "./Hashtag";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
+import Hashtag from "../Timeline/Hashtag";
+import UserContext from "../../contexts/UserContext";
 
-export default function PostMyLikes({ post,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
+export default function Post({ post }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
-  let enabled=false
+  let enabled=true
   
-  // function LikeOrDeslike() {
-  //   const body = [];
-   
-   
-  //   const config = {
-  //     headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
-  //   };
-  //   if(enabled===false){
-  //   const request = axios.post(
-  //     `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
-  //     body,
-  //     config
-  //   );
-   
-    
-  //   }else{
-  //     const request = axios.post(
-  //       `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
-  //       body,
-  //       config
-  //     );
+  function LikeOrDeslike() {
+    const body = [];
       
-  //   }
-  //   RenderLikes()
-  //   RenderPosts()
-  // }
+    const config = {
+      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+    };
+    if(enabled===false){
+    const request = axios.post(
+      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
+      body,
+      config
+    );
+    
+    }else{
+      const request = axios.post(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
+        body,
+        config
+      );
+    }
+  }
 
-  // likes.forEach(element => {
-  //   if(element.userId===localUser.user.id){
-  //     enabled=true
-  //   }
-  // });
-  
-  
   return (
+    
     <PostBox>
       <SideMenu enabled={enabled}>
         <Link to={`user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
+        {console.log(post.id)}
         {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
         <span data-tip={likes.length === 0 ? '' :
           likes.length !== 1 ?
@@ -124,7 +114,7 @@ const SideMenu = styled.div`
   .heart-icon {
     width: 20px;
     height: 18px;
-    color: "#AC0000"};
+    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
     margin-bottom: 4px;
     @media (max-width: 614px) {
       width: 17px;

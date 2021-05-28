@@ -9,7 +9,7 @@ import Trending from "./Trending/Trending";
 import MyPostsPage from './MyPosts/MyPostsPage';
 import UserPage from './UserPage/UserPage';
 import HashtagPage from './Hashtag/HashtagPage';
-import LikesPage from './my-likes/LikesPage';
+import LikesPage from './MyLikes/LikesPage';
 
 
 export default function App() {

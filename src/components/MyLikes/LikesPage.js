@@ -3,26 +3,23 @@ import styled from "styled-components";
 import axios from "axios";
 import Trending from "../Trending/Trending";
 import Loading from "../Timeline/Loading";
-import Post from "../Timeline/Post";
+import LikedPost from "./LikedPost";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
-import PostMyLikes from "./PostMyLikes";
 
 export default function LikesPage() {
     const [enableLoading, setEnableLoading] = useState(false);
-    const [likedPosts, setLikedPosts] = useState([]);
-
+    const [LikedPosts, setLikedPosts] = useState([]);
+    const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
-    const {userData} = useContext(UserContext);
+    const [TimelinePosts, setTimelinePosts] = useState([]);
 
-    useEffect(() => {
+       useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
 
         request.then(response => {
             setLikedPosts(response.data.posts);
-            setEnableLoading(false);
-            console.log(userData);
         });
 
         request.catch(error => {
@@ -30,6 +27,8 @@ export default function LikesPage() {
             setEnableLoading(false);
         });
     }, []);
+    
+    console.log(LikedPosts)
 
     return(
         <>
@@ -39,11 +38,15 @@ export default function LikesPage() {
                 <TimelinePostsContainer>
                     <Title>my likes</Title>
                     {
-                        likedPosts.length === 0 && !enableLoading
+                        LikedPosts.length ===
+                         0 && !enableLoading
                         ? <div className="no-post">Nenhum post encontrado :(</div> 
-                        : likedPosts.map((post, i) => <PostMyLikes post={post} key={i}         
+                        : LikedPosts.map((post, i) => <LikedPost 
+                          post={post} 
+                          key={i}         
                           setLikedPosts={setLikedPosts}
-                          likedPosts={likedPosts}
+                          LikedPosts={LikedPosts}
+                          TimelinePosts={TimelinePosts}
                           />)
                     }
                     {enableLoading && <Loading />}

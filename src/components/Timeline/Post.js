@@ -17,8 +17,7 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
   
   function LikeOrDeslike() {
     const body = [];
-   
-   
+      
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
@@ -48,13 +47,13 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
     }
   });
   
-  
   return (
     <PostBox>
       <SideMenu enabled={enabled}>
         <Link to={`user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
+        {console.log(post.id)}
         {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
         <span data-tip={likes.length === 0 ? '' :
           likes.length !== 1 ?
