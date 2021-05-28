@@ -39,7 +39,7 @@ export default function SignInPage() {
         <Body>
             <Container>
                 <img src={logo} alt='logo'/>
-                <P>save, share and discover the best links on the web</P>
+                <Subtitle>save, share and discover the best links on the web</Subtitle>
             </Container>
             <Form onSubmit={e => subscribe(e)}>
                 <input disabled={load} type='email' placeholder='email' value={email} onChange={e => setEmail(e.target.value)}/>
@@ -51,7 +51,7 @@ export default function SignInPage() {
                 <input disabled={load} type='url' placeholder='picture url' value={picture} onChange={e => setPicture(e.target.value)}/>
                 <Button disabled={load} type='submit'>Sign Up</Button>
                 <Link to='/'>
-                    <A>Switch back to log in</A>
+                    <Redirect>Switch back to log in</Redirect>
                 </Link>
             </Form>
  
@@ -92,7 +92,7 @@ const Container = styled.div`
     }
 `
 
-const P = styled.p`
+const Subtitle = styled.p`
     width: 35vw;
     font-size: 43px;
 
@@ -157,7 +157,7 @@ const Button = styled.button`
     }
 `
 
-const A = styled.p`
+const Redirect = styled.p`
     font-family: 'Lato', sans-serif;
     color: #fff;
     text-decoration: underline;
