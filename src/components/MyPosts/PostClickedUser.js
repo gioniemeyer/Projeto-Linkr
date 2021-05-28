@@ -12,6 +12,7 @@ export default function PostClickedUser({ post, RenderPosts }) {
     const history = useHistory();
     const { userData } = useContext(UserContext);
     const [modalOpen, setModalOpen] = useState(false);
+   
 
     return(
         <PostBox>
@@ -99,6 +100,7 @@ const SideMenu = styled.div`
         color: #FFFFFF;
         margin-bottom: 4px;
         margin-top: 19px;
+        color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
 
         @media (max-width: 614px){
             width: 17px;
