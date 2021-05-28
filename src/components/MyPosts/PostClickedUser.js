@@ -86,8 +86,8 @@ export default function PostClickedUser({ post, RenderPosts }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
-            {userData ? userData.user.id : localUser.user.id === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
-            {userData ? userData.user.id : localUser.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+            {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
+            {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
             <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
         </PostBox>
     );
