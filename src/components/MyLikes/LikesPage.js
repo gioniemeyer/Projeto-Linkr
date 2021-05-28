@@ -77,6 +77,8 @@ const TimelineContainer = styled.div`
   justify-content: space-between;
   font-family: "Lato";
   margin-top: 60px;
+  min-height: 100vh;     
+  
   @media (max-width: 614px) {
     width: 100%;
     flex-direction: column;

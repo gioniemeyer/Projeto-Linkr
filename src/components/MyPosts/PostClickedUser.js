@@ -1,11 +1,14 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import Hashtag from "../Timeline/Hashtag";
 import { Link, useHistory } from "react-router-dom";
 import Modal from "../Modal";
 import { FaTrash } from 'react-icons/fa';
 import UserContext from "../../contexts/UserContext";
+import axios from "axios";
+import {FaPencilAlt} from 'react-icons/fa';
+
 
 export default function PostClickedUser({ post, RenderPosts }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
@@ -13,6 +16,48 @@ export default function PostClickedUser({ post, RenderPosts }) {
     const { userData } = useContext(UserContext);
     const [modalOpen, setModalOpen] = useState(false);
     const localUser = JSON.parse(localStorage.getItem("user"));  
+    const [control,setControl]=useState(false)
+    const [newText,setNewText]=useState(text)
+    const [disabler,setDisabler]=useState(false)
+    const inputRef=useRef();
+
+    useEffect(()=>{
+        if(control){
+          inputRef.current.focus()
+        }
+        setNewText(text)
+    },[control]);
+
+    function ShowEdit(){ 
+        if(control){
+         setControl(false)
+         
+         return
+        }else{
+         setControl(true)
+         
+        }
+        
+    }
+      
+     function Edit(event){
+       event.preventDefault();
+       setDisabler(true)
+       const body = {
+         text: newText
+       };
+       const config = {
+         headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+       };
+       const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
+       request.then((response)=>{
+       setDisabler(false)
+       setControl(false)
+       RenderPosts()}
+       )
+       request.catch(()=>{alert('Não foi possível salvar as alterações')
+       setDisabler(false)})
+    }
       
     return(
         <PostBox>
@@ -25,7 +70,13 @@ export default function PostClickedUser({ post, RenderPosts }) {
             </SideMenu>
             <Content>
                 <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
-                <h2><Hashtag text={text} /></h2>
+                <h2>
+                {control?          
+                [<form onSubmit={Edit}>
+                    <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
+                </form>]           
+                :<Hashtag text={text} />}
+                </h2>
                 <Snippet href={link} target="_blank">
                     <div className="snippet-text">
                         <h3>{linkTitle}</h3>
@@ -35,6 +86,7 @@ export default function PostClickedUser({ post, RenderPosts }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
+            {userData ? userData.user.id : localUser.user.id === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
             {userData ? userData.user.id : localUser.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
             <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
         </PostBox>
@@ -69,6 +121,20 @@ const PostBox = styled.li`
       @media (max-width: 614px) {
             top: 13px;
         }
+    }
+
+    .pencil-icon {
+      position: absolute;
+      top: 23px;
+      right: 48px;
+      color: #FFFFFF;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+
+      @media (max-width: 614px) {
+            top: 13px;
+      }
     }
 `;
 
@@ -145,6 +211,17 @@ const Content = styled.div`
         @media (max-width: 614px){
             font-size: 15px;
         }
+    }
+
+    input{
+        width: 100%;
+        border-radius: 7px;
+        font-size: 14px;
+        padding:4px 9px;
+        outline: 1px solid black;
+        overflow-y: auto;
+        overflow-wrap: break-word;
+        color: #4C4C4C;
     }
 `;
 

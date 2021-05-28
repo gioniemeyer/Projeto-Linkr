@@ -51,9 +51,7 @@ export default function HomePage() {
             </Container>
             <Form onSubmit={e => login(e)}>
                 <input disabled={load} type='email' placeholder='email' value={email} onChange={e => setEmail(e.target.value)}/>
-
-                <input disabled={load} type='password' placeholder='password' value={password} onChange={e => setPassword(e.target.value)}/>
-                    
+                <input disabled={load} type='password' placeholder='password' value={password} onChange={e => setPassword(e.target.value)}/>                    
                 <Button disabled={load} type='submit'>Log In</Button>
                 <Link to='/sign-up'>
                     <Redirect>First time? Create an account!</Redirect>

@@ -1,9 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
 import Loading from "../Timeline/Loading"
-
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
@@ -15,6 +13,7 @@ export default function MyPostsPage() {
     const [HashtagList, setHashtagList] = useState([]);
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
+    
     
     
   function RenderPosts() {
@@ -32,6 +31,8 @@ export default function MyPostsPage() {
   }
 
   useEffect(RenderPosts, []);
+
+ 
 
     return(
         <>

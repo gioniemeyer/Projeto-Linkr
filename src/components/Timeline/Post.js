@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
 import { FaTrash } from 'react-icons/fa';
 import UserContext from "../../contexts/UserContext";
-
 import { useContext, useState,useRef,useEffect } from "react";
 import Hashtag from "./Hashtag";
 import { useHistory, Link } from "react-router-dom";
@@ -21,7 +20,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
   const [newText,setNewText]=useState(text)
   const [disabler,setDisabler]=useState(false)
   let enabled=false
-  const inputRef=useRef()
+  const inputRef=useRef();
   const [modalOpen, setModalOpen] = useState(false);
   const history = useHistory();
   
@@ -75,13 +74,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
      }
      
   }
-
- function ClosingWithEsc(e){
-  if (e.keyCode == 27) {
-    alert('alo');
-  }
- }
-  
+   
   function Edit(event){
     event.preventDefault();
     setDisabler(true)
@@ -175,6 +168,10 @@ const PostBox = styled.li`
       width: 14px;
       height: 14px;
       cursor: pointer;
+
+      @media (max-width: 614px) {
+            top: 13px;
+      }
     }
   .trash-icon {
         position: absolute;
