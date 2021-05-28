@@ -7,6 +7,7 @@ import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
+
 export default function Timeline() {
   const [TimelinePosts, setTimelinePosts] = useState([]);
   const [enableLoading, setEnableLoading] = useState(true);

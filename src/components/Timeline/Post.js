@@ -1,34 +1,37 @@
 import styled from "styled-components";
-import { AiOutlineHeart } from "react-icons/ai";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { AiOutlineHeart } from 'react-icons/ai';
+import { FaTrash } from 'react-icons/fa';
 import UserContext from "../../contexts/UserContext";
 import { useContext, useState } from "react";
 import Hashtag from "./Hashtag";
+import { useHistory, Link } from "react-router-dom";
+import axios from "axios";
+import Modal from "../Modal";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 
-export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
+export default function Post({ post, TimelinePosts, LikedPosts, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
-  const texto = text.split(" ");
+  const texto = text.split("");
   const localUser = JSON.parse(localStorage.getItem("user"));
-  let enabled=false
+  let enabled = false;
+  const [modalOpen, setModalOpen] = useState(false);
+  const history = useHistory();
   
   function LikeOrDeslike() {
     const body = [];
-      
+   
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
+
     if(enabled===false){
     const request = axios.post(
       `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
       body,
       config
     );
-   
-    
     }else{
       const request = axios.post(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
@@ -42,18 +45,17 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
   }
 
   likes.forEach(element => {
-    if(element.userId===localUser.user.id){
-      enabled=true
+    if(element.userId === localUser.user.id) {
+      enabled = true;
     }
   });
   
   return (
     <PostBox>
       <SideMenu enabled={enabled}>
-        <Link to={`user/${user.id}`}>
+        <Link to={`user/${user.id}`} className="link-user-name">
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
-        {console.log(post.id)}
         {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
         <span data-tip={likes.length === 0 ? '' :
           likes.length !== 1 ?
@@ -71,9 +73,7 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
         <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>
       <Content>
-        <Link to={`user/${user.id}`}>
-          <h1>{user.username}</h1>
-        </Link>
+        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
         <h2>
           <Hashtag text={text} />
         </h2>
@@ -86,9 +86,12 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
           <img src={linkImage} alt={linkDescription} />
         </Snippet>
       </Content>
+      {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+      <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
     </PostBox>
   );
 }
+
 const PostBox = styled.li`
   width: 611px;
   background-color: #171717;
@@ -97,12 +100,30 @@ const PostBox = styled.li`
   padding: 17px 21px 20px 18px;
   border-radius: 16px;
   margin-bottom: 16px;
+  position: relative;
+
   @media (max-width: 614px) {
     width: 100%;
     border-radius: 0;
     padding: 9px 18px 15px 15px;
   }
+
+  .trash-icon {
+        position: absolute;
+        top: 23px;
+        right: 23px;
+        color: #FFFFFF;
+        width: 14px;
+        height: 14px;
+        cursor: pointer;
+
+        @media (max-width: 614px) {
+            top: 13px;
+        }
+    }
+
 `;
+
 const SideMenu = styled.div`
   display: flex;
   flex-direction: column;
@@ -110,21 +131,25 @@ const SideMenu = styled.div`
   @media (max-width: 614px) {
     margin-right: 14px;
   }
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 26.5px;
-    margin-bottom: 19px;
-    @media (max-width: 614px) {
-      width: 40px;
-      height: 40px;
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 26.5px;
+        cursor: pointer;
+
+        @media (max-width: 614px){
+            width: 40px;
+            height: 40px;
+        }
     }
-  }
+
   .heart-icon {
     width: 20px;
     height: 18px;
     color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
     margin-bottom: 4px;
+    margin-top: 19px;
+
     @media (max-width: 614px) {
       width: 17px;
       height: 15px;
@@ -138,18 +163,21 @@ const SideMenu = styled.div`
     }
   }
 `;
+
 const Content = styled.div`
     width: 503px;
 
     @media (max-width: 614px){
         width: calc(100% - 69px);
     }
-
+    
     h1 {
+        width: fit-content;
         font-size: 19px;
         color: #FFFFFF;
         margin-bottom: 7px;
         word-break: break-all;
+        cursor: pointer;
 
         @media (max-width: 614px){
             font-size: 17px;

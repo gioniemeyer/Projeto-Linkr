@@ -7,12 +7,16 @@ import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 import Hashtag from "../Timeline/Hashtag";
 import UserContext from "../../contexts/UserContext";
+import Modal from "../Modal";
+import { FaTrash } from 'react-icons/fa';
 
-export default function Post({ post }) {
+export default function LikedPost({ post, RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
+  const [modalOpen, setModalOpen] = useState(false);
+
   let enabled=true
   
   function LikeOrDeslike() {
@@ -44,7 +48,6 @@ export default function Post({ post }) {
         <Link to={`user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
-        {console.log(post.id)}
         {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
         <span data-tip={likes.length === 0 ? '' :
           likes.length !== 1 ?
@@ -77,6 +80,9 @@ export default function Post({ post }) {
           <img src={linkImage} alt={linkDescription} />
         </Snippet>
       </Content>
+      {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+      <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
+
     </PostBox>
   );
 }

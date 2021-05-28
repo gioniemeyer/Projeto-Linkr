@@ -92,6 +92,7 @@ const Content = styled.div`
     }
 
     h1 {
+        width: fit-content;
         font-size: 20px;
         font-weight: 300;
         color: #707070;

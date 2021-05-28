@@ -28,8 +28,6 @@ export default function LikesPage() {
         });
     }, []);
     
-    console.log(LikedPosts)
-
     return(
         <>
         <Header />
