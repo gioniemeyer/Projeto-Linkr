@@ -10,8 +10,8 @@ export default function HomePage() {
     const { userData, setUserData } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [load, setLoad] = useState(false);
-
+    const [load, setLoad] = useState(false);    
+    
     function login(e) {
         e.preventDefault();
 
@@ -21,18 +21,17 @@ export default function HomePage() {
         }
         
         setLoad(true);
-
         const body = {email, password};        
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body);
         
-        request.then(resp => {
-            history.push('/timeline');
+        request.then(resp => {            
             setLoad(false);
             setUserData(resp.data);            
             localStorage.setItem('user', JSON.stringify(resp.data));
             const pessoa = JSON.parse(localStorage.getItem("user"));  
             setEmail("");
             setPassword("");
+            history.push('/timeline');                      
         });
 
         request.catch(error => {
@@ -40,6 +39,8 @@ export default function HomePage() {
             setLoad(false);
         });
     }
+
+   
 
     return(
         <Body>

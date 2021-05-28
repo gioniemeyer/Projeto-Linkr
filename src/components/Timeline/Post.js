@@ -16,7 +16,7 @@ export default function Post({ post, TimelinePosts, LikedPosts, RenderLikes, Ren
   const texto = text.split("");
   const localUser = JSON.parse(localStorage.getItem("user"));
   let enabled = false;
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);  
   const history = useHistory();
   
   function LikeOrDeslike() {
@@ -48,9 +48,11 @@ export default function Post({ post, TimelinePosts, LikedPosts, RenderLikes, Ren
     if(element.userId === localUser.user.id) {
       enabled = true;
     }
-  });
+  });  
+
   
   return (
+    
     <PostBox>
       <SideMenu enabled={enabled}>
         <Link to={`user/${user.id}`} className="link-user-name">
@@ -86,7 +88,7 @@ export default function Post({ post, TimelinePosts, LikedPosts, RenderLikes, Ren
           <img src={linkImage} alt={linkDescription} />
         </Snippet>
       </Content>
-      {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+      {userData ? userData.user.id : localUser.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
       <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
     </PostBox>
   );

@@ -90,7 +90,7 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
-            {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+            {userData ? userData.user.id : localUser.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
             <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
         </PostBox>
     );

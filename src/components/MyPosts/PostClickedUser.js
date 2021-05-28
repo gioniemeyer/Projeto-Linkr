@@ -12,8 +12,8 @@ export default function PostClickedUser({ post, RenderPosts }) {
     const history = useHistory();
     const { userData } = useContext(UserContext);
     const [modalOpen, setModalOpen] = useState(false);
-   
-
+    const localUser = JSON.parse(localStorage.getItem("user"));  
+      
     return(
         <PostBox>
             <SideMenu>
@@ -37,7 +37,7 @@ export default function PostClickedUser({ post, RenderPosts }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
-            {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+            {userData ? userData.user.id : localUser.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
             <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
         </PostBox>
     );

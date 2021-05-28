@@ -23,7 +23,7 @@ export default function HashtagPage() {
     } 
 
     function RenderPosts() {
-        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${params.hashtag}/posts`, config);
         
         request.then(response => {
@@ -51,26 +51,26 @@ export default function HashtagPage() {
         requestLikeds.then((response) => setLikedPosts(response.data.posts));
     }
 
-    // function CreateLikedPosts() {
-    //     const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
-    //     const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
+    function CreateLikedPosts() {
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
     
-    //     request.then(response => {
-    //         setLikedPosts(response.data.posts);
+        request.then(response => {
+            setLikedPosts(response.data.posts);
     
-    //         RenderPosts();
-    //     });
+            RenderPosts();
+        });
     
-    //     request.catch(error => {
-    //         alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
-    //         setEnableLoading(false);
-    //     });
-    // }
+        request.catch(error => {
+            alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+            setEnableLoading(false);
+        });
+    }
       
     useEffect(() => {
         RenderPosts();
         RenderLikes();
-        // CreateLikedPosts()
+        CreateLikedPosts()
       }, []);
 
     return(
