@@ -9,9 +9,9 @@ import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 import {FaPencilAlt} from 'react-icons/fa';
 
-export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
+export default function Post({ post,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
+  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [control,setControl]=useState(false)
@@ -20,12 +20,17 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
   let enabled=false
   const inputRef=useRef()
    
- 
   
+  useEffect(()=>{
+    if(control){
+      inputRef.current.focus()
+    }
+    setNewText(text)
+  },[control])
+  
+
   function LikeOrDeslike() {
     const body = [];
-   
-   
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
@@ -58,15 +63,19 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
   function ShowEdit(){ 
      if(control){
       setControl(false)
-      console.log(inputRef)
+      
       return
      }else{
       setControl(true)
+      
      }
+     
   }
 
- function printer(){
-   alert('alo')
+ function ClosingWithEsc(e){
+  if (e.keyCode == 27) {
+    alert('alo');
+  }
  }
    
   
@@ -75,14 +84,13 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
     event.preventDefault();
     setDisabler(true)
     const body = {
-      "text": newText
+      text: newText
     };
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
     const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
     request.then((response)=>{
-    console.log(response.data)
     setDisabler(false)
     setControl(false)
     RenderPosts()}
@@ -122,7 +130,7 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
           {control?
           
             [<form onSubmit={Edit}>
-              <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} />
+              <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
             </form>]
             
           
