@@ -9,6 +9,7 @@ import Trending from "./Trending/Trending";
 import MyPostsPage from './MyPosts/MyPostsPage';
 import UserPage from './UserPage/UserPage';
 import HashtagPage from './Hashtag/HashtagPage';
+import LikesPage from './MyLikes/LikesPage';
 
 
 export default function App() {
@@ -30,6 +31,10 @@ export default function App() {
           <Route path='/trending' exact>
             <Header />
             <Trending />
+          </Route>
+          <Route path='/my-likes' exact>
+            <Header />
+            <LikesPage />
           </Route>
           <Route path='/my-posts' exact>
             <Header />            

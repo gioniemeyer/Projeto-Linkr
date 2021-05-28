@@ -45,7 +45,7 @@ export default function HomePage() {
         <Body>
             <Container>
                 <img src={logo} alt='logo'/>
-                <P>save, share and discover the best links on the web</P>
+                <Subtitle>save, share and discover the best links on the web</Subtitle>
             </Container>
             <Form onSubmit={e => login(e)}>
                 <input disabled={load} type='email' placeholder='email' value={email} onChange={e => setEmail(e.target.value)}/>
@@ -54,7 +54,7 @@ export default function HomePage() {
                     
                 <Button disabled={load} type='submit'>Log In</Button>
                 <Link to='/sign-up'>
-                    <A>First time? Create an account!</A>
+                    <Redirect>First time? Create an account!</Redirect>
                 </Link>
             </Form>
         </Body>
@@ -94,7 +94,7 @@ const Container = styled.div`
     }
 `
 
-const P = styled.p`
+const Subtitle = styled.p`
     width: 35vw;
     font-size: 43px;
 
@@ -159,7 +159,7 @@ const Button = styled.button`
     }
 `
 
-const A = styled.p`
+const Redirect = styled.p`
     font-family: 'Lato', sans-serif;
     color: #fff;
     text-decoration: underline;
