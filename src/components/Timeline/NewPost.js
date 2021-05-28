@@ -9,6 +9,8 @@ export default function NewPost({ RenderPosts }) {
     const [link, setLink] = useState("");
     const [text, setText] = useState("");
     const [disabled, setDisabled] = useState(false);
+    
+
 
     function makePost(e) {
         e.preventDefault();
