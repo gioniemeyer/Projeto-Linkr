@@ -72,14 +72,10 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
             `Você curtiu` :
             `${likes[0]['user.username']} curtiu`}>
             {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
-            <ReactTooltip place="bottom" type="light" effect="float"/>
-                {/* <AiOutlineHeart className="heart-icon" />
-                <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span> */}
+            <ReactTooltip place="bottom" type="light" effect="float"/>                
             </SideMenu>
             <Content>
-                <Link to={`/user/${user.id}`} >
-                    <h1>{user.username}</h1>
-                </Link>
+                <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
                 <h2><Hashtag text={text} /></h2>
                 <Snippet href={link} target="_blank">
                     <div className="snippet-text">
@@ -282,6 +278,9 @@ const Snippet = styled.a`
         height: 155px;
         border-radius: 0px 12px 13px 0px;
         object-fit: cover;
+        white-space: pre-wrap;
+        text-overflow: ellipsis; 
+        overflow: hidden;
 
         @media (max-width: 614px){
             width: 95px;

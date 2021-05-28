@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState } from "react";
 import {AiFillHeart} from 'react-icons/ai';
@@ -16,6 +16,7 @@ export default function LikedPost({ post, RenderPosts }) {
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [modalOpen, setModalOpen] = useState(false);
+  const history = useHistory();
 
   let enabled=true
   
@@ -65,9 +66,7 @@ export default function LikedPost({ post, RenderPosts }) {
         <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>
       <Content>
-        <Link to={`user/${user.id}`}>
-          <h1>{user.username}</h1>
-        </Link>
+        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
         <h2>
           <Hashtag text={text} />
         </h2>
@@ -161,6 +160,7 @@ const Content = styled.div`
         color: #FFFFFF;
         margin-bottom: 7px;
         word-break: break-all;
+        width: fit-content;
 
         @media (max-width: 614px){
             font-size: 17px;
@@ -257,6 +257,9 @@ const Snippet = styled.a`
         height: 155px;
         border-radius: 0px 12px 13px 0px;
         object-fit: cover;
+        white-space: pre-wrap;
+        text-overflow: ellipsis; 
+        overflow: hidden;
 
         @media (max-width: 614px){
             width: 95px;

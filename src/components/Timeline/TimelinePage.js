@@ -130,9 +130,10 @@ const TimelineContainer = styled.div`
     position: fixed;
     top: 208px;
     left: calc((100vw + 611px + 15px - 301px) / 2);
-    @media (max-width: 614px) {
+    
+    @media (max-width: 900px) {
       display: none;
-    }
+    }    
   }
 `;
 const TimelinePostsContainer = styled.ul`

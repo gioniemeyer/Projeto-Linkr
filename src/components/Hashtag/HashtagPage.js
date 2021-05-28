@@ -129,9 +129,9 @@ const UserPostsContainer = styled.div`
         top: 208px;
         left: calc((100vw + 611px + 15px - 301px) / 2);
 
-        @media (max-width: 614px){
-            display: none;
-        }
+        @media (max-width: 900px) {
+        display: none;
+        }   
     }
 `;
 

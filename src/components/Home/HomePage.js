@@ -24,7 +24,8 @@ export default function HomePage() {
         const body = {email, password};        
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body);
         
-        request.then(resp => {            
+                  
+        request.then(resp => {
             setLoad(false);
             setUserData(resp.data);            
             localStorage.setItem('user', JSON.stringify(resp.data));
