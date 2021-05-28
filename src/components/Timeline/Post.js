@@ -3,17 +3,24 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useState,useRef,useEffect } from "react";
 import Hashtag from "./Hashtag";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
+import {FaPencilAlt} from 'react-icons/fa';
 
 export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
+  const [control,setControl]=useState(false)
+  const [newText,setNewText]=useState(text)
+  const [disabler,setDisabler]=useState(false)
   let enabled=false
+  const inputRef=useRef()
+   
+ 
   
   function LikeOrDeslike() {
     const body = [];
@@ -47,8 +54,43 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
       enabled=true
     }
   });
+
+  function ShowEdit(){ 
+     if(control){
+      setControl(false)
+      console.log(inputRef)
+      return
+     }else{
+      setControl(true)
+     }
+  }
+
+ function printer(){
+   alert('alo')
+ }
+   
   
-  
+
+  function Edit(event){
+    event.preventDefault();
+    setDisabler(true)
+    const body = {
+      "text": newText
+    };
+    const config = {
+      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+    };
+    const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
+    request.then((response)=>{
+    console.log(response.data)
+    setDisabler(false)
+    setControl(false)
+    RenderPosts()}
+    )
+    request.catch(()=>{alert('Não foi possível salvar as alterações')
+    setDisabler(false)})
+  }
+
   return (
     <PostBox>
       <SideMenu enabled={enabled}>
@@ -77,7 +119,15 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
           <h1>{user.username}</h1>
         </Link>
         <h2>
-          <Hashtag text={text} />
+          {control?
+          
+            [<form onSubmit={Edit}>
+              <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} />
+            </form>]
+            
+          
+          :<Hashtag text={text} />}
+          
         </h2>
         <Snippet href={link} target="_blank">
           <div className="snippet-text">
@@ -88,6 +138,7 @@ export default function Post({ post,TimelinePosts,LikedPosts,RenderLikes,RenderP
           <img src={linkImage} alt={linkDescription} />
         </Snippet>
       </Content>
+      {localUser.user.id===user.id?<FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>:''}
     </PostBox>
   );
 }
@@ -99,11 +150,21 @@ const PostBox = styled.li`
   padding: 17px 21px 20px 18px;
   border-radius: 16px;
   margin-bottom: 16px;
+  position: relative;
   @media (max-width: 614px) {
     width: 100%;
     border-radius: 0;
     padding: 9px 18px 15px 15px;
   }
+  .pencil-icon {
+      position: absolute;
+      top: 23px;
+      right: 48px;
+      color: #FFFFFF;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+    }
 `;
 const SideMenu = styled.div`
   display: flex;
@@ -167,6 +228,16 @@ const Content = styled.div`
     @media (max-width: 614px) {
       font-size: 15px;
     }
+    input{
+    width: 100%;
+    border-radius: 7px;
+    font-size: 14px;
+    padding:4px 9px;
+    outline: 1px solid black;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    color: #4C4C4C;
+   }
   }
 `;
 const Snippet = styled.a`
