@@ -77,6 +77,8 @@ const TimelineContainer = styled.div`
   justify-content: space-between;
   font-family: "Lato";
   margin-top: 60px;
+  min-height: 100vh;     
+  
   @media (max-width: 614px) {
     width: 100%;
     flex-direction: column;
@@ -90,9 +92,9 @@ const TimelineContainer = styled.div`
     position: fixed;
     top: 208px;
     left: calc((100vw + 611px + 15px - 301px) / 2);
-    @media (max-width: 614px) {
+    @media (max-width: 900px) {
       display: none;
-    }
+    }   
   }
 `;
 const TimelinePostsContainer = styled.ul`

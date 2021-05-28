@@ -16,13 +16,14 @@ export default function HashtagPage() {
     const localUser = JSON.parse(localStorage.getItem("user"));    
     const params = useParams(); 
     const [name, setName] = useState("");
+    const [LikedPosts, setLikedPosts] = useState([]);
 
     if (name !== params.hashtag) {
        RenderPosts(); 
     } 
 
     function RenderPosts() {
-        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${params.hashtag}/posts`, config);
         
         request.then(response => {
@@ -37,7 +38,40 @@ export default function HashtagPage() {
 
     }
     
-    useEffect(RenderPosts, []);
+    
+
+    function RenderLikes() {
+        const config = {
+          headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+        };
+        const requestLikeds = axios.get(
+          "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked",
+          config
+        );
+        requestLikeds.then((response) => setLikedPosts(response.data.posts));
+    }
+
+    function CreateLikedPosts() {
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
+    
+        request.then(response => {
+            setLikedPosts(response.data.posts);
+    
+            RenderPosts();
+        });
+    
+        request.catch(error => {
+            alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+            setEnableLoading(false);
+        });
+    }
+      
+    useEffect(() => {
+        RenderPosts();
+        RenderLikes();
+        CreateLikedPosts()
+      }, []);
 
     return(
         <>
@@ -47,7 +81,7 @@ export default function HashtagPage() {
                 <PostsContainer>
                     <Title># {name}</Title>                   
 
-                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag RenderPosts={RenderPosts} post={post} key={i} />)}
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag LikedPosts={LikedPosts} RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">
@@ -95,9 +129,9 @@ const UserPostsContainer = styled.div`
         top: 208px;
         left: calc((100vw + 611px + 15px - 301px) / 2);
 
-        @media (max-width: 614px){
-            display: none;
-        }
+        @media (max-width: 900px) {
+        display: none;
+        }   
     }
 `;
 

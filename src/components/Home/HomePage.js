@@ -10,8 +10,8 @@ export default function HomePage() {
     const { userData, setUserData } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [load, setLoad] = useState(false);
-
+    const [load, setLoad] = useState(false);    
+    
     function login(e) {
         e.preventDefault();
 
@@ -21,10 +21,10 @@ export default function HomePage() {
         }
         
         setLoad(true);
-
         const body = {email, password};        
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body);
         
+                  
         request.then(resp => {
             setLoad(false);
             setUserData(resp.data);            
@@ -32,7 +32,7 @@ export default function HomePage() {
             const pessoa = JSON.parse(localStorage.getItem("user"));  
             setEmail("");
             setPassword("");
-            history.push('/timeline');
+            history.push('/timeline');                      
         });
 
         request.catch(error => {
@@ -40,6 +40,8 @@ export default function HomePage() {
             setLoad(false);
         });
     }
+
+   
 
     return(
         <Body>
@@ -49,9 +51,7 @@ export default function HomePage() {
             </Container>
             <Form onSubmit={e => login(e)}>
                 <input disabled={load} type='email' placeholder='email' value={email} onChange={e => setEmail(e.target.value)}/>
-
-                <input disabled={load} type='password' placeholder='password' value={password} onChange={e => setPassword(e.target.value)}/>
-                    
+                <input disabled={load} type='password' placeholder='password' value={password} onChange={e => setPassword(e.target.value)}/>                    
                 <Button disabled={load} type='submit'>Log In</Button>
                 <Link to='/sign-up'>
                     <Redirect>First time? Create an account!</Redirect>

@@ -1,33 +1,131 @@
 import styled from "styled-components";
 import { AiOutlineHeart } from 'react-icons/ai';
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import Hashtag from "../Timeline/Hashtag";
 import { Link, useHistory, useParams } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import { FaTrash } from 'react-icons/fa';
 import Modal from "../Modal";
+import axios from "axios";
+import {AiFillHeart} from 'react-icons/ai';
+import ReactTooltip from 'react-tooltip';
+import {FaPencilAlt} from 'react-icons/fa';
 
-export default function PostClickedHashtag({ post, RenderPosts }) {
+export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;  
     const history = useHistory();
     const params = useParams();
+    const localUser = JSON.parse(localStorage.getItem("user"));    
     const { userData } = useContext(UserContext);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false); 
+    const [control,setControl]=useState(false)
+    const [newText,setNewText]=useState(text)
+    const [disabler,setDisabler]=useState(false)
+    const inputRef=useRef();   
+   
+    let enabled = false;      
+  
+    function LikeOrDeslike() {
+        const body = [];
     
+        const config = {
+        headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+        };
+
+        if(enabled===false){
+        const request = axios.post(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
+        body,
+        config
+        );
+        }else{
+        const request = axios.post(
+            `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
+            body,
+            config
+        );
+        
+        }
+        RenderLikes()
+        RenderPosts()
+    }
+
+  likes.forEach(element => {
+    if(element.userId === localUser.user.id) {
+      enabled = true;
+    }
+  });
+
+  useEffect(()=>{
+    if(control){
+      inputRef.current.focus()
+    }
+    setNewText(text)
+},[control]);
+
+function ShowEdit(){ 
+    if(control){
+     setControl(false)
+     
+     return
+    }else{
+     setControl(true)
+     
+    }
+    
+}
+  
+ function Edit(event){
+   event.preventDefault();
+   setDisabler(true)
+   const body = {
+     text: newText
+   };
+   const config = {
+     headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+   };
+   const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
+   request.then((response)=>{
+   setDisabler(false)
+   setControl(false)
+   RenderPosts()}
+   )
+   request.catch(()=>{alert('Não foi possível salvar as alterações')
+   setDisabler(false)})
+}
+
+
     return(
         <PostBox>
-            <SideMenu>
+            <SideMenu enabled={enabled}>
                 <Link to={`/user/${user.id}`} > 
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
                 </Link>
-                <AiOutlineHeart className="heart-icon" />
-                <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
+                {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
+        <span data-tip={likes.length === 0 ? '' :
+          likes.length !== 1 ?
+            likes.length >= 3 ?
+              enabled ? 
+                `Você, ${likes[0]['user.username']} e outras ${likes.length-2} pessoas` : 
+                `${likes[0]['user.username']}, ${likes[1]['user.username']} e outras ${likes.length-2} pessoas` :
+            enabled ? 
+              `Você e ${localUser.user.username===likes[0]['user.username']?likes[1]['user.username']:likes[0]['user.username']} curtiram` : 
+              `${likes[0]['user.username']} e ${likes[1]['user.username']} curtiram` :
+          enabled ? 
+            `Você curtiu` :
+            `${likes[0]['user.username']} curtiu`}>
+            {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
+            <ReactTooltip place="bottom" type="light" effect="float"/>                
             </SideMenu>
             <Content>
-                <Link to={`/user/${user.id}`} >
-                    <h1>{user.username}</h1>
-                </Link>
-                <h2><Hashtag text={text} /></h2>
+                <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
+                <h2>
+                {control?          
+                [<form onSubmit={Edit}>
+                    <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
+                </form>]           
+                :<Hashtag text={text} />}
+                </h2>
                 <Snippet href={link} target="_blank">
                     <div className="snippet-text">
                         <h3>{linkTitle}</h3>
@@ -37,7 +135,8 @@ export default function PostClickedHashtag({ post, RenderPosts }) {
                     <img src={linkImage} alt={linkDescription} />
                 </Snippet>
             </Content>
-            {userData.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+            {userData ? userData.user.id : localUser.user.id === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
+            {userData ? userData.user.id : localUser.user.id === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
             <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
         </PostBox>
     );
@@ -72,6 +171,20 @@ const PostBox = styled.li`
             top: 13px;
         }
     }
+
+    .pencil-icon {
+      position: absolute;
+      top: 23px;
+      right: 48px;
+      color: #FFFFFF;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+
+      @media (max-width: 614px) {
+            top: 13px;
+      }
+    }
 `;
 
 const SideMenu = styled.div`
@@ -100,6 +213,7 @@ const SideMenu = styled.div`
         color: #FFFFFF;
         margin-bottom: 4px;
         margin-top: 19px;
+        color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
 
         @media (max-width: 614px){
             width: 17px;
@@ -146,6 +260,17 @@ const Content = styled.div`
         @media (max-width: 614px){
             font-size: 15px;
         }
+    }
+
+    input{
+        width: 100%;
+        border-radius: 7px;
+        font-size: 14px;
+        padding:4px 9px;
+        outline: 1px solid black;
+        overflow-y: auto;
+        overflow-wrap: break-word;
+        color: #4C4C4C;
     }
 `;
 
@@ -228,6 +353,9 @@ const Snippet = styled.a`
         height: 155px;
         border-radius: 0px 12px 13px 0px;
         object-fit: cover;
+        white-space: pre-wrap;
+        text-overflow: ellipsis; 
+        overflow: hidden;
 
         @media (max-width: 614px){
             width: 95px;
