@@ -93,12 +93,26 @@ const PostBox = styled.li`
   justify-content: space-between;
   padding: 17px 21px 20px 18px;
   border-radius: 16px;
+  position: relative;
   margin-bottom: 16px;
   @media (max-width: 614px) {
     width: 100%;
     border-radius: 0;
     padding: 9px 18px 15px 15px;
   }
+  .trash-icon {
+      position: absolute;
+      top: 23px;
+      right: 23px;
+      color: #FFFFFF;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+
+      @media (max-width: 614px) {
+            top: 13px;
+        }
+    }
 `;
 const SideMenu = styled.div`
   display: flex;

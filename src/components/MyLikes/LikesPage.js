@@ -14,7 +14,7 @@ export default function LikesPage() {
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [TimelinePosts, setTimelinePosts] = useState([]);
 
-       useEffect(() => {
+      function RenderPosts() {
         const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
 
@@ -26,7 +26,9 @@ export default function LikesPage() {
             alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
             setEnableLoading(false);
         });
-    }, []);
+    }
+
+       useEffect(RenderPosts, []);
     
     return(
         <>
@@ -45,6 +47,7 @@ export default function LikesPage() {
                           setLikedPosts={setLikedPosts}
                           LikedPosts={LikedPosts}
                           TimelinePosts={TimelinePosts}
+                          RenderPosts={RenderPosts}
                           />)
                     }
                     {enableLoading && <Loading />}
