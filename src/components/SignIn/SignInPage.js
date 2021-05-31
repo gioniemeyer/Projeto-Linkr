@@ -11,10 +11,7 @@ export default function SignInPage() {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [picture, setPicture] = useState('');
-    const [load, setLoad] = useState(false);
-
-    const condicaoURL = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
-    let regexURL = new RegExp(condicaoURL);
+    const [load, setLoad] = useState(false);   
 
     function subscribe(e) {
         e.preventDefault();
@@ -31,10 +28,10 @@ export default function SignInPage() {
         request.then(() => {
             history.push('/');
             setLoad(false);
-        })
+        });
+
         request.catch(error => {
             const statusCode = error.response.status;
-
             
             if (statusCode === 403) {
                 alert("O email que você inseriu já está cadastrado. Tente novamente!")  
@@ -46,7 +43,7 @@ export default function SignInPage() {
             
             setLoad(false);           
             
-        })
+        });
     }
 
     return(
