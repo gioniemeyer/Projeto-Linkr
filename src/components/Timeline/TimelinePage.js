@@ -7,6 +7,7 @@ import NewPost from "./NewPost";
 import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
+import useInterval from 'react-useinterval';
 
 export default function Timeline() {
   const [TimelinePosts, setTimelinePosts] = useState([]);
@@ -14,6 +15,7 @@ export default function Timeline() {
   const { userData } = useContext(UserContext);
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [LikedPosts, setLikedPosts] = useState([]);
+  const [counter, setCounter] = useState(0);
 
   function RenderLikes() {
     const config = {
@@ -63,10 +65,14 @@ export default function Timeline() {
   useEffect(() => {
     RenderPosts();
     RenderLikes();
-    CreateLikedPosts()
+    CreateLikedPosts();
   }, []);
 
+  // useInterval(RenderPosts, 15000);
+  // useInterval(RenderLikes, 15000);
+  // useInterval(CreateLikedPosts, 15000);
 
+  console.log(TimelinePosts);
 
   return (
     <>

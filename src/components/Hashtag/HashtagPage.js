@@ -7,7 +7,7 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
 import { useParams } from 'react-router-dom';
 import PostClickedHashtag from "./PostClickedHashtag";
-
+import useInterval from 'react-useinterval';
 
 export default function HashtagPage() {
     const [UserPosts, setUserPosts] = useState([]);
@@ -73,6 +73,11 @@ export default function HashtagPage() {
         CreateLikedPosts()
       }, []);
 
+    useInterval(RenderPosts, 15000);
+    useInterval(RenderLikes, 15000);
+    useInterval(CreateLikedPosts, 15000);
+
+      
     return(
         <>
         <Header />

@@ -7,6 +7,7 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header"; 
 import { useParams } from 'react-router-dom';
 import PostClickedUser from "../MyPosts/PostClickedUser";
+import useInterval from "react-useinterval";
 
 export default function UserPage() {
     const [UserPosts, setUserPosts] = useState([]);
@@ -16,8 +17,7 @@ export default function UserPage() {
     const params = useParams();  
     const [name, setName] = useState(""); 
 
-    
-    useEffect(() => {
+    function RenderPosts() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts`, config);
         
@@ -30,8 +30,11 @@ export default function UserPage() {
         request.catch(error => {
             alert("Houve uma falha ao obter os posts desse usuário, por favor, atualize a página.");
         });
-    }, []);    
+    }    
 
+    useEffect(RenderPosts, []);
+
+    useInterval(RenderPosts, 15000);
 
     return(
         <>
