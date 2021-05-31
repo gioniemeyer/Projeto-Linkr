@@ -13,6 +13,9 @@ export default function SignInPage() {
     const [picture, setPicture] = useState('');
     const [load, setLoad] = useState(false);
 
+    const condicaoURL = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+    let regexURL = new RegExp(condicaoURL);
+
     function subscribe(e) {
         e.preventDefault();
 
@@ -30,8 +33,19 @@ export default function SignInPage() {
             setLoad(false);
         })
         request.catch(error => {
-            alert("O email inserido já está cadastrado");
-            setLoad(false);
+            const statusCode = error.response.status;
+
+            
+            if (statusCode === 403) {
+                alert("O email que você inseriu já está cadastrado. Tente novamente!")  
+            } 
+            
+            else {
+                alert("Ocorreu um erro ao realizar o seu cadastro. Verifique se a imagem inserida na picture url termina em alguma extensão de imagem (ex: .jpg, .png) e tente novamente!");
+            }
+            
+            setLoad(false);           
+            
         })
     }
 
