@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useState, useContext } from "react";
 import axios from "axios";
 import UserContext from "../../contexts/UserContext";
+import { VscLocation } from "react-icons/vsc";
 
 export default function NewPost({ RenderPosts }) {
     const { userData } = useContext(UserContext);
@@ -9,6 +10,7 @@ export default function NewPost({ RenderPosts }) {
     const [link, setLink] = useState("");
     const [text, setText] = useState("");
     const [disabled, setDisabled] = useState(false);
+    
     
 
 
@@ -44,6 +46,7 @@ export default function NewPost({ RenderPosts }) {
                     <textarea disabled={disabled} placeholder ="Muito irado esse link falando de #javascript" onChange={(e) => setText(e.target.value)} value={text} />
                     <button disabled={disabled} type="submit">{disabled ? 'Publishing...' : 'Publicar'}</button>
                 </form>
+                <Geolocation><img src={VscLocation}></img></Geolocation>
             </Content>
         </NewPostBox>
     );
@@ -184,4 +187,14 @@ const Content = styled.div`
             height: 22px;
         }
     }
+  
+`;
+
+
+const Geolocation = styled.div`   
+
+        img {
+            color: black;
+        }
+
 `;
