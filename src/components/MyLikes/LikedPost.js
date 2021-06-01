@@ -10,6 +10,8 @@ import UserContext from "../../contexts/UserContext";
 import Modal from "../Modal";
 import { FaTrash } from 'react-icons/fa';
 import {FaPencilAlt} from 'react-icons/fa';
+import getYouTubeID from 'get-youtube-id';
+import SnippetDiv from "../Timeline/SnippetDiv";
 
 export default function LikedPost({ post, RenderPosts }) {
   const { userData } = useContext(UserContext);
@@ -22,6 +24,7 @@ export default function LikedPost({ post, RenderPosts }) {
   const [newText,setNewText]=useState(text)
   const [disabler,setDisabler]=useState(false)
   const inputRef=useRef();
+  const idVideo = getYouTubeID(link);
 
   let enabled=true
   
@@ -117,14 +120,16 @@ function ShowEdit(){
            </form>]           
           :<Hashtag text={text} />}
         </h2>
-        <Snippet href={link} target="_blank">
-          <div className="snippet-text">
-            <h3>{linkTitle}</h3>
-            <h4>{linkDescription}</h4>
-            <h5>{link}</h5>
-          </div>
-          <img src={linkImage} alt={linkDescription} />
-        </Snippet>
+        {idVideo ? 
+            <SnippetDiv link={link} idVideo={idVideo} /> :
+            <Snippet href={link} target="_blank">
+                <div className="snippet-text">
+                <h3>{linkTitle}</h3>
+                <h4>{linkDescription}</h4>
+                <h5>{link}</h5>
+                </div>
+                <img src={linkImage} alt={linkDescription} />
+            </Snippet> }
       </Content>
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}

@@ -12,6 +12,9 @@ import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 import {FaPencilAlt} from 'react-icons/fa';
 import { IoLocationSharp } from "react-icons/io5";
+import YouTube from 'react-youtube';
+import getYouTubeID from 'get-youtube-id';
+import SnippetDiv from "./SnippetDiv";
 
 export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
@@ -28,6 +31,8 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
   const history = useHistory();
   
   
+  const idVideo = getYouTubeID(link);
+
   useEffect(()=>{
     if(control){
       inputRef.current.focus()
@@ -97,13 +102,6 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
     setDisabler(false)})
   }
 
-  
- 
-  
-
- 
-  
-  
 
   return (
     
@@ -126,7 +124,10 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
             `Você curtiu` :
             `${likes[0]['user.username']} curtiu`}>
         {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
-        <ReactTooltip place="bottom" type="light" effect="float"/>
+        <ReactTooltip className='react-player'
+          url={link}
+          width='100%'
+          height='100%'/>
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}
@@ -142,18 +143,19 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
               <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
             </form>]
             
-          
           :<Hashtag text={text} />}
           
         </h2>
-        <Snippet href={link} target="_blank">
-          <div className="snippet-text">
-            <h3>{linkTitle}</h3>
-            <h4>{linkDescription}</h4>
-            <h5>{link}</h5>
-          </div>
-          <img src={linkImage} alt={linkDescription} />
-        </Snippet>
+        {idVideo ? 
+          <SnippetDiv link={link} idVideo={idVideo} /> :
+          <Snippet href={link} target="_blank">
+            <div className="snippet-text">
+              <h3>{linkTitle}</h3>
+              <h4>{linkDescription}</h4>
+              <h5>{link}</h5>
+            </div>
+            <img src={linkImage} alt={linkDescription} />
+          </Snippet> }
       </Content>
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
@@ -292,6 +294,7 @@ const Content = styled.div`
    }
   }
 `;
+
 const Snippet = styled.a`
     width: 503px;
     height: 155px;
