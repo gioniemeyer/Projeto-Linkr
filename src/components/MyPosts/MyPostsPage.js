@@ -14,8 +14,6 @@ export default function MyPostsPage() {
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     
-    
-    
   function RenderPosts() {
     const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
     const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${localUser.user.id || userData.user.id}/posts`, config);
@@ -32,9 +30,7 @@ export default function MyPostsPage() {
 
   useEffect(RenderPosts, []);
 
- 
-
-    return(
+     return(
         <>
         <Header />
         <MyPostsBody>

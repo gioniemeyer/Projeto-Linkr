@@ -9,8 +9,9 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 
 export default function Timeline() {
+  
   const [TimelinePosts, setTimelinePosts] = useState([]);
-  const [enableLoading, setEnableLoading] = useState(true);
+  const [enableLoading, setEnableLoading] = useState(false);
   const { userData } = useContext(UserContext);
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [LikedPosts, setLikedPosts] = useState([]);
@@ -30,8 +31,7 @@ export default function Timeline() {
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
-    const request = axios.get(
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts",
+    const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts",
       config
     );
     request.then((response) => {
@@ -44,6 +44,8 @@ export default function Timeline() {
     ;
   }
 
+
+  
   function CreateLikedPosts() {
     const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
     const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
