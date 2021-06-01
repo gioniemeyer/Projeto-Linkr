@@ -191,6 +191,7 @@ const PostBox = styled.li`
   border-radius: 16px;
   margin-bottom: 16px;
   position: relative;
+  
   @media (max-width: 614px) {
     width: 100%;
     border-radius: 0;
