@@ -130,9 +130,9 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}
-        {post.geolocation &&
-        <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
-        }
+          {post.geolocation &&
+          <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
+          }
         </h1>
         <h2>
         
@@ -158,7 +158,9 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
       <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
-      <GeolocationModal RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
+      {post.geolocation && 
+      <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
+      }
     </PostBox>
   );
 }

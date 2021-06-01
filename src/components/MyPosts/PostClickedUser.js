@@ -69,7 +69,10 @@ export default function PostClickedUser({ post, RenderPosts }) {
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
-                <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
+            <Link className="link" to={`/user/${user.id}`}> 
+            <h1>{user.username}</h1>
+                </Link>
+                
                 <h2>
                 {control?          
                 [<form onSubmit={Edit}>
@@ -196,9 +199,12 @@ const Content = styled.div`
         margin-bottom: 7px;
         word-break: break-all;
 
+        
         @media (max-width: 614px){
             font-size: 17px;
         }
+
+        
     }
 
     h2 {
@@ -223,6 +229,17 @@ const Content = styled.div`
         overflow-wrap: break-word;
         color: #4C4C4C;
     }
+
+    .link {
+      width: 100px;
+        
+        h1 {
+            width: 100px;
+
+        }
+            
+    }
+    
 `;
 
 const Snippet = styled.a`
