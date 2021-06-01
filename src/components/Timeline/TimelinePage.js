@@ -31,10 +31,11 @@ export default function Timeline() {
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
-    const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts",
+    const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts",
       config
     );
     request.then((response) => {
+      console.log(response.data)
       setTimelinePosts(response.data.posts);
       setEnableLoading(false);
     })
@@ -108,6 +109,7 @@ const TimelineBody = styled.div`
   display: flex;
   justify-content: center;
   background-color: #333333;
+  min-height: 100vh;
   @media (max-width: 614px) {
     flex-direction: column;
     align-items: center;
