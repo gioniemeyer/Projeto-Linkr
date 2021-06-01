@@ -105,7 +105,7 @@ export default function Post({ post, RenderLikes, RenderPosts }) {
         {enabled ? (
           <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
         ) : (
-          <AiFillHeart stroke={"white"} stroke-width={80} fill={"#171717"} className="heart-icon" onClick={LikeOrDeslike} />
+          <AiFillHeart stroke={"white"} strokeWidth={80} fill={"#171717"} className="heart-icon" onClick={LikeOrDeslike} />
         )}
         <span
           data-tip={
