@@ -13,7 +13,7 @@ import ReactTooltip from 'react-tooltip';
 import {FaPencilAlt} from 'react-icons/fa';
 import { IoLocationSharp } from "react-icons/io5";
 
-export default function Post({ post,RenderLikes,RenderPosts }) {
+export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes } =post;
   const texto = text.split(" ");
@@ -21,11 +21,12 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
   const [control,setControl]=useState(false)
   const [newText,setNewText]=useState(text)
   const [disabler,setDisabler]=useState(false)
-  let enabled=false
+  let enabled=false  
   const inputRef=useRef();
   const [modalOpen, setModalOpen] = useState(false);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
   const history = useHistory();
+  
   
   useEffect(()=>{
     if(control){
@@ -33,7 +34,6 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
     }
     setNewText(text)
   },[control])
-
   
 
   function LikeOrDeslike() {
@@ -97,6 +97,14 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
     setDisabler(false)})
   }
 
+  
+ 
+  
+
+ 
+  
+  
+
   return (
     
     <PostBox>
@@ -121,8 +129,13 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
         <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>
       <Content>
-        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username} <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/></h1>
+        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}
+        {post.geolocation &&
+        <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
+        }
+        </h1>
         <h2>
+        
           {control?
           
             [<form onSubmit={Edit}>

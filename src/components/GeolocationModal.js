@@ -1,10 +1,12 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import ReactModal from 'react-modal';
 import axios from "axios";
 import UserContext from "../contexts/UserContext";
 import "../styles/modal-styles.css";
 import ReactLoading from 'react-loading';
-import { Map, GoogleApiWrapper } from 'google-maps-react';
+// import { Map, GoogleApiWrapper } from 'google-maps-react';
+// // import MapContainer from "./MapContainer";
+
 
 
 export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, RenderPosts }) {
@@ -18,53 +20,17 @@ export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, 
     const [latitude, setLatitude] = useState("");
     const [longitude, setLongitude] = useState("");
 
-    // function deletePost() {
-    //     setEnableLoading(true);
-    //     setDisabled(true);
-    //     const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         
-    //     const request = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${postID}`, config);
-
-    //     request.then(response => {
-    //         setGeoModalOpen(false);
-    //         setEnableLoading(false);
-    //         setDisabled(false);
-    //         RenderPosts();
-    //     });
-
-    //     request.catch(error => {
-    //         setGeoModalOpen(false);
-    //         setEnableLoading(false);
-    //         setDisabled(false);
-    //         alert("Não foi possível excluir o post, por favor, tente novamente.");
-    //     })
-    // }
-
    
 
-    // function showPosition(position) {              
-    //     latlon = post.geolocation[0] + "," + post.geolocation[1]; 
-
-    //     img_url = `https://maps.googleapis.com/maps/api/staticmap?center=
-    //     "+${latlon}+"&zoom=14&size=400x300&sensor=false&key=YOUR_KEY`; 
-              
-    // } 
+    // if (geoModalOpen && post.geolocation.latitude && post.geolocation.longitude) {  
+    //     setLatitude(post.geolocation.latitude)  
+    //     setLongitude(post.geolocation.longitude)      
+    // }  
 
     
+    // console.log(latitude, longitude)
 
-    if (geoModalOpen && post.geolocation.latitude && post.geolocation.longitude) {  
-        console.log("oi")      
-      
-    }
-
-    // export class MapContainer extends React.Component {}
-
-    // export default GoogleApiWrapper({
-    //     apiKey: (YOUR_GOOGLE_API_KEY_GOES_HERE)
-    // })(MapContainer)
-   
-    
-    console.log(post.geolocation)
     return(
         <ReactModal
         isOpen={geoModalOpen}
@@ -79,24 +45,23 @@ export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, 
                 width={100}
                 height={125}
             />
-            :
-            <h1>lala</h1>
-            
-    }
-    </ReactModal>
-    );
+            :            
+          
+            <iframe
+            width="450"
+            height="250"
+            frameBorder="0" style={{marginTop: 1 + 'em'}}
+            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUAArWaNwCYbpOqwV1PmfeMvOIZbWRuXY&q=${latitude},${longitude}
+            &zoom=15
+            &maptype=satellite`}
+            allowFullScreen>
+          </iframe>           
+        }
 
-        //     : <Map
-        //         google={this.props.google}
-        //         zoom={7}
-        //         initialCenter={{ lat: -27.0922364, lng: -52.6166878 }}
-        //     >
-        //     </Map>
-        // }
-        {/* <div className="buttons">
-            <button disabled={disabled} onClick={() => setGeoModalOpen(false)} className='go-back'>Não, voltar</button>
-            <button disabled={disabled} onClick={deletePost} className='delete'>Sim, excluir</button>
-        </div> */}
-       
-       
+        <div className="buttons">
+            <button disabled={disabled} onClick={() => setGeoModalOpen(false)} className='go-back'>Não, voltar</button>          
+        </div>
+    </ReactModal>
+    
+    );     
 }
