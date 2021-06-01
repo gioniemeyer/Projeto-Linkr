@@ -4,6 +4,7 @@ import axios from "axios";
 import UserContext from "../contexts/UserContext";
 import "../styles/modal-styles.css";
 import ReactLoading from 'react-loading';
+import { Map, GoogleApiWrapper } from 'google-maps-react';
 
 
 export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, RenderPosts }) {
@@ -55,31 +56,47 @@ export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, 
         console.log("oi")      
       
     }
+
+    // export class MapContainer extends React.Component {}
+
+    // export default GoogleApiWrapper({
+    //     apiKey: (YOUR_GOOGLE_API_KEY_GOES_HERE)
+    // })(MapContainer)
    
     
     console.log(post.geolocation)
     return(
         <ReactModal
-            isOpen={geoModalOpen}
-            overlayClassName="Overlay"
-            className="Modal"
-        >
-            {
-                enableLoading
-                ? <ReactLoading
-                    type="spinningBubbles"
-                    color="#FFFFFF"
-                    width={100}
-                    height={125}
-                />
-                : <h1>
-                    {/* <img src={`+${img_url}+`}> </img> */}
-                  </h1>
-            }
-            {/* <div className="buttons">
-                <button disabled={disabled} onClick={() => setGeoModalOpen(false)} className='go-back'>Não, voltar</button>
-                <button disabled={disabled} onClick={deletePost} className='delete'>Sim, excluir</button>
-            </div> */}
-        </ReactModal>
+        isOpen={geoModalOpen}
+        overlayClassName="Overlay"
+        className="Modal"
+            >
+        {
+            enableLoading
+            ? <ReactLoading
+                type="spinningBubbles"
+                color="#FFFFFF"
+                width={100}
+                height={125}
+            />
+            :
+            <h1>lala</h1>
+            
+    }
+    </ReactModal>
     );
+
+        //     : <Map
+        //         google={this.props.google}
+        //         zoom={7}
+        //         initialCenter={{ lat: -27.0922364, lng: -52.6166878 }}
+        //     >
+        //     </Map>
+        // }
+        {/* <div className="buttons">
+            <button disabled={disabled} onClick={() => setGeoModalOpen(false)} className='go-back'>Não, voltar</button>
+            <button disabled={disabled} onClick={deletePost} className='delete'>Sim, excluir</button>
+        </div> */}
+       
+       
 }
