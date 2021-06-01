@@ -74,9 +74,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
       return
      }else{
       setControl(true)
-      
      }
-     
   }
    
   function Edit(event){

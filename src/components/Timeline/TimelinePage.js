@@ -111,6 +111,7 @@ const TimelineBody = styled.div`
   @media (max-width: 614px) {
     flex-direction: column;
     align-items: center;
+    margin-top: 50px;
   }
 `;
 const TimelineContainer = styled.div`

@@ -72,7 +72,7 @@ export default function PostClickedUser({ post, RenderPosts }) {
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
-                <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
+                <h1 onClick={() => history.push(`${user.id}`)}>{user.username}</h1>
                 <h2>
                 {control?          
                 [<form onSubmit={Edit}>
