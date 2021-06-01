@@ -78,9 +78,9 @@ export default function Timeline() {
           <TimelinePostsContainer>
             <Title>timeline</Title>
             <NewPost RenderPosts={RenderPosts} />
-            {TimelinePosts.length === 0 && !enableLoading ? (
+            {TimelinePosts.length === 0 && !enableLoading ? 
               <div className="no-post">Nenhum post encontrado :(</div>
-            ) : (
+            : (
               TimelinePosts.map((post, i) => (
                 <Post
                   post={post}

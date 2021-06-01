@@ -12,7 +12,6 @@ import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 import {FaPencilAlt} from 'react-icons/fa';
 import { IoLocationSharp } from "react-icons/io5";
-import YouTube from 'react-youtube';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "./SnippetDiv";
 
