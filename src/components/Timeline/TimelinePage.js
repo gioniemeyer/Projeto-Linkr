@@ -13,7 +13,7 @@ export default function Timeline() {
     {
         id: 2,
         text: "Never Gonna Give You Up #rickroll",
-        link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        link: "https://www.youtube.com/watch?v=Iz_H_Z7aPdA&t=1s&ab_channel=RodrigoMarques",
         linkTitle: "Rick Astley - Never Gonna Give You Up (Video)",
         linkDescription: "Rick Astley's official music video for “Never Gonna Give You Up” Listen to Rick Astley: https://RickAstley.lnk.to/_listenYDSubscribe to the official Rick Ast...",
         linkImage: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",

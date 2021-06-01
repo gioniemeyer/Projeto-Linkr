@@ -10,6 +10,7 @@ import Modal from "../Modal";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 import {FaPencilAlt} from 'react-icons/fa';
+import YouTube from 'react-youtube';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "./SnippetDiv";
 
@@ -25,7 +26,8 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
   const inputRef=useRef();
   const [modalOpen, setModalOpen] = useState(false);
   const history = useHistory();
-  
+  const idVideo = getYouTubeID(link);
+
   useEffect(()=>{
     if(control){
       inputRef.current.focus()
@@ -135,8 +137,8 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
           :<Hashtag text={text} />}
           
         </h2>
-        {getYouTubeID ? 
-          <SnippetDiv link={link} /> :
+        {idVideo ? 
+          <SnippetDiv link={link} idVideo={idVideo} /> :
           <Snippet href={link} target="_blank">
             <div className="snippet-text">
               <h3>{linkTitle}</h3>
@@ -145,6 +147,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
             </div>
             <img src={linkImage} alt={linkDescription} />
           </Snippet> }
+          {console.log(idVideo)}
       </Content>
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
