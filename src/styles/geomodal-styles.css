@@ -3,7 +3,7 @@
     height: 354px;
     border: none;
     background-color: #333333;
-    border-radius: 50px;
+    border-radius: 20px;
     display: flex;    
     align-items: top;
     justify-content: center;   
@@ -19,18 +19,24 @@ h1 {
 }
 
 button {    
-    width: 34px;
-    height: 37px;
+   
     font-size: 18px;
     font-family: 'Lato';
     font-weight: 700;
     border: none;
     border-radius: 5px;
-    cursor: pointer;    
+    cursor: pointer;   
+    
 }
 
-.go-backGeo {   
-  margin-left: 50px;   
+.go-backGeo {  
+  border: none;
+  background-color: inherit;  
+}
+
+.close {
+  color: white !important; 
+  font-size: 30px;         
 }
 
 
@@ -48,8 +54,9 @@ button {
 
 @media (max-width: 614px){
     .ModalGeo {
-        width: 400px;
-        height: 175px;
+        width: 300px;
+        height: 245px;
+        border-radius: 10px;
     }
 
     h1 {
@@ -57,8 +64,13 @@ button {
     }
     
     button {
-        width: 90px;
+        
         height: 25px;
         font-size: 14px;
     }
+
+    .close {
+        color: white !important; 
+        font-size: 25px;         
+      }
 }

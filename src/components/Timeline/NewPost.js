@@ -269,8 +269,11 @@ const Geolocation = styled.div`
         width: ${(props) => (props.location ? "135px" : "157px")}; 
     }
 
-    /* .active {
-        width: 135px;
-    } */
+    @media (max-width: 614px){
+        .geolocation {
+            align-items: flex-start;
+        }
+
+    }
 
 `;
