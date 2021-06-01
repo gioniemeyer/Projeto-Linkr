@@ -63,7 +63,7 @@ export default function Timeline() {
   useEffect(() => {
     RenderPosts();
     RenderLikes();
-    CreateLikedPosts()
+    CreateLikedPosts();
   }, []);
 
 
