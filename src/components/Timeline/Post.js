@@ -7,9 +7,11 @@ import Hashtag from "./Hashtag";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import Modal from "../Modal";
+import GeolocationModal from "../GeolocationModal";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 import {FaPencilAlt} from 'react-icons/fa';
+import { IoLocationSharp } from "react-icons/io5";
 
 export default function Post({ post,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
@@ -22,6 +24,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
   let enabled=false
   const inputRef=useRef();
   const [modalOpen, setModalOpen] = useState(false);
+  const [geoModalOpen, setGeoModalOpen] = useState(false);
   const history = useHistory();
   
   useEffect(()=>{
@@ -118,7 +121,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
         <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>
       <Content>
-        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
+        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username} <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/></h1>
         <h2>
           {control?
           
@@ -142,6 +145,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
       <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
+      <GeolocationModal RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
     </PostBox>
   );
 }
@@ -245,6 +249,10 @@ const Content = styled.div`
 
         @media (max-width: 614px){
             font-size: 17px;
+        }
+
+        .geolocation {
+          padding-top: 3px;
         }
     }
   

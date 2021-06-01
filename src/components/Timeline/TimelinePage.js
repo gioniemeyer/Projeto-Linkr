@@ -66,7 +66,7 @@ export default function Timeline() {
     CreateLikedPosts()
   }, []);
 
-
+  console.log(TimelinePosts);
 
   return (
     <>

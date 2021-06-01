@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useContext } from "react";
 import axios from "axios";
 import UserContext from "../../contexts/UserContext";
-import { VscLocation } from "react-icons/vsc";
+import { IoLocationOutline } from "react-icons/io5";
 
 export default function NewPost({ RenderPosts }) {
     const { userData } = useContext(UserContext);
@@ -10,15 +10,59 @@ export default function NewPost({ RenderPosts }) {
     const [link, setLink] = useState("");
     const [text, setText] = useState("");
     const [disabled, setDisabled] = useState(false);
+    const [location, setLocation] = useState(false);
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
+
+
+
+    function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+          alert("A geolocalização não é permitida pelo seu navegador, tente atualizá-lo ou instalar um mais recente.");
+        }
+    }
+      
+    function showPosition(position) {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);        
+    }
+
+    console.log(latitude, longitude)
+       
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+            alert("O acesso à sua localização foi negado com sucesso.");
+            break;
+            case error.POSITION_UNAVAILABLE:
+            alert("A informação da sua localização está indisponível.");
+            break;
+            case error.TIMEOUT:
+            alert("A requisição falhou, tente novamente.");
+            break;
+            case error.UNKNOWN_ERROR:
+            alert("Um erro desconhecido ocorreu. Tente novamente.");
+            break;
+        }
+        setLocation(false);
+    }
+        
     
+
     
+   
 
 
     function makePost(e) {
         e.preventDefault();
         setDisabled(true);
         const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
-        const body = { text, link};       
+        const body = { text, link, "geolocation": {
+            "latitude": latitude,
+            "longitude": longitude
+        }};       
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts', body, config);
 
         request.then(response => {            
@@ -26,11 +70,13 @@ export default function NewPost({ RenderPosts }) {
             setLink("");
             setText("");
             RenderPosts();
+            console.log("deu bom :)")
         })
 
         request.catch(error => {
-            alert("Houve um erro ao publicar sue link.");
+            alert("Houve um erro ao publicar seu post.");
             setDisabled(false);
+            console.log("deu ruim :(")
         })
     }
 
@@ -46,7 +92,19 @@ export default function NewPost({ RenderPosts }) {
                     <textarea disabled={disabled} placeholder ="Muito irado esse link falando de #javascript" onChange={(e) => setText(e.target.value)} value={text} />
                     <button disabled={disabled} type="submit">{disabled ? 'Publishing...' : 'Publicar'}</button>
                 </form>
-                <Geolocation><img src={VscLocation}></img></Geolocation>
+                
+                    {location ? 
+                    <Geolocation location={location}>
+                        <IoLocationOutline className="geolocation"></IoLocationOutline>
+                        <button onClick={() => setLocation(false)}>Localização ativada</button>  
+                    </Geolocation>  
+                        :  
+                    <Geolocation location={location}>   
+                        <IoLocationOutline className="geolocation"></IoLocationOutline>
+                        <button onClick={() => {setLocation(true); getLocation()}}>Localização desativada</button>  
+                    </Geolocation>
+                    }              
+                
             </Content>
         </NewPostBox>
     );
@@ -193,8 +251,26 @@ const Content = styled.div`
 
 const Geolocation = styled.div`   
 
-        img {
-            color: black;
-        }
+    display: flex;
+
+    .geolocation {
+        color: ${(props) => (props.location ? "#238700" : "#949494")}; 
+        font-size: 25px;
+        margin-top: 7px;
+    }
+
+    button {
+        font-size: 15px;
+        line-height: 15.6px;        
+        font-weight: 300;
+        border: none;
+        background: white;
+        color: ${(props) => (props.location ? "#238700" : "#949494")}; 
+        width: ${(props) => (props.location ? "135px" : "157px")}; 
+    }
+
+    /* .active {
+        width: 135px;
+    } */
 
 `;
