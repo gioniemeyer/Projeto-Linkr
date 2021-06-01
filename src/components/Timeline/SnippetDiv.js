@@ -9,7 +9,7 @@ export default function SnippetDiv({link, idVideo}) {
          
             <iframe className="snippet-text"
                 width="500" 
-                height="300" 
+                height="280" 
                 src={`https://www.youtube.com/embed/${idVideo}?autoplay=1&mute=1`}>
             </iframe>     
 
@@ -33,17 +33,24 @@ const SnippetVideo = styled.a`
         height: 220px;
     }
 
+    @media (max-width: 321px){
+        height: 160px;
+    }
     .snippet-text {
 
         @media (max-width: 614px){
             width: calc(250px);
-            height: calc(200px);
+            height: calc(170px);
+        }
+        @media (max-width: 321px){
+            width: calc(210px);
+            height: calc(120px);
         }
     }
 
     h5 {
         height: 13px;
-        font-size: 11px;
+        font-size: 17px;
         line-height: 13px;
         color: #CECECE;
         word-break: break-all;
