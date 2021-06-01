@@ -147,7 +147,6 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
             </div>
             <img src={linkImage} alt={linkDescription} />
           </Snippet> }
-          {console.log(idVideo)}
       </Content>
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}

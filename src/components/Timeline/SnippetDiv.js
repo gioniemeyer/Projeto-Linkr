@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import YouTube from 'react-youtube';
-import getYouTubeID from 'get-youtube-id';
 
 export default function SnippetDiv({link, idVideo}) {
 
