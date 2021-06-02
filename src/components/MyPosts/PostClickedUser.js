@@ -129,11 +129,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
             {post.geolocation &&
             <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
             }
-             </Wrapper>
-            
-                
-                
-                {/* <h1 onClick={() => history.push(`${user.id}`)}>{user.username}</h1> */}
+             </Wrapper>                                      
                 <h2>
                 {control?          
                 [<form onSubmit={Edit}>
