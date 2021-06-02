@@ -3,7 +3,7 @@ import Topic from "./Topic"
 import UserContext from "../../contexts/UserContext";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios"
-
+import SearchHashtag from "./SearchHashtag" 
 export default function Trending({ getHashtagPosts }){
     const { userData } = useContext(UserContext);
     const [topicList, setTopicList]=useState(0)
@@ -29,7 +29,7 @@ export default function Trending({ getHashtagPosts }){
             trending
         </h1>
         {topicList? topicList.map((e,i)=><Topic onClick={getHashtagPosts} item={e} key={i}/>):''}
-        
+        <SearchHashtag/>
         </TrendingBox>
     )
 }
