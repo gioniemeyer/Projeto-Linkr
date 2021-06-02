@@ -49,8 +49,7 @@ export default function UserPage() {
         
         request.then(response => {
             setUserPosts(response.data.posts);
-            setEnableLoading(false);      
-            // setName(response.data.posts[0].user.username);                                        
+            setEnableLoading(false);                                                      
         });    
         
         request.catch(error => {
