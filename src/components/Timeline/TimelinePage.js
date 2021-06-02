@@ -123,7 +123,6 @@ export default function Timeline() {
       request.then((response) => {
         setTimeout(() => {
           setTimelinePosts([...TimelinePosts, ...response.data.posts]);
-          console.log(TimelinePosts);
         }, 500);
       });
 

@@ -103,7 +103,6 @@ export default function MyPostsPage() {
       request.then((response) => {
         setTimeout(() => {
           setMyPosts([...MyPosts, ...response.data.posts]);
-          console.log(MyPosts);
         }, 500);
       });
 

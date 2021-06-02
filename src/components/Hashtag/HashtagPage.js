@@ -105,7 +105,6 @@ export default function HashtagPage() {
       request.then((response) => {
         setTimeout(() => {
           setUserPosts([...UserPosts, ...response.data.posts]);
-          console.log(UserPosts);
         }, 500);
       });
 

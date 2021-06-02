@@ -61,7 +61,6 @@ export default function LikesPage() {
       request.then((response) => {
         setTimeout(() => {
           setLikedPosts([...LikedPosts, ...response.data.posts]);
-          console.log(LikedPosts);
         }, 500);
       });
 
