@@ -13,13 +13,11 @@ export default function UserPage() {
     const [enableLoading, setEnableLoading] = useState(true);    
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));  
-    const params = useParams();  
+    let params = useParams();  
     const [name, setName] = useState(""); 
-    const [following,setFollowing]=useState([])
-    const [enabled,setEnabled]=useState(false)
-    const [disabler,setDisabler]=useState(false)
-  
-    
+    const [following,setFollowing]=useState([]);
+    const [enabled,setEnabled]=useState(false);
+    const [disabler,setDisabler]=useState(false);
 
     function Follow(){
         const body=[]
@@ -47,26 +45,28 @@ export default function UserPage() {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts`, config);
         
+        const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}`, config)
+        
         request.then(response => {
             setUserPosts(response.data.posts);
-            setEnableLoading(false);                                                      
-        });    
-        
-        request.catch(error => {
+            setEnableLoading(false);
+        });
+
+        promise.then(r => setName(r.data.user.username));
+
+      request.catch(error => {
             alert("Houve uma falha ao obter os posts desse usuário, por favor, atualize a página.");
         });
 
         const retest= axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/follows`, config)
-        retest.then((r)=>setFollowing(r.data))
-
-        
-    }, []);    
+        retest.then((r)=>setFollowing(r.data))   
+    }, [params]);    
     
   
    function teste(){
        if(following.users){
             for(let i=0;i<following.users.length;i++){
-                if(following.users[i].id==params.id){
+                if(following.users[i].id===params.id){
                     setEnabled(true) 
                 }
             }
@@ -86,7 +86,9 @@ export default function UserPage() {
                     <FollowButton onClick={Follow} disabled={disabler} habilitado={enabled}>
                     {enabled?'Unfollow':'Follow'}
                     </FollowButton>
-                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedUser post={post} key={i} />)}
+                    {UserPosts.length === 0 && !enableLoading ?
+                        <div className="no-post">Nenhum post encontrado :
+                        (</div> : UserPosts.map((post, i) => <PostClickedUser post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
               
@@ -126,6 +128,8 @@ const UserPostsBody = styled.div`
     @media (max-width: 614px){
         flex-direction: column;
         align-items: center;
+        margin-top: 50px;
+
     }
     
 `;
