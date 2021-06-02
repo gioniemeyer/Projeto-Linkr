@@ -13,7 +13,7 @@ import {FaPencilAlt} from 'react-icons/fa';
 import YouTube from 'react-youtube';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "./SnippetDiv";
-
+import Comments from "../Comments"
 export default function Post({ post,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes } =post;
@@ -122,6 +122,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
           url={link}
           width='100%'
           height='100%'/>
+        <Comments/>
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
@@ -215,12 +216,10 @@ const SideMenu = styled.div`
     }
 
   .heart-icon {
-    width: 20px;
-    height: 18px;
-    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+    font-size: 20px;
+    color: ${(props) => (props.enabled ? "#AC0000" : "#FFFFFF")};
     margin-bottom: 4px;
     margin-top: 19px;
-
     @media (max-width: 614px) {
       width: 17px;
       height: 15px;
