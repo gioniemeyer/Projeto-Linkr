@@ -27,9 +27,7 @@ export default function NewPost({ RenderPosts }) {
     function showPosition(position) {
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);        
-    }
-
-    console.log(latitude, longitude)
+    }   
        
     function showError(error) {
         switch(error.code) {
@@ -69,14 +67,12 @@ export default function NewPost({ RenderPosts }) {
             setDisabled(false);
             setLink("");
             setText("");
-            RenderPosts();
-            console.log("deu bom :)")
+            RenderPosts();            
         })
 
         request.catch(error => {
             alert("Houve um erro ao publicar seu post.");
-            setDisabled(false);
-            console.log("deu ruim :(")
+            setDisabled(false);            
         })
     }
 

@@ -56,8 +56,7 @@ export default function HashtagPage() {
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
     
         request.then(response => {
-            setLikedPosts(response.data.posts);
-    
+            setLikedPosts(response.data.posts);    
             RenderPosts();
         });
     
@@ -67,8 +66,7 @@ export default function HashtagPage() {
         });
     }
       
-    useEffect(() => {
-        RenderPosts();
+    useEffect(() => {       
         RenderLikes();
         CreateLikedPosts()
       }, []);
