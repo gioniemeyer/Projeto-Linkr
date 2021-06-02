@@ -77,9 +77,7 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
       return
      }else{
       setControl(true)
-      
      }
-     
   }
    
   function Edit(event){

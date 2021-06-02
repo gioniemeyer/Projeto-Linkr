@@ -88,7 +88,8 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
         );
         
         }
-        RenderLikes()        
+        RenderLikes();
+        RenderPosts();        
     }
 
   likes.forEach(element => {
@@ -121,7 +122,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
             </SideMenu>
             <Content>
                 <Wrapper>
-            <Link className="link" to={`/user/${user.id}`}> 
+            <Link className="link" to={`${user.id}`}> 
                 <h1>{user.username}
                 </h1>
             </Link>
@@ -132,6 +133,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
             
                 
                 
+                {/* <h1 onClick={() => history.push(`${user.id}`)}>{user.username}</h1> */}
                 <h2>
                 {control?          
                 [<form onSubmit={Edit}>

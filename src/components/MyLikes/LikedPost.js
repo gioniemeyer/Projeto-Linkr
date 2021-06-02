@@ -115,7 +115,7 @@ function ShowEdit(){
         <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>
       <Content>
-        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}
+        <h1 onClick={() => history.push(`/user/${user.id}`)}>{user.username}
         {post.geolocation &&
           <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
         }
