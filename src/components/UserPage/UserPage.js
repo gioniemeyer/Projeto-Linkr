@@ -20,18 +20,14 @@ export default function UserPage() {
     const [disabler,setDisabler]=useState(false)
     const [LikedPosts, setLikedPosts] = useState([]);     
    
-    // if (name !== params.id) {
-    //     RenderPosts(); 
-    // } 
-  
+    
     function RenderPosts() {
         const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts`, config);
         
         request.then(response => {
             setUserPosts(response.data.posts);
-            setEnableLoading(false);               
-            // setName(params.hashtag);                                        
+            setEnableLoading(false);                                                               
         });    
         
         request.catch(error => {
