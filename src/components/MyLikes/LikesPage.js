@@ -8,59 +8,64 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 
 export default function LikesPage() {
-    const [enableLoading, setEnableLoading] = useState(false);
-    const [LikedPosts, setLikedPosts] = useState([]);
-    const { userData } = useContext(UserContext);
-    const localUser = JSON.parse(localStorage.getItem("user"));
-    const [TimelinePosts, setTimelinePosts] = useState([]);
+  const [enableLoading, setEnableLoading] = useState(false);
+  const [LikedPosts, setLikedPosts] = useState([]);
+  const { userData } = useContext(UserContext);
+  const localUser = JSON.parse(localStorage.getItem("user"));
+  const [TimelinePosts, setTimelinePosts] = useState([]);
 
-      function RenderPosts() {
-        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
-        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
-
-        request.then(response => {
-            setLikedPosts(response.data.posts);
-        });
-
-        request.catch(error => {
-            alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
-            setEnableLoading(false);
-        });
-    }
-
-       useEffect(RenderPosts, []);
-    
-    return(
-        <>
-        <Header />
-        <TimelineBody>
-            <TimelineContainer>
-                <TimelinePostsContainer>
-                    <Title>my likes</Title>
-                    {
-                        LikedPosts.length ===
-                         0 && !enableLoading
-                        ? <div className="no-post">Nenhum post encontrado :(</div> 
-                        : LikedPosts.map((post, i) => <LikedPost 
-                          post={post} 
-                          key={i}         
-                          setLikedPosts={setLikedPosts}
-                          LikedPosts={LikedPosts}
-                          TimelinePosts={TimelinePosts}
-                          RenderPosts={RenderPosts}
-                          />)
-                    }
-                    {enableLoading && <Loading />}
-                </TimelinePostsContainer>
-                <div className="trending">
-                    <Trending />
-                </div>
-            </TimelineContainer>
-        </TimelineBody>
-        </>
+  function RenderPosts() {
+    const config = {
+      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+    };
+    const request = axios.get(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked",
+      config
     );
-}
 
+    request.then((response) => {
+      setLikedPosts(response.data.posts);
+    });
+
+    request.catch((error) => {
+      alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+      setEnableLoading(false);
+    });
+  }
+
+  useEffect(RenderPosts, []);
+
+  return (
+    <>
+      <Header />
+      <TimelineBody>
+        <TimelineContainer>
+          <TimelinePostsContainer>
+            <Title>my likes</Title>
+            {LikedPosts.length === 0 && !enableLoading ? (
+              <div className="no-post">Nenhum post encontrado :(</div>
+            ) : (
+              LikedPosts.map((post, i) => (
+                <LikedPost
+                  post={post}
+                  key={i}
+                  setLikedPosts={setLikedPosts}
+                  LikedPosts={LikedPosts}
+                  TimelinePosts={TimelinePosts}
+                  RenderPosts={RenderPosts}
+                />
+              ))
+            )}
+            {enableLoading && <Loading />}
+          </TimelinePostsContainer>
+          <div className="trending">
+            <Trending />
+          </div>
+        </TimelineContainer>
+      </TimelineBody>
+    </>
+  );
+}
 
 const TimelineBody = styled.div`
   display: flex;
@@ -69,6 +74,7 @@ const TimelineBody = styled.div`
   @media (max-width: 614px) {
     flex-direction: column;
     align-items: center;
+    margin-top: 50px;
   }
 `;
 const TimelineContainer = styled.div`
@@ -77,8 +83,8 @@ const TimelineContainer = styled.div`
   justify-content: space-between;
   font-family: "Lato";
   margin-top: 60px;
-  min-height: 100vh;     
-  
+  min-height: 100vh;
+
   @media (max-width: 614px) {
     width: 100%;
     flex-direction: column;
@@ -94,7 +100,7 @@ const TimelineContainer = styled.div`
     left: calc((100vw + 611px + 15px - 301px) / 2);
     @media (max-width: 900px) {
       display: none;
-    }   
+    }
   }
 `;
 const TimelinePostsContainer = styled.ul`
@@ -119,4 +125,4 @@ const Title = styled.h1`
     margin: 25px 0 19px 17px;
     font-size: 33px;
   }
-`
+`;

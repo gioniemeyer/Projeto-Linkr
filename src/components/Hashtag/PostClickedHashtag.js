@@ -10,6 +10,10 @@ import axios from "axios";
 import { AiFillHeart } from "react-icons/ai";
 import ReactTooltip from "react-tooltip";
 import { FaPencilAlt } from "react-icons/fa";
+import getYouTubeID from "get-youtube-id";
+import SnippetDiv from "../Timeline/SnippetDiv";
+import GeolocationModal from "../GeolocationModal";
+import { IoLocationSharp } from "react-icons/io5";
 
 export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
   const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } =
@@ -23,6 +27,8 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
   const [newText, setNewText] = useState(text);
   const [disabler, setDisabler] = useState(false);
   const inputRef = useRef();
+  const idVideo = getYouTubeID(link);
+  const [geoModalOpen, setGeoModalOpen] = useState(false);
 
   let enabled = false;
 
@@ -92,6 +98,7 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
       setControl(false);
       RenderPosts();
     });
+
     request.catch(() => {
       alert("Não foi possível salvar as alterações");
       setDisabler(false);
@@ -145,7 +152,18 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
         <ReactTooltip place="bottom" type="light" effect="float" />
       </SideMenu>
       <Content>
-        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
+        <h1 onClick={() => history.push(`/user/${user.id}`)}>
+          {user.username}
+          {post.geolocation && (
+            <IoLocationSharp
+              onClick={(e) => {
+                e.stopPropagation();
+                setGeoModalOpen(true);
+              }}
+              className="geolocation"
+            />
+          )}
+        </h1>
         <h2>
           {control ? (
             [
@@ -165,14 +183,18 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
             <Hashtag text={text} />
           )}
         </h2>
-        <Snippet href={link} target="_blank">
-          <div className="snippet-text">
-            <h3>{linkTitle}</h3>
-            <h4>{linkDescription}</h4>
-            <h5>{link}</h5>
-          </div>
-          <img src={linkImage} alt={linkDescription} />
-        </Snippet>
+        {idVideo ? (
+          <SnippetDiv link={link} idVideo={idVideo} />
+        ) : (
+          <Snippet href={link} target="_blank">
+            <div className="snippet-text">
+              <h3>{linkTitle}</h3>
+              <h4>{linkDescription}</h4>
+              <h5>{link}</h5>
+            </div>
+            <img src={linkImage} alt={linkDescription} />
+          </Snippet>
+        )}
       </Content>
       {(userData ? userData.user.id : localUser.user.id) === user.id && (
         <FaPencilAlt onClick={ShowEdit} className="pencil-icon" />
@@ -186,6 +208,16 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
         setModalOpen={setModalOpen}
         postID={id}
       />
+      {post.geolocation && (
+        <GeolocationModal
+          latitude={post.geolocation.latitude}
+          longitude={post.geolocation.longitude}
+          RenderPosts={RenderPosts}
+          geoModalOpen={geoModalOpen}
+          setGeoModalOpen={setGeoModalOpen}
+          post={post}
+        ></GeolocationModal>
+      )}
     </PostBox>
   );
 }
@@ -303,6 +335,12 @@ const Content = styled.div`
 
     @media (max-width: 614px) {
       font-size: 17px;
+    }
+
+    .geolocation {
+      padding-top: 3px;
+      cursor: pointer;
+      margin-left: 3px;
     }
   }
 

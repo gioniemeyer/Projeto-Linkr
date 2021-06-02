@@ -7,11 +7,20 @@ import Hashtag from "./Hashtag";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import Modal from "../Modal";
+import GeolocationModal from "../GeolocationModal";
 import { AiFillHeart } from "react-icons/ai";
 import ReactTooltip from "react-tooltip";
 import { FaPencilAlt } from "react-icons/fa";
+import { IoLocationSharp } from "react-icons/io5";
+import getYouTubeID from "get-youtube-id";
+import SnippetDiv from "./SnippetDiv";
 
-export default function Post({ post, RenderLikes, RenderPosts }) {
+export default function Post({
+  TimelinePosts,
+  post,
+  RenderLikes,
+  RenderPosts,
+}) {
   const { userData } = useContext(UserContext);
   const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } =
     post;
@@ -23,7 +32,10 @@ export default function Post({ post, RenderLikes, RenderPosts }) {
   let enabled = false;
   const inputRef = useRef();
   const [modalOpen, setModalOpen] = useState(false);
+  const [geoModalOpen, setGeoModalOpen] = useState(false);
   const history = useHistory();
+
+  const idVideo = getYouTubeID(link);
 
   useEffect(() => {
     if (control) {
@@ -105,7 +117,7 @@ export default function Post({ post, RenderLikes, RenderPosts }) {
         {enabled ? (
           <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
         ) : (
-          <AiFillHeart stroke={"white"} strokeWidth={80} fill={"#171717"} className="heart-icon" onClick={LikeOrDeslike} />
+          <AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike} />
         )}
         <span
           data-tip={
@@ -134,10 +146,26 @@ export default function Post({ post, RenderLikes, RenderPosts }) {
         >
           {likes.length} {likes.length === 1 ? "like" : "likes"}
         </span>
-        <ReactTooltip place="bottom" type="light" effect="float" />
+        <ReactTooltip
+          className="react-player"
+          url={link}
+          width="100%"
+          height="100%"
+        />
       </SideMenu>
       <Content>
-        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
+        <h1 onClick={() => history.push(`user/${user.id}`)}>
+          {user.username}
+          {post.geolocation && (
+            <IoLocationSharp
+              onClick={(e) => {
+                e.stopPropagation();
+                setGeoModalOpen(true);
+              }}
+              className="geolocation"
+            />
+          )}
+        </h1>
         <h2>
           {control ? (
             [
@@ -157,14 +185,18 @@ export default function Post({ post, RenderLikes, RenderPosts }) {
             <Hashtag text={text} />
           )}
         </h2>
-        <Snippet href={link} target="_blank">
-          <div className="snippet-text">
-            <h3>{linkTitle}</h3>
-            <h4>{linkDescription}</h4>
-            <h5>{link}</h5>
-          </div>
-          <img src={linkImage} alt={linkDescription} />
-        </Snippet>
+        {idVideo ? (
+          <SnippetDiv link={link} idVideo={idVideo} />
+        ) : (
+          <Snippet href={link} target="_blank">
+            <div className="snippet-text">
+              <h3>{linkTitle}</h3>
+              <h4>{linkDescription}</h4>
+              <h5>{link}</h5>
+            </div>
+            <img src={linkImage} alt={linkDescription} />
+          </Snippet>
+        )}
       </Content>
       {(userData ? userData.user.id : localUser.user.id) === user.id && (
         <FaPencilAlt onClick={ShowEdit} className="pencil-icon" />
@@ -178,6 +210,16 @@ export default function Post({ post, RenderLikes, RenderPosts }) {
         setModalOpen={setModalOpen}
         postID={id}
       />
+      {post.geolocation && (
+        <GeolocationModal
+          latitude={post.geolocation.latitude}
+          longitude={post.geolocation.longitude}
+          RenderPosts={RenderPosts}
+          geoModalOpen={geoModalOpen}
+          setGeoModalOpen={setGeoModalOpen}
+          post={post}
+        ></GeolocationModal>
+      )}
     </PostBox>
   );
 }
@@ -191,7 +233,7 @@ const PostBox = styled.li`
   border-radius: 16px;
   margin-bottom: 16px;
   position: relative;
-  
+
   @media (max-width: 614px) {
     width: 100%;
     border-radius: 0;
@@ -259,6 +301,7 @@ const SideMenu = styled.div`
     color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
     margin-bottom: 4px;
     margin-top: 19px;
+    cursor: pointer;
 
     @media (max-width: 614px) {
       width: 17px;
@@ -293,6 +336,11 @@ const Content = styled.div`
     @media (max-width: 614px) {
       font-size: 17px;
     }
+
+    .geolocation {
+      padding-top: 3px;
+      margin-left: 3px;
+    }
   }
 
   h2 {
@@ -316,6 +364,7 @@ const Content = styled.div`
     }
   }
 `;
+
 const Snippet = styled.a`
   width: 503px;
   height: 155px;
