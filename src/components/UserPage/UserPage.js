@@ -19,7 +19,6 @@ export default function UserPage() {
     const [enabled,setEnabled]=useState(false);
     const [disabler,setDisabler]=useState(false);
 
-
     function Follow(){
         const body=[]
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
@@ -54,8 +53,8 @@ export default function UserPage() {
         });
 
         promise.then(r => setName(r.data.user.username));
-        
-        request.catch(error => {
+
+      request.catch(error => {
             alert("Houve uma falha ao obter os posts desse usuário, por favor, atualize a página.");
         });
 
@@ -74,6 +73,8 @@ export default function UserPage() {
     }
    }
    useEffect(teste,[following.users])
+
+   
   
     return(
         <>
@@ -81,7 +82,7 @@ export default function UserPage() {
         <UserPostsBody>
             <UserPostsContainer>
                 <PostsContainer habilitado={enabled}>
-                    <Title>{name}'s posts</Title>   
+                    <Title>'s posts</Title>   
                     <FollowButton onClick={Follow} disabled={disabler} habilitado={enabled}>
                     {enabled?'Unfollow':'Follow'}
                     </FollowButton>

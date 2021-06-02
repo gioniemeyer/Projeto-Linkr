@@ -15,6 +15,13 @@ export default function Timeline() {
   const { userData } = useContext(UserContext);
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [LikedPosts, setLikedPosts] = useState([]);
+  const [following,setFollowing]=useState([]);
+  let listOfFollowing;
+
+  if (following.users) {
+    listOfFollowing = following.users.length;
+  } 
+  
 
   function RenderLikes() {
     const config = {
@@ -31,10 +38,10 @@ export default function Timeline() {
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
-    const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts",
+    const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts",
       config
     );
-    request.then((response) => {
+    request.then((response) => {      
       setTimelinePosts(response.data.posts);
       setEnableLoading(false);
     })
@@ -43,6 +50,22 @@ export default function Timeline() {
     })
     ;
   }
+
+  function getListOfFollowing() {
+    const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
+    const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/follows`, config);
+    
+    request.then(response => {
+        setFollowing(response.data);
+        setEnableLoading(false);                                         
+    });    
+    
+    request.catch(error => {
+        alert("Houve uma falha ao obter os posts desse usuário, por favor, atualize a página.");
+    });
+  }
+
+
 
 
   
@@ -66,9 +89,10 @@ export default function Timeline() {
     RenderPosts();
     RenderLikes();
     CreateLikedPosts()
+    getListOfFollowing()
   }, []);
 
-
+ 
 
   return (
     <>
@@ -78,8 +102,8 @@ export default function Timeline() {
           <TimelinePostsContainer>
             <Title>timeline</Title>
             <NewPost RenderPosts={RenderPosts} />
-            {TimelinePosts.length === 0 && !enableLoading ? (
-              <div className="no-post">Nenhum post encontrado :(</div>
+            {TimelinePosts.length === 0 && !enableLoading ? (listOfFollowing > 0 ?
+              <div className="no-post">Nenhuma publicação encontrada :(</div> : <div className="no-post">Você ainda não segue ninguém, procure por perfis na busca</div>
             ) : (
               TimelinePosts.map((post, i) => (
                 <Post
@@ -108,6 +132,7 @@ const TimelineBody = styled.div`
   display: flex;
   justify-content: center;
   background-color: #333333;
+  min-height: 100vh;
   @media (max-width: 614px) {
     flex-direction: column;
     align-items: center;
