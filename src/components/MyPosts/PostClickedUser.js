@@ -10,7 +10,8 @@ import axios from "axios";
 import {FaPencilAlt} from 'react-icons/fa';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "../Timeline/SnippetDiv";
-
+import GeolocationModal from "../GeolocationModal";
+import { IoLocationSharp } from "react-icons/io5";
 
 export default function PostClickedUser({ post, RenderPosts }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
@@ -21,6 +22,7 @@ export default function PostClickedUser({ post, RenderPosts }) {
     const [control,setControl]=useState(false)
     const [newText,setNewText]=useState(text)
     const [disabler,setDisabler]=useState(false)
+    const [geoModalOpen, setGeoModalOpen] = useState(false);
     const inputRef=useRef();
     const idVideo = getYouTubeID(link);
 
@@ -72,9 +74,17 @@ export default function PostClickedUser({ post, RenderPosts }) {
                 <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
             </SideMenu>
             <Content>
+                <Wrapper>
             <Link className="link" to={`/user/${user.id}`}> 
-            <h1>{user.username}</h1>
-                </Link>
+                <h1>{user.username}
+                </h1>
+            </Link>
+            {post.geolocation &&
+            <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
+            }
+             </Wrapper>
+            
+                
                 
                 <h2>
                 {control?          
@@ -97,6 +107,9 @@ export default function PostClickedUser({ post, RenderPosts }) {
             {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
             {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
             <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
+            {post.geolocation && 
+            <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
+            }
         </PostBox>
     );
 }
@@ -209,7 +222,7 @@ const Content = styled.div`
             font-size: 17px;
         }
 
-        
+              
     }
 
     h2 {
@@ -233,9 +246,7 @@ const Content = styled.div`
         overflow-y: auto;
         overflow-wrap: break-word;
         color: #4C4C4C;
-    }
-
-    
+    }  
     
 `;
 
@@ -328,4 +339,16 @@ const Snippet = styled.a`
             object-fit: cover;
         }
     }
+`;
+
+const Wrapper = styled.div`
+    display: flex;    
+
+     .geolocation {
+            margin-top: 3px;
+            margin-left: 5px;
+            color: white;
+            cursor: pointer;
+            
+        }     
 `;
