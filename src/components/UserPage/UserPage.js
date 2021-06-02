@@ -74,6 +74,8 @@ export default function UserPage() {
     }
    }
    useEffect(teste,[following.users])
+
+   
   
     return(
         <>
@@ -81,7 +83,7 @@ export default function UserPage() {
         <UserPostsBody>
             <UserPostsContainer>
                 <PostsContainer habilitado={enabled}>
-                    <Title>{name}'s posts</Title>   
+                    <Title>'s posts</Title>   
                     <FollowButton onClick={Follow} disabled={disabler} habilitado={enabled}>
                     {enabled?'Unfollow':'Follow'}
                     </FollowButton>
