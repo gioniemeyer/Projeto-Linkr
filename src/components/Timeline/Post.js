@@ -233,6 +233,7 @@ const SideMenu = styled.div`
     color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
     margin-bottom: 4px;
     margin-top: 19px;
+    cursor: pointer;
 
     @media (max-width: 614px) {
       width: 17px;
