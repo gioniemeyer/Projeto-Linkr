@@ -349,6 +349,13 @@ const Wrapper = styled.div`
             margin-left: 5px;
             color: white;
             cursor: pointer;
+
+            @media (max-width: 614px){
+                margin-top: 1px;
+
+            }
             
-        }     
+    }     
+
+    
 `;
