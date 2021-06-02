@@ -113,18 +113,19 @@ export default function UserPage() {
         retest.then((r)=>setFollowing(r.data))   
     }, [params]);
     
-  
-   function teste(){
-       if(following.users){
-            for(let i=0;i<following.users.length;i++){
-                if(following.users[i].id===params.id){
-                    setEnabled(true) 
-                }
-            }
-    }
-   }
 
-   useEffect(teste,[following.users])
+    
+  
+    function teste(){
+        if(following.users){
+             for(let i=0;i<following.users.length;i++){
+                 if(following.users[i].id==params.id){
+                     setEnabled(true) 
+                 }
+             }
+     }
+    }
+    useEffect(teste,[following.users])
   
     return(
         <>
