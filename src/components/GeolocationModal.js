@@ -7,16 +7,18 @@ import ReactLoading from 'react-loading';
 import styled from "styled-components";
 import { IoCloseSharp } from "react-icons/io5";
 
+
 export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, RenderPosts, latitude, longitude }) {
     ReactModal.setAppElement('.root');
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [enableLoading, setEnableLoading] = useState(false);
-    const [disabled, setDisabled] = useState(false); 
-       
-         
+    const [disabled, setDisabled] = useState(false);   
+    
+    const apiKey = (process.env.REACT_APP_API_KEY);
+             
     return(
-        <>        
+        <>       
         <ReactModal
         isOpen={geoModalOpen}
         overlayClassName="OverlayGeo"
@@ -50,7 +52,7 @@ export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, 
                         width="100%"
                         height="100%"              
                         frameBorder="0" style={{margin: 0 + 'em'}}
-                        src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUAArWaNwCYbpOqwV1PmfeMvOIZbWRuXY&q=${latitude},${longitude}
+                        src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${latitude},${longitude}
                         &zoom=10
                         &maptype=satellite`}
                         allowFullScreen>

@@ -96,7 +96,7 @@ export default function NewPost({ RenderPosts }) {
                     {location ? 
                     <Geolocation location={location}>
                         <IoLocationOutline className="geolocation"></IoLocationOutline>
-                        <button onClick={() => setLocation(false)}>Localização ativada</button>  
+                        <button onClick={() => {setLocation(false); setLatitude(""); setLongitude(""); }}>Localização ativada</button>  
                     </Geolocation>  
                         :  
                     <Geolocation location={location}>   
