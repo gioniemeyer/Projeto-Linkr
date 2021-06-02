@@ -12,6 +12,7 @@ import ReactTooltip from 'react-tooltip';
 import {FaPencilAlt} from 'react-icons/fa';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "../Timeline/SnippetDiv";
+import ModalLink from "../ModalLink";
 
 export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;  
@@ -25,6 +26,7 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
     const [disabler,setDisabler]=useState(false)
     const inputRef=useRef();   
     const idVideo = getYouTubeID(link);
+    const [modalLink, setModalLink] = useState(false);
 
     let enabled = false;      
   
@@ -100,6 +102,7 @@ function ShowEdit(){
 
     return(
         <PostBox>
+            <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
             <SideMenu enabled={enabled}>
                 <Link to={`/user/${user.id}`} > 
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
@@ -132,7 +135,7 @@ function ShowEdit(){
                 </h2>
                 {idVideo ? 
                     <SnippetDiv link={link} idVideo={idVideo} /> :
-                    <Snippet href={link} target="_blank">
+                    <Snippet onClick={() => setModalLink(true)}>
                         <div className="snippet-text">
                         <h3>{linkTitle}</h3>
                         <h4>{linkDescription}</h4>
@@ -280,7 +283,7 @@ const Content = styled.div`
     }
 `;
 
-const Snippet = styled.a`
+const Snippet = styled.div`
     width: 503px;
     height: 155px;
     border-radius: 11px;

@@ -10,7 +10,7 @@ import axios from "axios";
 import {FaPencilAlt} from 'react-icons/fa';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "../Timeline/SnippetDiv";
-
+import ModalLink from "../ModalLink";
 
 export default function PostClickedUser({ post, RenderPosts }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
@@ -23,6 +23,7 @@ export default function PostClickedUser({ post, RenderPosts }) {
     const [disabler,setDisabler]=useState(false)
     const inputRef=useRef();
     const idVideo = getYouTubeID(link);
+    const [modalLink, setModalLink] = useState(false);
 
     useEffect(()=>{
         if(control){
@@ -64,6 +65,7 @@ export default function PostClickedUser({ post, RenderPosts }) {
       
     return(
         <PostBox>
+            <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
             <SideMenu>
                 <Link to={`/user/${user.id}`}> 
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
@@ -82,8 +84,8 @@ export default function PostClickedUser({ post, RenderPosts }) {
                 </h2>
                 {idVideo ? 
                     <SnippetDiv link={link} idVideo={idVideo} /> :
-                    <Snippet href={link} target="_blank">
-                        <div className="snippet-text">
+                    <Snippet onClick={() => setModalLink(true)}>
+                    <div className="snippet-text">
                         <h3>{linkTitle}</h3>
                         <h4>{linkDescription}</h4>
                         <h5>{link}</h5>
@@ -230,7 +232,7 @@ const Content = styled.div`
     }
 `;
 
-const Snippet = styled.a`
+const Snippet = styled.div`
     width: 503px;
     height: 155px;
     border-radius: 11px;

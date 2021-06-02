@@ -65,10 +65,6 @@ export default function Timeline() {
     });
   }
 
-
-
-
-  
   function CreateLikedPosts() {
     const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
     const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);

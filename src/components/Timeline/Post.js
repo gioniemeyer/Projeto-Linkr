@@ -13,6 +13,7 @@ import {FaPencilAlt} from 'react-icons/fa';
 import YouTube from 'react-youtube';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "./SnippetDiv";
+import ModalLink from "../ModalLink";
 
 export default function Post({ post,RenderLikes,RenderPosts }) {
   const { userData } = useContext(UserContext);
@@ -27,6 +28,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
   const [modalOpen, setModalOpen] = useState(false);
   const history = useHistory();
   const idVideo = getYouTubeID(link);
+  const [modalLink, setModalLink] = useState(false);
 
   useEffect(()=>{
     if(control){
@@ -100,6 +102,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
   return (
     
     <PostBox>
+      <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
       <SideMenu enabled={enabled}>
         <Link to={`user/${user.id}`} className="link-user-name">
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
@@ -137,7 +140,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
         </h2>
         {idVideo ? 
           <SnippetDiv link={link} idVideo={idVideo} /> :
-          <Snippet href={link} target="_blank">
+          <Snippet onClick={() => setModalLink(true)}>
             <div className="snippet-text">
               <h3>{linkTitle}</h3>
               <h4>{linkDescription}</h4>
@@ -235,7 +238,7 @@ const SideMenu = styled.div`
   }
 `;
 
-const Content = styled.div`
+const Content = styled.a`
     width: 503px;
 
     @media (max-width: 614px){
@@ -277,7 +280,7 @@ const Content = styled.div`
   }
 `;
 
-const Snippet = styled.a`
+const Snippet = styled.div`
     width: 503px;
     height: 155px;
     border-radius: 11px;
