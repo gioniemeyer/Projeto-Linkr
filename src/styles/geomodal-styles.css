@@ -64,9 +64,10 @@ button {
     }
     
     button {
-        
+        width: fit-content;
         height: 25px;
         font-size: 14px;
+        margin-right: 5px;
     }
 
     .close {

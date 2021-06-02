@@ -235,15 +235,7 @@ const Content = styled.div`
         color: #4C4C4C;
     }
 
-    .link {
-      width: 100px;
-        
-        h1 {
-            width: 100px;
-
-        }
-            
-    }
+    
     
 `;
 

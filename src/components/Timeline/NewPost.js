@@ -252,6 +252,7 @@ const Content = styled.div`
 const Geolocation = styled.div`   
 
     display: flex;
+    width: 100%;
 
     .geolocation {
         color: ${(props) => (props.location ? "#238700" : "#949494")}; 
@@ -270,9 +271,11 @@ const Geolocation = styled.div`
     }
 
     @media (max-width: 614px){
-        .geolocation {
-            align-items: flex-start;
+        .geolocation {            
+            align-items: flex-start;            
         }
+
+        
 
     }
 
