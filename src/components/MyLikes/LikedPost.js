@@ -12,6 +12,8 @@ import { FaTrash } from 'react-icons/fa';
 import {FaPencilAlt} from 'react-icons/fa';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "../Timeline/SnippetDiv";
+import GeolocationModal from "../GeolocationModal";
+import { IoLocationSharp } from "react-icons/io5";
 
 export default function LikedPost({ post, RenderPosts }) {
   const { userData } = useContext(UserContext);
@@ -25,6 +27,7 @@ export default function LikedPost({ post, RenderPosts }) {
   const [disabler,setDisabler]=useState(false)
   const inputRef=useRef();
   const idVideo = getYouTubeID(link);
+  const [geoModalOpen, setGeoModalOpen] = useState(false);
 
   let enabled=true
   
@@ -112,7 +115,11 @@ function ShowEdit(){
         <ReactTooltip place="bottom" type="light" effect="float"/>
       </SideMenu>
       <Content>
-        <h1 onClick={() => history.push(`/user/${user.id}`)}>{user.username}</h1>
+        <h1 onClick={() => history.push(`/user/${user.id}`)}>{user.username}
+        {post.geolocation &&
+          <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
+        }
+        </h1>
         <h2>
           {control?          
             [<form onSubmit={Edit}>
@@ -134,7 +141,9 @@ function ShowEdit(){
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
       <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
-
+      {post.geolocation && 
+        <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
+      }
     </PostBox>
   );
 }
@@ -231,6 +240,12 @@ const Content = styled.div`
 
         @media (max-width: 614px){
             font-size: 17px;
+        }
+
+        .geolocation {
+          padding-top: 3px;
+          cursor: pointer;
+          margin-left: 3px;
         }
     }
   

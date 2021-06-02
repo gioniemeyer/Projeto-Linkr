@@ -15,9 +15,59 @@ export default function UserPage() {
     const localUser = JSON.parse(localStorage.getItem("user"));  
     let params = useParams();  
     const [name, setName] = useState(""); 
-    const [following,setFollowing]=useState([]);
-    const [enabled,setEnabled]=useState(false);
-    const [disabler,setDisabler]=useState(false);
+    const [following,setFollowing]=useState([])
+    const [enabled,setEnabled]=useState(false)
+    const [disabler,setDisabler]=useState(false)
+    const [LikedPosts, setLikedPosts] = useState([]);     
+   
+    
+    function RenderPosts() {
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+        const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts`, config);
+        
+        request.then(response => {
+            setUserPosts(response.data.posts);
+            setEnableLoading(false);                                                               
+        });    
+        
+        request.catch(error => {
+            alert("Houve uma falha ao obter os posts dessa hashtag, por favor, atualize a página.");
+        });
+
+    }
+
+    function RenderLikes() {
+        const config = {
+          headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+        };
+        const requestLikeds = axios.get(
+          "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked",
+          config
+        );
+        requestLikeds.then((response) => setLikedPosts(response.data.posts));
+    }
+    
+    function CreateLikedPosts() {
+        const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
+        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
+    
+        request.then(response => {
+            setLikedPosts(response.data.posts);       
+            RenderPosts(); 
+        });
+    
+        request.catch(error => {
+            alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+            setEnableLoading(false);
+        });
+    }
+
+    useEffect(() => {                   
+        RenderLikes();
+        CreateLikedPosts();  
+        RenderPosts();     
+    }, []);
+    
 
     function Follow(){
         const body=[]
@@ -42,39 +92,40 @@ export default function UserPage() {
     }
 
     useEffect(() => {
+        const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };       
+        const retest= axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/follows`, config)
+        retest.then((r)=>setFollowing(r.data))        
+    }, []);    
+
+    useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts`, config);
-        
         const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}`, config)
-        
         request.then(response => {
             setUserPosts(response.data.posts);
             setEnableLoading(false);
         });
-
         promise.then(r => setName(r.data.user.username));
-
       request.catch(error => {
             alert("Houve uma falha ao obter os posts desse usuário, por favor, atualize a página.");
         });
-
         const retest= axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/follows`, config)
         retest.then((r)=>setFollowing(r.data))   
-    }, [params]);    
+    }, [params]);
+    
+
     
   
-   function teste(){
-       if(following.users){
-            for(let i=0;i<following.users.length;i++){
-                if(following.users[i].id===params.id){
-                    setEnabled(true) 
-                }
-            }
+    function teste(){
+        if(following.users){
+             for(let i=0;i<following.users.length;i++){
+                 if(following.users[i].id==params.id){
+                     setEnabled(true) 
+                 }
+             }
+     }
     }
-   }
-   useEffect(teste,[following.users])
-
-   
+    useEffect(teste,[following.users])
   
     return(
         <>
@@ -82,13 +133,11 @@ export default function UserPage() {
         <UserPostsBody>
             <UserPostsContainer>
                 <PostsContainer habilitado={enabled}>
-                    <Title>'s posts</Title>   
+                    <Title>{name}'s posts</Title>   
                     <FollowButton onClick={Follow} disabled={disabler} habilitado={enabled}>
                     {enabled?'Unfollow':'Follow'}
                     </FollowButton>
-                    {UserPosts.length === 0 && !enableLoading ?
-                        <div className="no-post">Nenhum post encontrado :
-                        (</div> : UserPosts.map((post, i) => <PostClickedUser post={post} key={i} />)}
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedUser RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} />)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
               
@@ -102,6 +151,8 @@ export default function UserPage() {
         </>
     );
 }
+
+
 const FollowButton=styled.button`
         color: ${props => props.habilitado ? ' #1877F2' :  ' #FFFFFF' };
         background-color:${props => props.habilitado ? ' #FFFFFF' :  ' #1877F2' };
