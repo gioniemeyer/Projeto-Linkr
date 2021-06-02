@@ -14,7 +14,7 @@ export default function HashtagPage() {
     const [enableLoading, setEnableLoading] = useState(true);    
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));    
-    const params = useParams(); 
+    let params = useParams(); 
     const [name, setName] = useState("");
     const [LikedPosts, setLikedPosts] = useState([]);
 
@@ -71,7 +71,7 @@ export default function HashtagPage() {
         RenderPosts();
         RenderLikes();
         CreateLikedPosts()
-      }, []);
+      }, [params]);
 
     return(
         <>

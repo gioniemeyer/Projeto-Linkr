@@ -11,25 +11,37 @@ import axios from 'axios';
 export default function Header() {  
   const [open, setOpen] = useState(false);
   const { userData } = useContext(UserContext);	  
-  const [name, setName] = useState('');
+  const [nameUser, setNameUser] = useState('');
   const [users, setUsers] = useState([]);
   const history = useHistory();
   const localUser = JSON.parse(localStorage.getItem("user"));
+  const URL = window.location.pathname;
+  const [followed, setFollowed] = useState([]);
+  const [unfollowed, setUnfollowed] = useState([]);
 
   function goToTimeline() {   
     history.push("/timeline")
   }
 
   function renderUsers(e) {
-    setName(e.target.value);
+    setNameUser(e.target.value);
     const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
 
-    const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/search?username=${name}`, config)
+    const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/search?username=${nameUser}`, config)
     request.then(resp => {
       setUsers(resp.data.users);
+      const arrFollowed = users.filter(u => u.isFollowingLoggedUser);
+      setFollowed(arrFollowed)
+      const arrUnfollowed = users.filter(u => !(u.isFollowingLoggedUser));
+      setUnfollowed(arrUnfollowed);
     });
   }
-console.log(users)
+
+  function closeSearch() {
+    setNameUser('');
+    setUsers([]);
+  }
+
   return (    
    <ClickAwayListener onClickAway={() => setOpen(false)}>
         <Body>
@@ -38,25 +50,40 @@ console.log(users)
         <Title onClick={goToTimeline}>linkr</Title>
         <Search>
           <DebounceInput
-            minLength={2}
+            minLength={3}
             placeholder='Search for people and friends'
             debounceTimeout={300}
-            value={name}
+            value={nameUser}
             onChange={renderUsers} />
 
             <ul>
 
-              {users.length > 0 ? (
-                users.map(u => {          
-                return(
-                <li key={u.id}>
-                  <Link to={`user/${u.id}`}>
-                  <img src={u.avatar}></img>
-                  </Link>
-                  <Link to={`user/${u.id}`}>
-                  <p>{u.username}</p>
-                  </Link>
+              {followed.length > 0 ? (
 
+              followed.map(u => {          
+                return(
+                <li onClick={closeSearch} key={u.id}>
+                  <Link to={URL.includes('user') ? `${u.id}` : `user/${u.id}`}>
+                    <img src={u.avatar}></img>
+                  </Link>
+                  <Link to={URL.includes('user') ? `${u.id}` : `user/${u.id}`}>
+                    <p >{u.username} {u.isFollowingLoggedUser ? <span>• following</span> : ''}</p>
+                  </Link>
+                </li>)
+                })
+              ) : ''}
+
+              {unfollowed.length > 0 ? (
+
+              unfollowed.map(u => {          
+                return(
+                <li onClick={closeSearch} key={u.id}>
+                  <Link to={URL.includes('user') ? `${u.id}` : `/user/${u.id}`}>
+                    <img src={u.avatar}></img>
+                  </Link>
+                  <Link to={URL.includes('user') ? `${u.id}` : `/user/${u.id}`}>
+                    <p >{u.username} {u.isFollowingLoggedUser ? <span>• following</span> : ''}</p>
+                  </Link>
                 </li>)
                 })
               ) : ''}
@@ -64,15 +91,9 @@ console.log(users)
             </ul>
 
 
-            {/* <ButtonSearch>
               <IoIosSearch />
-            </ButtonSearch> */}
-            
-            {/* <UserDiv>
-                <p>teste</p>
-              </UserDiv>
-            
-            */}
+
+
         </Search>
         <RightSide>
           {open ? (          
@@ -260,25 +281,37 @@ const Search = styled.div`
   font-family: 'Lato';
 
   input{
-    width: 30vw;
+    width: 100%;
     height: 60px;
     border-radius: 8px;
     border: none;
   }
+
   textarea:focus, input:focus, select:focus {
     outline: 0;
   }
 
+  ul {
+    background-color: #e7e7e7;
+    border-radius: 8px;
 
+  }
   li {
     background-color: #e7e7e7;
     height: 50px;
     display: flex;
     align-items: center;
+    color: #515151;
+    font-size: 19px;
   }
   
   li:last-child{
   border-radius: 8px;
+  }
+
+  span {
+    font-size:16px;
+    color: #c5c5c5;
   }
 
   img {
@@ -288,6 +321,16 @@ const Search = styled.div`
     margin: 0 5px 0 5px;
   }
 
+  svg {
+    background-color: transparent;
+    color: #C6C6C6;
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    top: 20px;
+    right: 15px;
+  }
+
   @media (max-width: 614px) {
     position: absolute;
     width: 95vw;
@@ -295,18 +338,3 @@ const Search = styled.div`
     left: 2.5vw;
     }
 `
-
-// const ButtonSearch = styled.button`
-
-//   background-color: transparent;
-//   border: none;
-
-// svg {
-//     background-color: transparent;
-//     color: #c6c6c6;
-//     border-radius: 5px;
-//     width: 100%;
-//     height: 100%;
-//     margin: auto auto;
-//   }
-// `
