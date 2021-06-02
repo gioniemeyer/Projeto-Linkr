@@ -269,6 +269,7 @@ const Content = styled.div`
 
         .geolocation {
           padding-top: 3px;
+          margin-left: 3px;
         }
     }
   
