@@ -9,19 +9,17 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 
 export default function Timeline() {
-  
   const [TimelinePosts, setTimelinePosts] = useState([]);
   const [enableLoading, setEnableLoading] = useState(false);
   const { userData } = useContext(UserContext);
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [LikedPosts, setLikedPosts] = useState([]);
-  const [following,setFollowing]=useState([]);
+  const [following, setFollowing] = useState([]);
   let listOfFollowing;
 
   if (following.users) {
     listOfFollowing = following.users.length;
-  } 
-  
+  }
 
   function RenderLikes() {
     const config = {
@@ -38,61 +36,67 @@ export default function Timeline() {
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
-    const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts",
+    const request = axios.get(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts",
       config
     );
-    request.then((response) => {      
+    request.then((response) => {
       setTimelinePosts(response.data.posts);
       setEnableLoading(false);
-    })
+    });
     request.catch(() => {
-        alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
-    })
-    ;
+      alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+    });
   }
 
   function getListOfFollowing() {
-    const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
-    const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/follows`, config);
-    
-    request.then(response => {
-        setFollowing(response.data);
-        setEnableLoading(false);                                         
-    });    
-    
-    request.catch(error => {
-        alert("Houve uma falha ao obter os posts desse usuário, por favor, atualize a página.");
+    const config = {
+      headers: { Authorization: `Bearer ${localUser.token || userData.token}` },
+    };
+    const request = axios.get(
+      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/follows`,
+      config
+    );
+
+    request.then((response) => {
+      setFollowing(response.data);
+      setEnableLoading(false);
+    });
+
+    request.catch((error) => {
+      alert(
+        "Houve uma falha ao obter os posts desse usuário, por favor, atualize a página."
+      );
     });
   }
 
-
-
-
-  
   function CreateLikedPosts() {
-    const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}` } };
-    const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked", config);
+    const config = {
+      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+    };
+    const request = axios.get(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/liked",
+      config
+    );
 
-    request.then(response => {
-        setLikedPosts(response.data.posts);
+    request.then((response) => {
+      setLikedPosts(response.data.posts);
 
-        RenderPosts();
+      RenderPosts();
     });
 
-    request.catch(error => {
-        alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
-        setEnableLoading(false);
+    request.catch((error) => {
+      alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
+      setEnableLoading(false);
     });
-}
-  
+  }
+
   useEffect(() => {
     RenderPosts();
     RenderLikes();
-    CreateLikedPosts()
-    getListOfFollowing()
+    CreateLikedPosts();
+    getListOfFollowing();
   }, []);
-
- 
 
   return (
     <>
@@ -102,8 +106,14 @@ export default function Timeline() {
           <TimelinePostsContainer>
             <Title>timeline</Title>
             <NewPost RenderPosts={RenderPosts} />
-            {TimelinePosts.length === 0 && !enableLoading ? (listOfFollowing > 0 ?
-              <div className="no-post">Nenhuma publicação encontrada :(</div> : <div className="no-post">Você ainda não segue ninguém, procure por perfis na busca</div>
+            {TimelinePosts.length === 0 && !enableLoading ? (
+              listOfFollowing > 0 ? (
+                <div className="no-post">Nenhuma publicação encontrada :(</div>
+              ) : (
+                <div className="no-post">
+                  Você ainda não segue ninguém, procure por perfis na busca
+                </div>
+              )
             ) : (
               TimelinePosts.map((post, i) => (
                 <Post
@@ -158,10 +168,10 @@ const TimelineContainer = styled.div`
     position: fixed;
     top: 208px;
     left: calc((100vw + 611px + 15px - 301px) / 2);
-    
+
     @media (max-width: 900px) {
       display: none;
-    }    
+    }
   }
 `;
 const TimelinePostsContainer = styled.ul`
@@ -177,14 +187,14 @@ const TimelinePostsContainer = styled.ul`
   }
 `;
 const Title = styled.h1`
-    font-family: 'Oswald';
-    font-weight: 700;
-    font-size: 43px;
-    color: #FFFFFF;
-    margin: 60px 0 45px 0;
+  font-family: "Oswald";
+  font-weight: 700;
+  font-size: 43px;
+  color: #ffffff;
+  margin: 60px 0 45px 0;
 
-    @media (max-width: 614px){
-        margin: 35px 0 19px 17px;
-        font-size: 33px;
-    }
-`
+  @media (max-width: 614px) {
+    margin: 35px 0 19px 17px;
+    font-size: 33px;
+  }
+`;
