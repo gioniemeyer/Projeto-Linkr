@@ -7,6 +7,8 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 import { useParams } from "react-router-dom";
 import PostClickedHashtag from "./PostClickedHashtag";
+import InfiniteScroll from "react-infinite-scroll-component";
+import ReactLoading from 'react-loading';
 
 export default function HashtagPage() {
   const [UserPosts, setUserPosts] = useState([]);
@@ -16,6 +18,7 @@ export default function HashtagPage() {
   let params = useParams();
   const [name, setName] = useState("");
   const [LikedPosts, setLikedPosts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
 
   if (name !== params.hashtag) {
     RenderPosts();
@@ -79,10 +82,66 @@ export default function HashtagPage() {
     CreateLikedPosts();
   }, [params]);
 
+  function fetchData() {
+    if (UserPosts.length >= 50) {
+      setHasMore(false);
+      return;
+    }
+
+    if (UserPosts.length !== 0) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userData.token || localUser.token}`,
+        },
+      };
+
+      const request = axios.get(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${params.hashtag}/posts?olderThan=${
+            UserPosts[UserPosts.length - 1].id
+          }`,
+        config
+      );
+
+      request.then((response) => {
+        setTimeout(() => {
+          setUserPosts([...UserPosts, ...response.data.posts]);
+          console.log(UserPosts);
+        }, 500);
+      });
+
+      request.catch((error) => {
+        alert("Algo deu errado com sua requisição, por favor, tente novamente");
+      });
+    }
+  }
+
   return (
     <>
       <Header />
       <UserPostsBody>
+      <InfiniteScroll
+          dataLength={UserPosts.length}
+          next={fetchData}
+          hasMore={hasMore}
+          loader={
+            <div className="loading-posts">
+              <ReactLoading
+                type="spin"
+                color="#6D6D6D"
+                width={80}
+                height={80}
+              />
+              <span>Loading more posts...</span>
+            </div>
+          }
+          endMessage={
+            <div className="loading-posts">
+              <p className="end-message" style={{ textAlign: "center" }}>
+                <b>Yay! You have seen it all!</b>
+              </p>
+            </div>
+          }
+        >
         <UserPostsContainer>
           <PostsContainer>
             <Title># {name}</Title>
@@ -106,6 +165,7 @@ export default function HashtagPage() {
             <Trending RenderPosts={RenderPosts} />
           </div>
         </UserPostsContainer>
+        </InfiniteScroll>
       </UserPostsBody>
     </>
   );
@@ -120,6 +180,23 @@ const UserPostsBody = styled.div`
     flex-direction: column;
     align-items: center;
     margin-top: 50px;
+  }
+
+  .loading-posts {
+    width: 611px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    span, .end-message {
+      margin-top: 16px;
+      margin-bottom: 20px;
+      font-size: 22px;
+      letter-spacing: 0.05em;
+      font-family: 'Lato';
+      color: #6D6D6D;
+    }
   }
 `;
 
