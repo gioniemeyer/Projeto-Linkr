@@ -18,6 +18,7 @@ export default function UserPage() {
     const [following,setFollowing]=useState([])
     const [enabled,setEnabled]=useState(false)
     const [disabler,setDisabler]=useState(false)
+  
     
 
     function Follow(){
@@ -49,7 +50,7 @@ export default function UserPage() {
         request.then(response => {
             setUserPosts(response.data.posts);
             setEnableLoading(false);      
-            setName(response.data.posts[0].user.username);                                        
+            // setName(response.data.posts[0].user.username);                                        
         });    
         
         request.catch(error => {
@@ -73,6 +74,8 @@ export default function UserPage() {
     }
    }
    useEffect(teste,[following.users])
+
+   
   
     return(
         <>
@@ -80,7 +83,7 @@ export default function UserPage() {
         <UserPostsBody>
             <UserPostsContainer>
                 <PostsContainer habilitado={enabled}>
-                    <Title>{name}'s posts</Title>   
+                    <Title>'s posts</Title>   
                     <FollowButton onClick={Follow} disabled={disabler} habilitado={enabled}>
                     {enabled?'Unfollow':'Follow'}
                     </FollowButton>
