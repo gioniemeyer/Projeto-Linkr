@@ -11,44 +11,31 @@ import { IoCloseSharp } from "react-icons/io5";
 export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, RenderPosts, latitude, longitude }) {
     ReactModal.setAppElement('.root');
     const { userData } = useContext(UserContext);
-    const localUser = JSON.parse(localStorage.getItem("user"));
-    const [enableLoading, setEnableLoading] = useState(false);
-    const [disabled, setDisabled] = useState(false);   
-    
-    const apiKey = (process.env.REACT_APP_API_KEY);
-             
+    const localUser = JSON.parse(localStorage.getItem("user"));    
+    const [disabled, setDisabled] = useState(false);       
+    const apiKey = (process.env.REACT_APP_API_KEY);    
+
     return(
         <>       
         <ReactModal
         isOpen={geoModalOpen}
         overlayClassName="OverlayGeo"
         className="ModalGeo"
-            >       
-        {
-            enableLoading
-            ? 
-            <>
-                <HeaderModal>
-                    <Title><h1>{post.user["username"]}'s location</h1></Title>
-                    <button disabled={disabled} onClick={() => setGeoModalOpen(false)} className='go-backGeo'><IoCloseSharp path={"white"} className="close" /></button> 
-                </HeaderModal>
-            <ReactLoading
-                type="spinningBubbles"
-                color="#FFFFFF"
-                width={100}
-                height={125}
-            />
-            </>
-
-
-            :               
+            >              
             <Content>         
                 <HeaderModal>
                     <Title><h1>{post.user["username"]}'s location</h1></Title>
                     <button disabled={disabled} onClick={() => setGeoModalOpen(false)} className='go-backGeo'><IoCloseSharp path={"white"} className="close" /></button> 
-                </HeaderModal>
+                </HeaderModal>                                   
                 <Map>
+                    <ReactLoading
+                        type="spinningBubbles"
+                        color="#FFFFFF"
+                        width={100}
+                        height={125}
+                    />
                     <iframe
+                        loading="lazy"                       
                         width="100%"
                         height="100%"              
                         frameBorder="0" style={{margin: 0 + 'em'}}
@@ -57,10 +44,8 @@ export default function GeolocationModal({ geoModalOpen, setGeoModalOpen, post, 
                         &maptype=satellite`}
                         allowFullScreen>
                     </iframe> 
-                </Map>            
-            </Content>         
-        }      
-               
+                </Map>                      
+            </Content>                                        
      </ReactModal>
     </>    
     );     
@@ -115,7 +100,31 @@ const Title = styled.div`
 
 const Map = styled.div`
     width: 713px;
-    height: 240px;
+    height: 240px; 
+    font-family: Oswald;
+    position: relative;
+    font-size: 24px;      
+    margin-bottom: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    color: white;
+
+    iframe {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 715px;
+        height: 240px;
+        margin-bottom: 23px;        
+
+        @media (max-width: 614px){
+            width: 260px;
+            height:150px;
+        }
+    }
 
     @media (max-width: 614px){
         width: 260px;
