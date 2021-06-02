@@ -113,7 +113,13 @@ export default function LikedPost({ post, RenderPosts }) {
         {enabled ? (
           <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
         ) : (
-          <AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike} />
+          <AiFillHeart
+            stroke={"white"}
+            strokeWidth={80}
+            fill={"#171717"}
+            className="heart-icon"
+            onClick={LikeOrDeslike}
+          />
         )}
         <span
           data-tip={
@@ -273,6 +279,15 @@ const SideMenu = styled.div`
       height: 40px;
     }
   }
+
+  svg {
+    pointer-events: none;
+
+    path {
+      pointer-events: all;
+    }
+  }
+
   .heart-icon {
     width: 20px;
     height: 18px;

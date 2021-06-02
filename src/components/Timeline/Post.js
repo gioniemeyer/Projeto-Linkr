@@ -117,7 +117,13 @@ export default function Post({
         {enabled ? (
           <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
         ) : (
-          <AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike} />
+          <AiFillHeart
+            stroke={"white"}
+            strokeWidth={80}
+            fill={"#171717"}
+            className="heart-icon"
+            onClick={LikeOrDeslike}
+          />
         )}
         <span
           data-tip={

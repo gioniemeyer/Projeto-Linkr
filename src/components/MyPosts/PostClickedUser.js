@@ -122,7 +122,13 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
         {enabled ? (
           <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
         ) : (
-          <AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike} />
+          <AiFillHeart
+            stroke={"white"}
+            strokeWidth={80}
+            fill={"#171717"}
+            className="heart-icon"
+            onClick={LikeOrDeslike}
+          />
         )}
         <span
           data-tip={
@@ -242,14 +248,6 @@ const PostBox = styled.li`
     padding: 9px 18px 15px 15px;
   }
 
-  svg {
-    pointer-events: none;
-
-    path {
-      pointer-events: all;
-    }
-  }
-
   .trash-icon {
     position: absolute;
     top: 23px;
@@ -297,6 +295,7 @@ const SideMenu = styled.div`
       width: 40px;
       height: 40px;
     }
+    }
 
     img {
       width: 50px;
@@ -306,6 +305,14 @@ const SideMenu = styled.div`
       @media (max-width: 614px) {
         width: 40px;
         height: 40px;
+      }
+    }
+
+    svg {
+      pointer-events: none;
+
+      path {
+        pointer-events: all;
       }
     }
 
@@ -323,7 +330,6 @@ const SideMenu = styled.div`
         height: 15px;
       }
     }
-  }
 
   span {
     font-size: 11px;
