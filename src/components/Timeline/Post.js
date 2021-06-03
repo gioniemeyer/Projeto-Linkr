@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineHeart } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
 import UserContext from "../../contexts/UserContext";
 import { useContext, useState, useRef, useEffect } from "react";
@@ -30,6 +30,8 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
   const idVideo = getYouTubeID(link);
   let enabled = false;
   const [modalLink, setModalLink] = useState(false);
+  
+  console.log(post);
 
   useEffect(() => {
     if (control) {
@@ -103,6 +105,13 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
   }
 
   return (
+    <>
+    <RepostHeader>
+      <div>
+        <BiRepost className="repost-icon-header" />
+        <span>Re-posted by <strong>oi</strong></span>
+      </div>
+    </RepostHeader>
     <PostBox>
       <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
       <SideMenu enabled={enabled}>
@@ -153,6 +162,8 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
           width="100%"
           height="100%"
         />
+        <BiRepost className="repost-icon" />
+        <span>0 re-post</span>
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>
@@ -221,6 +232,7 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
         ></GeolocationModal>
       )}
     </PostBox>
+    </>
   );
 }
 
@@ -315,6 +327,12 @@ const SideMenu = styled.div`
     @media (max-width: 614px) {
       font-size: 9px;
     }
+  }
+
+  .repost-icon {
+    color: #FFFFFF;
+    margin-top: 22px;
+    font-size: 25px;
   }
 `;
 
@@ -453,5 +471,26 @@ const Snippet = styled.div`
       height: 115px;
       object-fit: cover;
     }
+  }
+`;
+
+const RepostHeader = styled.header`
+  width: 611px;
+  height: 100px;
+  font-size: 11px;
+  color: white;
+  background-color: #1E1E1E;
+  border-radius: 16px;
+  padding: 4px 0 0 13px;
+  margin-bottom: -67px;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .repost-icon-header {
+    font-size: 25px;
+    margin-right: 5px;
   }
 `;
