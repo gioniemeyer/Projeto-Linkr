@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineHeart } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState, useRef, useEffect } from "react";
@@ -15,6 +15,7 @@ import SnippetDiv from "../Timeline/SnippetDiv";
 import ModalLink from "../ModalLink";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
+import ModalRepost from "../ModalRepost";
 
 export default function LikedPost({ post, RenderPosts }) {
   const { userData } = useContext(UserContext);
@@ -27,7 +28,9 @@ export default function LikedPost({ post, RenderPosts }) {
     linkImage,
     user,
     likes,
-    isLiked,
+    isLiked, 
+    repostCount, 
+    repostedBy,
   } = post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
@@ -40,6 +43,7 @@ export default function LikedPost({ post, RenderPosts }) {
   const idVideo = getYouTubeID(link);
   const [modalLink, setModalLink] = useState(false);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
+  const [modalRepostOpen, setModalRepostOpen] = useState(false);
 
   let enabled = true;
 
@@ -106,9 +110,26 @@ export default function LikedPost({ post, RenderPosts }) {
     });
   }
 
+  function openModalRepost() {
+    setModalRepostOpen(true);
+  }
+
   return (
+    <>
+    {
+      repostedBy === undefined
+      ? ""
+      :
+        <RepostHeader>
+          <div>
+            <BiRepost className="repost-icon-header" />
+            <span>Re-posted by <strong>{repostedBy.id === (userData.id || localUser.user.id) ? "you" : repostedBy.username}</strong></span>
+          </div>
+        </RepostHeader>
+    }
     <PostBox>
       <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
+      <ModalRepost modalRepostOpen={modalRepostOpen} setModalRepostOpen={setModalRepostOpen} RenderPosts={RenderPosts} postID={id} />
       <SideMenu enabled={enabled}>
         <Link to={`/user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
@@ -152,6 +173,10 @@ export default function LikedPost({ post, RenderPosts }) {
           {likes.length} {likes.length === 1 ? "like" : "likes"}
         </span>
         <ReactTooltip place="bottom" type="light" effect="float" />
+        <div className="repost-box">
+          <BiRepost onClick={openModalRepost} className="repost-icon" />
+        </div>
+        <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>
@@ -221,6 +246,7 @@ export default function LikedPost({ post, RenderPosts }) {
         ></GeolocationModal>
       )}
     </PostBox>
+    </>
   );
 }
 const PostBox = styled.li`
@@ -306,6 +332,19 @@ const SideMenu = styled.div`
     color: #ffffff;
     @media (max-width: 614px) {
       font-size: 9px;
+    }
+  }
+
+  .repost-box {
+    svg {
+      pointer-events: all;
+    }
+    
+    .repost-icon {
+      color: #FFFFFF;
+      margin-top: 22px;
+      font-size: 25px;
+      cursor: pointer;
     }
   }
 `;
@@ -444,5 +483,31 @@ const Snippet = styled.div`
       height: 115px;
       object-fit: cover;
     }
+  }
+`;
+
+const RepostHeader = styled.header`
+  width: 611px;
+  height: 100px;
+  font-size: 11px;
+  color: white;
+  background-color: #1E1E1E;
+  border-radius: 16px;
+  padding: 4px 0 0 13px;
+  margin-bottom: -67px;
+
+  @media (max-width: 614px) {
+    width: 100vw;
+    border-radius: 0;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .repost-icon-header {
+    font-size: 25px;
+    margin-right: 5px;
   }
 `;
