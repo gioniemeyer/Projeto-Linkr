@@ -28,16 +28,7 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
   const [geoModalOpen, setGeoModalOpen] = useState(false);
   const history = useHistory();
   const idVideo = getYouTubeID(link);
-  // const [isLiked, setIsLiked] = useState(false);
-  // const [likesQty, setLikesQty] = useState(post.likes.length);
-  // const [likes, setLikes] = useState(post.likes);
   let enabled = false;
-
-  // useEffect(() => {
-  //   likes.forEach((like, i) => {
-  //     setLikes([...likes], like.username = like['user.username']);
-  //   });
-  // }, []);
 
   useEffect(() => {
     if (control) {
@@ -59,38 +50,22 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
         config
       );
 
-      // request.then(response => {
-      //   setIsLiked(true);
-      //   const soma = likesQty + 1;
-      //   setLikesQty(soma);
-      //   setLikes(response.data.post.likes);
-      // });
-
     } else {
       const request = axios.post(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
         body,
         config
       );
-
-      // request.then(response => {
-      //   setIsLiked(false);
-      //   const subtrair = likesQty - 1;
-      //   setLikesQty(subtrair);
-      //   setLikes(response.data.post.likes);
-      // });
     }
+    RenderLikes();
     RenderPosts();
   }
 
-  useEffect(() => {
     likes.forEach(element => {
       if(element.userId === localUser.user.id) {
-        // setIsLiked(true);
         enabled = true;
       }
     });
-  }, []);
 
   function ShowEdit() {
     if (control) {
