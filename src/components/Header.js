@@ -326,6 +326,17 @@ const Search = styled.div`
     height: 60px;
     border-radius: 8px;
     border: none;
+
+    ::-webkit-input-placeholder {
+      color: #C6C6C6;
+      font-family: "Lato";
+      font-size: 19px;
+      padding-left: 17px;
+
+      @media (max-width: 614px) {
+        font-size: 14px;
+      }
+    }
   }
 
   textarea:focus,

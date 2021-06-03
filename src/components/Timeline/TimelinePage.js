@@ -49,7 +49,6 @@ export default function Timeline() {
     request.then((response) => {
       setTimelinePosts(response.data.posts);
       setEnableLoading(false);
-      console.log(response.data);
     });
     request.catch(() => {
       alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
@@ -161,7 +160,7 @@ export default function Timeline() {
     });
   }
 
-  // useInterval(updateTimeline, 15000);
+  useInterval(updateTimeline, 15000);
 
   return (
     <>

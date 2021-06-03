@@ -73,5 +73,13 @@ button {
     .close {
         color: white !important; 
         font-size: 25px;         
-      }
+    }
+
+    .buttons-repost {
+        font-size: 9px !important;
+    }
+}
+
+.buttons-repost {
+    font-size: 14px;
 }

@@ -15,10 +15,11 @@ import { IoLocationSharp } from "react-icons/io5";
 import getYouTubeID from "get-youtube-id";
 import SnippetDiv from "./SnippetDiv";
 import ModalLink from "../ModalLink";
+import ModalRepost from "../ModalRepost";
 
 export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
+  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes, repostCount, repostedBy } = post;
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [control, setControl] = useState(false);
   const [newText, setNewText] = useState(text);
@@ -30,8 +31,7 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
   const idVideo = getYouTubeID(link);
   let enabled = false;
   const [modalLink, setModalLink] = useState(false);
-  
-  console.log(post);
+  const [modalRepostOpen, setModalRepostOpen] = useState(false);
 
   useEffect(() => {
     if (control) {
@@ -104,16 +104,27 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
     });
   }
 
+  function openModalRepost() {
+    setModalRepostOpen(true);
+    alert("oi");
+  }
+
   return (
     <>
-    <RepostHeader>
-      <div>
-        <BiRepost className="repost-icon-header" />
-        <span>Re-posted by <strong>oi</strong></span>
-      </div>
-    </RepostHeader>
+    {
+      repostedBy === undefined
+      ? ""
+      :
+        <RepostHeader>
+          <div>
+            <BiRepost className="repost-icon-header" />
+            <span>Re-posted by <strong>{repostedBy.id === (userData.id || localUser.user.id) ? "you" : repostedBy.username}</strong></span>
+          </div>
+        </RepostHeader>
+    }
     <PostBox>
       <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
+      <ModalRepost modalRepostOpen={modalRepostOpen} setModalRepostOpen={setModalRepostOpen} RenderPosts={RenderPosts} postID={id} />
       <SideMenu enabled={enabled}>
         <Link to={`/user/${user.id}`} className="link-user-name">
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
@@ -162,8 +173,10 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
           width="100%"
           height="100%"
         />
-        <BiRepost className="repost-icon" />
-        <span>0 re-post</span>
+        <div className="repost-box">
+          <BiRepost onClick={openModalRepost} className="repost-icon" />
+        </div>
+        <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>
@@ -329,11 +342,18 @@ const SideMenu = styled.div`
     }
   }
 
-  .repost-icon {
-    color: #FFFFFF;
-    margin-top: 22px;
-    font-size: 25px;
-  }
+  .repost-box {
+    svg {
+      pointer-events: all;
+    }
+    
+    .repost-icon {
+      color: #FFFFFF;
+      margin-top: 22px;
+      font-size: 25px;
+      cursor: pointer;
+    }
+  } 
 `;
 
 const Content = styled.div`
@@ -483,6 +503,11 @@ const RepostHeader = styled.header`
   border-radius: 16px;
   padding: 4px 0 0 13px;
   margin-bottom: -67px;
+
+  @media (max-width: 614px) {
+    width: 100vw;
+    border-radius: 0;
+  }
 
   div {
     display: flex;
