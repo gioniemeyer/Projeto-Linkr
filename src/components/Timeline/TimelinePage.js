@@ -27,6 +27,8 @@ export default function Timeline() {
     listOfFollowing = following.users.length;
   }
 
+  console.log(TimelinePosts);
+
   function RenderLikes() {
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },

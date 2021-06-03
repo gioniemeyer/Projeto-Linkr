@@ -106,7 +106,6 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
 
   function openModalRepost() {
     setModalRepostOpen(true);
-    alert("oi");
   }
 
   return (
