@@ -41,11 +41,8 @@ export default function Post({
   useEffect(() => {
     likes.forEach((like, i) => {
       setLikes([...likes], like.username = like['user.username']);
-      console.log(like['user.username']);
     });
   }, []);
-
-  console.log(likes);
 
   useEffect(() => {
     if (control) {
@@ -72,7 +69,6 @@ export default function Post({
         const soma = likesQty + 1;
         setLikesQty(soma);
         setLikes(response.data.post.likes);
-        console.log(response.data.post.likes);
       });
 
     } else {
@@ -87,9 +83,7 @@ export default function Post({
         const subtrair = likesQty - 1;
         setLikesQty(subtrair);
         setLikes(response.data.post.likes);
-        console.log(response.data.post.likes);
       });
-
     }
   }
 
