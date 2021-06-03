@@ -164,7 +164,7 @@ export default function UserPage() {
   useEffect(teste, [following.users]);
 
   function fetchData() {
-    if (UserPosts.length >= 50) {
+    if (UserPosts.length >= 500) {
       setHasMore(false);
       return;
     }
@@ -184,6 +184,9 @@ export default function UserPage() {
       );
 
       request.then((response) => {
+        if(response.data.posts.length < 10) {
+            setHasMore(false);
+        }
         setTimeout(() => {
           setUserPosts([...UserPosts, ...response.data.posts]);
         }, 500);

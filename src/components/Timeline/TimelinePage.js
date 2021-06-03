@@ -105,7 +105,7 @@ export default function Timeline() {
   },[])
 
   function fetchData() {
-    if (TimelinePosts.length >= 50) {
+    if (TimelinePosts.length >= 500) {
       setHasMore(false);
       return;
     }
@@ -124,6 +124,9 @@ export default function Timeline() {
       );
 
       request.then((response) => {
+        if(response.data.posts.length < 10) {
+          setHasMore(false);
+        }
         setTimeout(() => {
           setTimelinePosts([...TimelinePosts, ...response.data.posts]);
         }, 500);

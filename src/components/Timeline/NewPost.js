@@ -71,12 +71,8 @@ export default function NewPost({ TimelinePosts, setTimelinePosts, RenderPosts, 
       setDisabled(false);
       setLink("");
       setText("");
-      // setTimeout(() => RenderPosts(), 2000);
-      setTimelinePosts([response.data.post, ...TimelinePosts]);
-      console.log(response.data);
+      RenderPosts();
     });
-
-    console.log(TimelinePosts);
 
     request.catch((error) => {
       alert("Houve um erro ao publicar seu post.");

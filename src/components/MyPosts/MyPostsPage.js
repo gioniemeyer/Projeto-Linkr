@@ -79,7 +79,7 @@ export default function MyPostsPage() {
   }, []);
 
   function fetchData() {
-    if (MyPosts.length >= 50) {
+    if (MyPosts.length >= 500) {
       setHasMore(false);
       return;
     }
@@ -101,6 +101,9 @@ export default function MyPostsPage() {
       );
 
       request.then((response) => {
+        if(response.data.posts.length < 10) {
+          setHasMore(false);
+        }
         setTimeout(() => {
           setMyPosts([...MyPosts, ...response.data.posts]);
         }, 500);

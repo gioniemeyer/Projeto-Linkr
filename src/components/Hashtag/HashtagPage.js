@@ -83,7 +83,7 @@ export default function HashtagPage() {
   }, [params]);
 
   function fetchData() {
-    if (UserPosts.length >= 50) {
+    if (UserPosts.length >= 500) {
       setHasMore(false);
       return;
     }
@@ -94,7 +94,6 @@ export default function HashtagPage() {
           Authorization: `Bearer ${userData.token || localUser.token}`,
         },
       };
-
       const request = axios.get(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${params.hashtag}/posts?olderThan=${
             UserPosts[UserPosts.length - 1].id

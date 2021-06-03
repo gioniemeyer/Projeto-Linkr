@@ -39,7 +39,7 @@ export default function LikesPage() {
   useEffect(RenderPosts, []);
 
   function fetchData() {
-    if (LikedPosts.length >= 50) {
+    if (LikedPosts.length >= 500) {
       setHasMore(false);
       return;
     }
@@ -59,6 +59,9 @@ export default function LikesPage() {
       );
 
       request.then((response) => {
+        if(response.data.posts.length < 10) {
+          setHasMore(false);
+        }
         setTimeout(() => {
           setLikedPosts([...LikedPosts, ...response.data.posts]);
         }, 500);
