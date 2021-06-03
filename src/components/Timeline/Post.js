@@ -7,25 +7,33 @@ import Hashtag from "./Hashtag";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import Modal from "../Modal";
+import GeolocationModal from "../GeolocationModal";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
 import {FaPencilAlt} from 'react-icons/fa';
-import YouTube from 'react-youtube';
+import { IoLocationSharp } from "react-icons/io5";
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "./SnippetDiv";
 import Comments from "../Comments"
-export default function Post({ post,RenderLikes,RenderPosts }) {
+import CommentBox from "../CommentBox"
+
+
+export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes } =post;
+  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes,commentCount } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [control,setControl]=useState(false)
   const [newText,setNewText]=useState(text)
   const [disabler,setDisabler]=useState(false)
-  let enabled=false
+  let enabled=false  
   const inputRef=useRef();
   const [modalOpen, setModalOpen] = useState(false);
+  const [geoModalOpen, setGeoModalOpen] = useState(false);
+  const [showComment,setShowComment]=useState(false)
   const history = useHistory();
+  
+  
   const idVideo = getYouTubeID(link);
 
   useEffect(()=>{
@@ -34,7 +42,6 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
     }
     setNewText(text)
   },[control])
-
   
 
   function LikeOrDeslike() {
@@ -98,7 +105,7 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
 
 
   return (
-    
+    <>
     <PostBox>
       <SideMenu enabled={enabled}>
         <Link to={`user/${user.id}`} className="link-user-name">
@@ -122,11 +129,16 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
           url={link}
           width='100%'
           height='100%'/>
-        <Comments/>
+        <Comments numberComment={commentCount} setShowComment={setShowComment} showComment={showComment} />
       </SideMenu>
       <Content>
-        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}</h1>
+        <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}
+          {post.geolocation &&
+          <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
+          }
+        </h1>
         <h2>
+        
           {control?
           
             [<form onSubmit={Edit}>
@@ -149,8 +161,14 @@ export default function Post({ post,RenderLikes,RenderPosts }) {
       </Content>
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
       {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
+      
       <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
+      {post.geolocation && 
+      <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
+      }
     </PostBox>
+    {showComment?<CommentBox id={id} userAuthor={user.id}/>:''}
+    </>
   );
 }
 
@@ -220,6 +238,8 @@ const SideMenu = styled.div`
     color: ${(props) => (props.enabled ? "#AC0000" : "#FFFFFF")};
     margin-bottom: 4px;
     margin-top: 19px;
+    cursor: pointer;
+
     @media (max-width: 614px) {
       width: 17px;
       height: 15px;
@@ -251,6 +271,11 @@ const Content = styled.div`
 
         @media (max-width: 614px){
             font-size: 17px;
+        }
+
+        .geolocation {
+          padding-top: 3px;
+          margin-left: 3px;
         }
     }
   

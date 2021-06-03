@@ -10,9 +10,12 @@ import axios from "axios";
 import {FaPencilAlt} from 'react-icons/fa';
 import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "../Timeline/SnippetDiv";
+import GeolocationModal from "../GeolocationModal";
+import { IoLocationSharp } from "react-icons/io5";
+import {AiFillHeart} from 'react-icons/ai';
+import ReactTooltip from 'react-tooltip';
 
-
-export default function PostClickedUser({ post, RenderPosts }) {
+export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
     const history = useHistory();
     const { userData } = useContext(UserContext);
@@ -21,8 +24,10 @@ export default function PostClickedUser({ post, RenderPosts }) {
     const [control,setControl]=useState(false)
     const [newText,setNewText]=useState(text)
     const [disabler,setDisabler]=useState(false)
+    const [geoModalOpen, setGeoModalOpen] = useState(false);
     const inputRef=useRef();
     const idVideo = getYouTubeID(link);
+    let enabled = false;  
 
     useEffect(()=>{
         if(control){
@@ -61,18 +66,70 @@ export default function PostClickedUser({ post, RenderPosts }) {
        request.catch(()=>{alert('Não foi possível salvar as alterações')
        setDisabler(false)})
     }
+
+    function LikeOrDeslike() {
+        const body = [];
+    
+        const config = {
+        headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+        };
+
+        if(enabled===false){
+        const request = axios.post(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
+        body,
+        config
+        );
+        }else{
+        const request = axios.post(
+            `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
+            body,
+            config
+        );
+        
+        }
+        RenderLikes();
+        RenderPosts();        
+    }
+
+  likes.forEach(element => {
+    if(element.userId === localUser.user.id) {
+      enabled = true;
+    }
+  });
       
     return(
         <PostBox>
-            <SideMenu>
+            <SideMenu enabled={enabled}>
                 <Link to={`/user/${user.id}`}> 
                     <img src={user.avatar} alt="Imagem de avatar do usuário" />
                 </Link>
-                <AiOutlineHeart className="heart-icon" />
-                <span>{likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}</span>
+                {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
+                <span data-tip={likes.length === 0 ? '' :
+                    likes.length !== 1 ?
+                        likes.length >= 3 ?
+                        enabled ? 
+                            `Você, ${likes[0]['user.username']} e outras ${likes.length-2} pessoas` : 
+                            `${likes[0]['user.username']}, ${likes[1]['user.username']} e outras ${likes.length-2} pessoas` :
+                        enabled ? 
+                        `Você e ${localUser.user.username===likes[0]['user.username']?likes[1]['user.username']:likes[0]['user.username']} curtiram` : 
+                        `${likes[0]['user.username']} e ${likes[1]['user.username']} curtiram` :
+                    enabled ? 
+                        `Você curtiu` :
+                        `${likes[0]['user.username']} curtiu`}>
+                {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
+                <ReactTooltip place="bottom" type="light" effect="float"/> 
             </SideMenu>
             <Content>
-                <h1 onClick={() => history.push(`${user.id}`)}>{user.username}</h1>
+                <Wrapper>
+            <Link className="link" to={`${user.id}`}> 
+                <h1>{user.username}
+                </h1>
+            </Link>
+            {post.geolocation &&
+            <IoLocationSharp onClick={(e) => {e.stopPropagation(); setGeoModalOpen(true)}} className="geolocation"/>
+            }
+             </Wrapper>                                      
                 <h2>
                 {control?          
                 [<form onSubmit={Edit}>
@@ -94,6 +151,9 @@ export default function PostClickedUser({ post, RenderPosts }) {
             {(userData ? userData.user.id : localUser.user.id) === user.id && <FaPencilAlt onClick={ShowEdit} className="pencil-icon"/>}
             {(userData ? userData.user.id : localUser.user.id) === user.id && <FaTrash onClick={() => setModalOpen(true)} className="trash-icon" />}
             <Modal RenderPosts={RenderPosts} modalOpen={modalOpen} setModalOpen={setModalOpen} postID={id} />
+            {post.geolocation && 
+            <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
+            }
         </PostBox>
     );
 }
@@ -170,6 +230,7 @@ const SideMenu = styled.div`
         margin-bottom: 4px;
         margin-top: 19px;
         color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+        cursor: pointer;
 
         @media (max-width: 614px){
             width: 17px;
@@ -201,9 +262,12 @@ const Content = styled.div`
         margin-bottom: 7px;
         word-break: break-all;
 
+        
         @media (max-width: 614px){
             font-size: 17px;
         }
+
+              
     }
 
     h2 {
@@ -227,7 +291,8 @@ const Content = styled.div`
         overflow-y: auto;
         overflow-wrap: break-word;
         color: #4C4C4C;
-    }
+    }  
+    
 `;
 
 const Snippet = styled.a`
@@ -319,4 +384,23 @@ const Snippet = styled.a`
             object-fit: cover;
         }
     }
+`;
+
+const Wrapper = styled.div`
+    display: flex;    
+
+     .geolocation {
+            margin-top: 3px;
+            margin-left: 5px;
+            color: white;
+            cursor: pointer;
+
+            @media (max-width: 614px){
+                margin-top: 1px;
+
+            }
+            
+    }     
+
+    
 `;
