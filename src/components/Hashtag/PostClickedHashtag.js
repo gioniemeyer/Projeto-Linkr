@@ -14,6 +14,7 @@ import getYouTubeID from "get-youtube-id";
 import SnippetDiv from "../Timeline/SnippetDiv";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
+import ModalLink from "../ModalLink";
 
 export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
   const { id, text, link, linkTitle, linkDescription, linkImage, user } = post;
@@ -31,6 +32,7 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
   const [isLiked, setIsLiked] = useState();
   const [likesQty, setLikesQty] = useState(post.likes.length);
   const [likes, setLikes] = useState(post.likes);
+  const [modalLink, setModalLink] = useState(false);
 
   useEffect(() => {
     likes.forEach((like, i) => {
@@ -93,7 +95,6 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
   function ShowEdit() {
     if (control) {
       setControl(false);
-
       return;
     } else {
       setControl(true);
@@ -128,7 +129,9 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
 
   return (
     <PostBox>
-      <SideMenu isLiked={isLiked}>
+      
+    <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
+    <SideMenu isLiked={isLiked}>
         <Link to={`/user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
@@ -207,7 +210,7 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
         {idVideo ? (
           <SnippetDiv link={link} idVideo={idVideo} />
         ) : (
-          <Snippet href={link} target="_blank">
+            <Snippet onClick={() => setModalLink(true)}>
             <div className="snippet-text">
               <h3>{linkTitle}</h3>
               <h4>{linkDescription}</h4>
@@ -390,7 +393,7 @@ const Content = styled.div`
   }
 `;
 
-const Snippet = styled.a`
+const Snippet = styled.div`
   width: 503px;
   height: 155px;
   border-radius: 11px;

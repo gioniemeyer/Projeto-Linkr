@@ -14,6 +14,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import getYouTubeID from "get-youtube-id";
 import SnippetDiv from "./SnippetDiv";
+import ModalLink from "../ModalLink";
 
 export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
@@ -29,6 +30,7 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
   const history = useHistory();
   const idVideo = getYouTubeID(link);
   let enabled = false;
+  const [modalLink, setModalLink] = useState(false);
 
   useEffect(() => {
     if (control) {
@@ -103,8 +105,9 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
 
   return (
     <PostBox>
+      <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
       <SideMenu enabled={enabled}>
-        <Link to={`user/${user.id}`} className="link-user-name">
+        <Link to={`/user/${user.id}`} className="link-user-name">
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
         {enabled ? (
@@ -153,7 +156,7 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
         />
       </SideMenu>
       <Content>
-        <h1 onClick={() => history.push(`user/${user.id}`)}>
+        <h1 onClick={() => history.push(`/user/${user.id}`)}>
           {user.username}
           {post.geolocation && (
             <IoLocationSharp
@@ -184,10 +187,9 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
             <Hashtag text={text} />
           )}
         </h2>
-        {idVideo ? (
-          <SnippetDiv link={link} idVideo={idVideo} />
-        ) : (
-          <Snippet href={link} target="_blank">
+        {idVideo ? 
+          <SnippetDiv link={link} idVideo={idVideo} /> :
+          <Snippet onClick={() => setModalLink(true)}>
             <div className="snippet-text">
               <h3>{linkTitle}</h3>
               <h4>{linkDescription}</h4>
@@ -195,7 +197,7 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
             </div>
             <img src={linkImage} alt={linkDescription} />
           </Snippet>
-        )}
+        }
       </Content>
       {(userData ? userData.user.id : localUser.user.id) === user.id && (
         <FaPencilAlt onClick={ShowEdit} className="pencil-icon" />
@@ -364,7 +366,7 @@ const Content = styled.div`
   }
 `;
 
-const Snippet = styled.a`
+const Snippet = styled.div`
   width: 503px;
   height: 155px;
   border-radius: 11px;

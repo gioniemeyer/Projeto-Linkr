@@ -12,6 +12,7 @@ import { FaTrash } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import getYouTubeID from "get-youtube-id";
 import SnippetDiv from "../Timeline/SnippetDiv";
+import ModalLink from "../ModalLink";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
 
@@ -37,6 +38,7 @@ export default function LikedPost({ post, RenderPosts }) {
   const [disabler, setDisabler] = useState(false);
   const inputRef = useRef();
   const idVideo = getYouTubeID(link);
+  const [modalLink, setModalLink] = useState(false);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
 
   let enabled = true;
@@ -106,8 +108,9 @@ export default function LikedPost({ post, RenderPosts }) {
 
   return (
     <PostBox>
+      <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
       <SideMenu enabled={enabled}>
-        <Link to={`user/${user.id}`}>
+        <Link to={`/user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
         {enabled ? (
@@ -185,7 +188,7 @@ export default function LikedPost({ post, RenderPosts }) {
         {idVideo ? (
           <SnippetDiv link={link} idVideo={idVideo} />
         ) : (
-          <Snippet href={link} target="_blank">
+          <Snippet onClick={() => setModalLink(true)}>
             <div className="snippet-text">
               <h3>{linkTitle}</h3>
               <h4>{linkDescription}</h4>
@@ -353,7 +356,7 @@ const Content = styled.div`
     color: #4c4c4c;
   }
 `;
-const Snippet = styled.a`
+const Snippet = styled.div`
   width: 503px;
   height: 155px;
   border-radius: 11px;
