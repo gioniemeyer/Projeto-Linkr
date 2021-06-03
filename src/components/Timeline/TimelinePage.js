@@ -9,6 +9,8 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ReactLoading from 'react-loading';
+import useInterval from 'react-useinterval';
+import { func } from "prop-types";
 
 export default function Timeline() {
   const [TimelinePosts, setTimelinePosts] = useState([]);
@@ -100,10 +102,6 @@ export default function Timeline() {
     getListOfFollowing();
   }, []);
 
-  useEffect(() => {
-
-  },[])
-
   function fetchData() {
     if (TimelinePosts.length >= 500) {
       setHasMore(false);
@@ -137,6 +135,26 @@ export default function Timeline() {
       });
     }
   }
+
+  function updateTimeline() {
+    const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}`} };
+    const request = axios.get(
+      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts?earlierThan=${
+        TimelinePosts[0].id
+      }`,
+      config
+    );
+
+    request.then(response => {
+      setTimelinePosts([...response.data.posts, ...TimelinePosts]);
+    });
+
+    request.catch(error => {
+      alert("Algo deu errado com sua requisição, por favor, tente novamente");
+    });
+  }
+
+  useInterval(updateTimeline, 15000);
 
   return (
     <>
