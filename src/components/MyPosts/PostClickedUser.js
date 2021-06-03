@@ -14,6 +14,7 @@ import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
 import { AiFillHeart } from "react-icons/ai";
 import ReactTooltip from "react-tooltip";
+import ModalLink from "../ModalLink";
 
 export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
   const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } =
@@ -29,6 +30,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
   const inputRef = useRef();
   const idVideo = getYouTubeID(link);
   let enabled = false;
+  const [modalLink, setModalLink] = useState(false);
 
   useEffect(() => {
     if (control) {
@@ -115,6 +117,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
 
   return (
     <PostBox>
+    <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
       <SideMenu enabled={enabled}>
         <Link to={`/user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
@@ -196,8 +199,8 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
         {idVideo ? (
           <SnippetDiv link={link} idVideo={idVideo} />
         ) : (
-          <Snippet href={link} target="_blank">
-            <div className="snippet-text">
+            <Snippet onClick={() => setModalLink(true)}>
+                <div className="snippet-text">
               <h3>{linkTitle}</h3>
               <h4>{linkDescription}</h4>
               <h5>{link}</h5>
@@ -384,7 +387,7 @@ const Content = styled.div`
   }
 `;
 
-const Snippet = styled.a`
+const Snippet = styled.div`
   width: 503px;
   height: 155px;
   border-radius: 11px;
