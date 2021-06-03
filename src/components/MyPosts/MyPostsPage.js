@@ -7,7 +7,8 @@ import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 import PostClickedUser from "./PostClickedUser";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ReactLoading from 'react-loading';
+import ReactLoading from "react-loading";
+import "../../styles/infinitescroll-styles.css";
 
 export default function MyPostsPage() {
   const [MyPosts, setMyPosts] = useState([]);
@@ -73,6 +74,7 @@ export default function MyPostsPage() {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     RenderPosts();
     RenderLikes();
     CreateLikedPosts();
@@ -94,14 +96,12 @@ export default function MyPostsPage() {
       const request = axios.get(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${
           localUser.user.id || userData.user.id
-        }/posts?olderThan=${
-          MyPosts[MyPosts.length - 1].id
-        }`,
+        }/posts?olderThan=${MyPosts[MyPosts.length - 1].id}`,
         config
       );
 
       request.then((response) => {
-        if(response.data.posts.length < 10) {
+        if (response.data.posts.length < 10) {
           setHasMore(false);
         }
         setTimeout(() => {
@@ -118,53 +118,48 @@ export default function MyPostsPage() {
   return (
     <>
       <Header />
-      <MyPostsBody>
       <InfiniteScroll
-          dataLength={MyPosts.length}
-          next={fetchData}
-          hasMore={hasMore}
-          loader={
-            <div className="loading-posts">
-              <ReactLoading
-                type="spin"
-                color="#6D6D6D"
-                width={80}
-                height={80}
-              />
-              <span>Loading more posts...</span>
-            </div>
-          }
-          endMessage={
-            <div className="loading-posts">
-              <p className="end-message" style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all!</b>
-              </p>
-            </div>
-          }
-        >
-        <MyPostsContainer>
-          <PostsContainer>
-            <Title>my posts</Title>
-            {MyPosts.length === 0 && !enableLoading ? (
-              <div className="no-post">Nenhum post encontrado :(</div>
-            ) : (
-              MyPosts.map((post, i) => (
-                <PostClickedUser
-                  RenderLikes={RenderLikes}
-                  RenderPosts={RenderPosts}
-                  post={post}
-                  key={i}
-                />
-              ))
-            )}
-            {enableLoading && <Loading />}
-          </PostsContainer>
-          <div className="trending">
-            <Trending />
+        dataLength={MyPosts.length}
+        next={fetchData}
+        hasMore={hasMore}
+        loader={
+          <div className="loading-posts">
+            <ReactLoading type="spin" color="#6D6D6D" width={80} height={80} />
+            <span className="loading-text">Loading more posts...</span>
           </div>
-        </MyPostsContainer>
-        </InfiniteScroll>
-      </MyPostsBody>
+        }
+        endMessage={
+          <div className="loading-posts">
+            <p className="end-message" style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all!</b>
+            </p>
+          </div>
+        }
+      >
+        <MyPostsBody>
+          <MyPostsContainer>
+            <PostsContainer>
+              <Title>my posts</Title>
+              {MyPosts.length === 0 && !enableLoading ? (
+                <div className="no-post">Nenhum post encontrado :(</div>
+              ) : (
+                MyPosts.map((post, i) => (
+                  <PostClickedUser
+                    RenderLikes={RenderLikes}
+                    RenderPosts={RenderPosts}
+                    post={post}
+                    key={i}
+                  />
+                ))
+              )}
+              {enableLoading && <Loading />}
+            </PostsContainer>
+            <div className="trending">
+              <Trending />
+            </div>
+          </MyPostsContainer>
+        </MyPostsBody>
+      </InfiniteScroll>
     </>
   );
 }
@@ -187,13 +182,14 @@ const MyPostsBody = styled.div`
     align-items: center;
     justify-content: center;
 
-    span, .end-message {
+    span,
+    .end-message {
       margin-top: 16px;
       margin-bottom: 20px;
       font-size: 22px;
       letter-spacing: 0.05em;
-      font-family: 'Lato';
-      color: #6D6D6D;
+      font-family: "Lato";
+      color: #6d6d6d;
     }
   }
 `;

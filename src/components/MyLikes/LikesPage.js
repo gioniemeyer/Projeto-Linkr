@@ -7,7 +7,8 @@ import LikedPost from "./LikedPost";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ReactLoading from 'react-loading';
+import ReactLoading from "react-loading";
+import "../../styles/infinitescroll-styles.css";
 
 export default function LikesPage() {
   const [enableLoading, setEnableLoading] = useState(false);
@@ -36,7 +37,10 @@ export default function LikesPage() {
     });
   }
 
-  useEffect(RenderPosts, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    RenderPosts();
+  }, []);
 
   function fetchData() {
     if (LikedPosts.length >= 500) {
@@ -59,7 +63,7 @@ export default function LikesPage() {
       );
 
       request.then((response) => {
-        if(response.data.posts.length < 10) {
+        if (response.data.posts.length < 10) {
           setHasMore(false);
         }
         setTimeout(() => {
@@ -76,55 +80,50 @@ export default function LikesPage() {
   return (
     <>
       <Header />
-      <TimelineBody>
       <InfiniteScroll
-          dataLength={LikedPosts.length}
-          next={fetchData}
-          hasMore={hasMore}
-          loader={
-            <div className="loading-posts">
-              <ReactLoading
-                type="spin"
-                color="#6D6D6D"
-                width={80}
-                height={80}
-              />
-              <span>Loading more posts...</span>
-            </div>
-          }
-          endMessage={
-            <div className="loading-posts">
-              <p className="end-message" style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all!</b>
-              </p>
-            </div>
-          }
-        >
-        <TimelineContainer>
-          <TimelinePostsContainer>
-            <Title>my likes</Title>
-            {LikedPosts.length === 0 && !enableLoading ? (
-              <div className="no-post">Nenhum post encontrado :(</div>
-            ) : (
-              LikedPosts.map((post, i) => (
-                <LikedPost
-                  post={post}
-                  key={i}
-                  setLikedPosts={setLikedPosts}
-                  LikedPosts={LikedPosts}
-                  TimelinePosts={TimelinePosts}
-                  RenderPosts={RenderPosts}
-                />
-              ))
-            )}
-            {enableLoading && <Loading />}
-          </TimelinePostsContainer>
-          <div className="trending">
-            <Trending />
+        dataLength={LikedPosts.length}
+        next={fetchData}
+        hasMore={hasMore}
+        loader={
+          <div className="loading-posts">
+            <ReactLoading type="spin" color="#6D6D6D" width={80} height={80} />
+            <span className="loading-text">Loading more posts...</span>
           </div>
-        </TimelineContainer>
-        </InfiniteScroll>
-      </TimelineBody>
+        }
+        endMessage={
+          <div className="loading-posts">
+            <p className="end-message" style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all!</b>
+            </p>
+          </div>
+        }
+      >
+        <TimelineBody>
+          <TimelineContainer>
+            <TimelinePostsContainer>
+              <Title>my likes</Title>
+              {LikedPosts.length === 0 && !enableLoading ? (
+                <div className="no-post">Nenhum post encontrado :(</div>
+              ) : (
+                LikedPosts.map((post, i) => (
+                  <LikedPost
+                    post={post}
+                    key={i}
+                    setLikedPosts={setLikedPosts}
+                    LikedPosts={LikedPosts}
+                    TimelinePosts={TimelinePosts}
+                    RenderPosts={RenderPosts}
+                  />
+                ))
+              )}
+              {enableLoading && <Loading />}
+            </TimelinePostsContainer>
+            <div className="trending">
+              <Trending />
+            </div>
+          </TimelineContainer>
+        </TimelineBody>
+      </InfiniteScroll>
     </>
   );
 }
@@ -146,13 +145,14 @@ const TimelineBody = styled.div`
     align-items: center;
     justify-content: center;
 
-    span, .end-message {
+    span,
+    .end-message {
       margin-top: 16px;
       margin-bottom: 20px;
       font-size: 22px;
       letter-spacing: 0.05em;
-      font-family: 'Lato';
-      color: #6D6D6D;
+      font-family: "Lato";
+      color: #6d6d6d;
     }
   }
 `;

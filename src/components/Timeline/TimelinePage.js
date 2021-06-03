@@ -8,9 +8,10 @@ import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ReactLoading from 'react-loading';
-import useInterval from 'react-useinterval';
+import ReactLoading from "react-loading";
+import useInterval from "react-useinterval";
 import { func } from "prop-types";
+import "../../styles/infinitescroll-styles.css";
 
 export default function Timeline() {
   const [TimelinePosts, setTimelinePosts] = useState([]);
@@ -96,6 +97,7 @@ export default function Timeline() {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     RenderPosts();
     RenderLikes();
     CreateLikedPosts();
@@ -122,7 +124,7 @@ export default function Timeline() {
       );
 
       request.then((response) => {
-        if(response.data.posts.length < 10) {
+        if (response.data.posts.length < 10) {
           setHasMore(false);
         }
         setTimeout(() => {
@@ -137,19 +139,19 @@ export default function Timeline() {
   }
 
   function updateTimeline() {
-    const config = { headers: { Authorization: `Bearer ${userData.token || localUser.token}`} };
+    const config = {
+      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+    };
     const request = axios.get(
-      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts?earlierThan=${
-        TimelinePosts[0].id
-      }`,
+      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts?earlierThan=${TimelinePosts[0].id}`,
       config
     );
 
-    request.then(response => {
+    request.then((response) => {
       setTimelinePosts([...response.data.posts, ...TimelinePosts]);
     });
 
-    request.catch(error => {
+    request.catch((error) => {
       alert("Algo deu errado com sua requisição, por favor, tente novamente");
     });
   }
@@ -159,34 +161,37 @@ export default function Timeline() {
   return (
     <>
       <Header />
-      <TimelineBody>
-        <InfiniteScroll
-          dataLength={TimelinePosts.length}
-          next={fetchData}
-          hasMore={hasMore}
-          loader={
-            <div className="loading-posts">
-              <ReactLoading
-                type="spin"
-                color="#6D6D6D"
-                width={80}
-                height={80}
-              />
-              <span>Loading more posts...</span>
-            </div>
-          }
-          endMessage={
-            <div className="loading-posts">
-              <p className="end-message" style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all!</b>
-              </p>
-            </div>
-          }
-        >
+      <InfiniteScroll
+        dataLength={TimelinePosts.length}
+        next={fetchData}
+        hasMore={hasMore}
+        loader={
+          <div className="loading-posts">
+            <ReactLoading type="spin" color="#6D6D6D" width={80} height={80} />
+            <span className="loading-text">Loading more posts...</span>
+          </div>
+        }
+        endMessage={
+          <div className="loading-posts">
+            <p className="end-message" style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all!</b>
+            </p>
+          </div>
+        }
+      >
+        <TimelineBody>
           <TimelineContainer>
             <TimelinePostsContainer>
               <Title>timeline</Title>
-              <NewPost TimelinePosts={TimelinePosts} setTimelinePosts={setTimelinePosts} LikedPosts={LikedPosts} setLikedPosts={setLikedPosts} RenderPosts={RenderPosts} RenderLikes={RenderLikes} CreateLikedPosts={CreateLikedPosts} />
+              <NewPost
+                TimelinePosts={TimelinePosts}
+                setTimelinePosts={setTimelinePosts}
+                LikedPosts={LikedPosts}
+                setLikedPosts={setLikedPosts}
+                RenderPosts={RenderPosts}
+                RenderLikes={RenderLikes}
+                CreateLikedPosts={CreateLikedPosts}
+              />
               {TimelinePosts.length === 0 && !enableLoading ? (
                 listOfFollowing > 0 ? (
                   <div className="no-post">
@@ -216,8 +221,8 @@ export default function Timeline() {
               <Trending />
             </div>
           </TimelineContainer>
-        </InfiniteScroll>
-      </TimelineBody>
+        </TimelineBody>
+      </InfiniteScroll>
     </>
   );
 }
@@ -241,16 +246,18 @@ const TimelineBody = styled.div`
     align-items: center;
     justify-content: center;
 
-    span, .end-message {
+    span,
+    .end-message {
       margin-top: 16px;
       margin-bottom: 20px;
       font-size: 22px;
       letter-spacing: 0.05em;
-      font-family: 'Lato';
-      color: #6D6D6D;
+      font-family: "Lato";
+      color: #6d6d6d;
     }
   }
 `;
+
 const TimelineContainer = styled.div`
   width: 937px;
   display: flex;

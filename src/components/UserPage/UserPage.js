@@ -8,7 +8,8 @@ import Header from "../Header";
 import { useParams } from "react-router-dom";
 import PostClickedUser from "../MyPosts/PostClickedUser";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ReactLoading from 'react-loading';
+import ReactLoading from "react-loading";
+import "../../styles/infinitescroll-styles.css";
 
 export default function UserPage() {
   const [UserPosts, setUserPosts] = useState([]);
@@ -76,6 +77,7 @@ export default function UserPage() {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     RenderLikes();
     CreateLikedPosts();
     RenderPosts();
@@ -177,15 +179,15 @@ export default function UserPage() {
       };
 
       const request = axios.get(
-        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${params.id}/posts?olderThan=${
-            UserPosts[UserPosts.length - 1].id
-          }`,
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${
+          params.id
+        }/posts?olderThan=${UserPosts[UserPosts.length - 1].id}`,
         config
       );
 
       request.then((response) => {
-        if(response.data.posts.length < 10) {
-            setHasMore(false);
+        if (response.data.posts.length < 10) {
+          setHasMore(false);
         }
         setTimeout(() => {
           setUserPosts([...UserPosts, ...response.data.posts]);
@@ -201,61 +203,56 @@ export default function UserPage() {
   return (
     <>
       <Header />
-      <UserPostsBody>
       <InfiniteScroll
-          dataLength={UserPosts.length}
-          next={fetchData}
-          hasMore={hasMore}
-          loader={
-            <div className="loading-posts">
-              <ReactLoading
-                type="spin"
-                color="#6D6D6D"
-                width={80}
-                height={80}
-              />
-              <span>Loading more posts...</span>
-            </div>
-          }
-          endMessage={
-            <div className="loading-posts">
-              <p className="end-message" style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all!</b>
-              </p>
-            </div>
-          }
-        >
-        <UserPostsContainer>
-          <PostsContainer habilitado={enabled}>
-            <Title>{name}'s posts</Title>
-            <FollowButton
-              onClick={Follow}
-              disabled={disabler}
-              habilitado={enabled}
-            >
-              {enabled ? "Unfollow" : "Follow"}
-            </FollowButton>
-            {UserPosts.length === 0 && !enableLoading ? (
-              <div className="no-post">Nenhum post encontrado :(</div>
-            ) : (
-              UserPosts.map((post, i) => (
-                <PostClickedUser
-                  RenderLikes={RenderLikes}
-                  RenderPosts={RenderPosts}
-                  post={post}
-                  key={i}
-                />
-              ))
-            )}
-            {enableLoading && <Loading />}
-          </PostsContainer>
-
-          <div className="trending">
-            <Trending />
+        dataLength={UserPosts.length}
+        next={fetchData}
+        hasMore={hasMore}
+        loader={
+          <div className="loading-posts">
+            <ReactLoading type="spin" color="#6D6D6D" width={80} height={80} />
+            <span className="loading-text">Loading more posts...</span>
           </div>
-        </UserPostsContainer>
-        </InfiniteScroll>
-      </UserPostsBody>
+        }
+        endMessage={
+          <div className="loading-posts">
+            <p className="end-message" style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all!</b>
+            </p>
+          </div>
+        }
+      >
+        <UserPostsBody>
+          <UserPostsContainer>
+            <PostsContainer habilitado={enabled}>
+              <Title>{name}'s posts</Title>
+              <FollowButton
+                onClick={Follow}
+                disabled={disabler}
+                habilitado={enabled}
+              >
+                {enabled ? "Unfollow" : "Follow"}
+              </FollowButton>
+              {UserPosts.length === 0 && !enableLoading ? (
+                <div className="no-post">Nenhum post encontrado :(</div>
+              ) : (
+                UserPosts.map((post, i) => (
+                  <PostClickedUser
+                    RenderLikes={RenderLikes}
+                    RenderPosts={RenderPosts}
+                    post={post}
+                    key={i}
+                  />
+                ))
+              )}
+              {enableLoading && <Loading />}
+            </PostsContainer>
+
+            <div className="trending">
+              <Trending />
+            </div>
+          </UserPostsContainer>
+        </UserPostsBody>
+      </InfiniteScroll>
     </>
   );
 }
@@ -296,13 +293,14 @@ const UserPostsBody = styled.div`
     align-items: center;
     justify-content: center;
 
-    span, .end-message {
+    span,
+    .end-message {
       margin-top: 16px;
       margin-bottom: 20px;
       font-size: 22px;
       letter-spacing: 0.05em;
-      font-family: 'Lato';
-      color: #6D6D6D;
+      font-family: "Lato";
+      color: #6d6d6d;
     }
   }
 `;
@@ -332,7 +330,7 @@ const UserPostsContainer = styled.div`
     top: 208px;
     left: calc((100vw + 611px + 15px - 301px) / 2);
 
-    @media (max-width: 614px) {
+    @media (max-width: 900px) {
       display: none;
     }
   }

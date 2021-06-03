@@ -1,0 +1,23 @@
+.loading-posts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #333333;
+    padding-right: 300px;
+}
+
+.loading-text, .end-message {
+    margin-top: 16px;
+    margin-bottom: 20px;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    font-family: "Lato";
+    color: #6d6d6d;
+}
+
+@media (max-width: 614px) {
+    .loading-posts {
+        padding-right: 0;
+    }
+}
