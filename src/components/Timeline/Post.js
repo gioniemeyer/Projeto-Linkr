@@ -15,15 +15,9 @@ import { IoLocationSharp } from "react-icons/io5";
 import getYouTubeID from "get-youtube-id";
 import SnippetDiv from "./SnippetDiv";
 
-export default function Post({
-  TimelinePosts,
-  post,
-  RenderLikes,
-  RenderPosts,
-}) {
+export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const { id, text, link, linkTitle, linkDescription, linkImage, user } =
-    post;
+  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [control, setControl] = useState(false);
@@ -34,15 +28,16 @@ export default function Post({
   const [geoModalOpen, setGeoModalOpen] = useState(false);
   const history = useHistory();
   const idVideo = getYouTubeID(link);
-  const [isLiked, setIsLiked] = useState();
-  const [likesQty, setLikesQty] = useState(post.likes.length);
-  const [likes, setLikes] = useState(post.likes);
+  // const [isLiked, setIsLiked] = useState(false);
+  // const [likesQty, setLikesQty] = useState(post.likes.length);
+  // const [likes, setLikes] = useState(post.likes);
+  let enabled = false;
 
-  useEffect(() => {
-    likes.forEach((like, i) => {
-      setLikes([...likes], like.username = like['user.username']);
-    });
-  }, []);
+  // useEffect(() => {
+  //   likes.forEach((like, i) => {
+  //     setLikes([...likes], like.username = like['user.username']);
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (control) {
@@ -57,19 +52,19 @@ export default function Post({
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
 
-    if(isLiked === false || likesQty === 0 || isLiked === undefined) {
+    if(enabled === false) {
       const request = axios.post(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
         body,
         config
       );
 
-      request.then(response => {
-        setIsLiked(true);
-        const soma = likesQty + 1;
-        setLikesQty(soma);
-        setLikes(response.data.post.likes);
-      });
+      // request.then(response => {
+      //   setIsLiked(true);
+      //   const soma = likesQty + 1;
+      //   setLikesQty(soma);
+      //   setLikes(response.data.post.likes);
+      // });
 
     } else {
       const request = axios.post(
@@ -78,19 +73,21 @@ export default function Post({
         config
       );
 
-      request.then(response => {
-        setIsLiked(false);
-        const subtrair = likesQty - 1;
-        setLikesQty(subtrair);
-        setLikes(response.data.post.likes);
-      });
+      // request.then(response => {
+      //   setIsLiked(false);
+      //   const subtrair = likesQty - 1;
+      //   setLikesQty(subtrair);
+      //   setLikes(response.data.post.likes);
+      // });
     }
+    RenderPosts();
   }
 
   useEffect(() => {
     likes.forEach(element => {
       if(element.userId === localUser.user.id) {
-        setIsLiked(true);
+        // setIsLiked(true);
+        enabled = true;
       }
     });
   }, []);
@@ -131,11 +128,11 @@ export default function Post({
 
   return (
     <PostBox>
-      <SideMenu isLiked={isLiked}>
+      <SideMenu enabled={enabled}>
         <Link to={`user/${user.id}`} className="link-user-name">
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
-        {isLiked ? (
+        {enabled ? (
           <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
         ) : (
           <AiFillHeart
@@ -152,26 +149,26 @@ export default function Post({
               ? ""
               : likes.length !== 1
               ? likes.length >= 3
-                ? isLiked
-                  ? `Você, ${likes[0]['username']} e outras ${
+                ? enabled
+                  ? `Você, ${likes[0]['user.username']} e outras ${
                       likes.length - 2
                     } pessoas`
-                  : `${likes[0]['username']}, ${
-                      likes[1]['username']
+                  : `${likes[0]['user.username']}, ${
+                      likes[1]['user.username']
                     } e outras ${likes.length - 2} pessoas`
-                : isLiked
+                : enabled
                 ? `Você e ${
-                    localUser.user.username === likes[0]['username']
-                      ? likes[1]['username']
-                      : likes[0]['username']
+                    localUser.user.username === likes[0]['user.username']
+                      ? likes[1]['user.username']
+                      : likes[0]['user.username']
                   } curtiram`
-                : `${likes[0]['username']} e ${likes[1]['username']} curtiram`
-              : isLiked
+                : `${likes[0]['user.username']} e ${likes[1]['user.username']} curtiram`
+              : enabled
               ? `Você curtiu`
-              : `${likes[0]['username']} curtiu`
+              : `${likes[0]['user.username']} curtiu`
           }
         >
-          {likesQty} {likesQty === 1 || likesQty === 0 ? "like" : "likes"}
+          {likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}
         </span>
         <ReactTooltip
           className="react-player"
@@ -325,7 +322,7 @@ const SideMenu = styled.div`
   .heart-icon {
     width: 20px;
     height: 18px;
-    color: ${(props) => (props.isLiked ? "#AC0000" : "#BABABA")};
+    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
     margin-bottom: 4px;
     margin-top: 19px;
     cursor: pointer;

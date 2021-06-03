@@ -84,7 +84,6 @@ export default function Timeline() {
 
     request.then((response) => {
       setLikedPosts(response.data.posts);
-
       RenderPosts();
     });
 
@@ -100,6 +99,10 @@ export default function Timeline() {
     CreateLikedPosts();
     getListOfFollowing();
   }, []);
+
+  useEffect(() => {
+
+  },[])
 
   function fetchData() {
     if (TimelinePosts.length >= 50) {
@@ -162,7 +165,7 @@ export default function Timeline() {
           <TimelineContainer>
             <TimelinePostsContainer>
               <Title>timeline</Title>
-              <NewPost RenderPosts={RenderPosts} />
+              <NewPost TimelinePosts={TimelinePosts} setTimelinePosts={setTimelinePosts} LikedPosts={LikedPosts} setLikedPosts={setLikedPosts} RenderPosts={RenderPosts} RenderLikes={RenderLikes} CreateLikedPosts={CreateLikedPosts} />
               {TimelinePosts.length === 0 && !enableLoading ? (
                 listOfFollowing > 0 ? (
                   <div className="no-post">

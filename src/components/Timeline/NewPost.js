@@ -4,7 +4,7 @@ import axios from "axios";
 import UserContext from "../../contexts/UserContext";
 import { IoLocationOutline } from "react-icons/io5";
 
-export default function NewPost({ RenderPosts }) {
+export default function NewPost({ TimelinePosts, setTimelinePosts, RenderPosts, RenderLikes, CreateLikedPosts, setLikedPosts, LikedPosts }) {
   const { userData } = useContext(UserContext);
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [link, setLink] = useState("");
@@ -71,8 +71,12 @@ export default function NewPost({ RenderPosts }) {
       setDisabled(false);
       setLink("");
       setText("");
-      RenderPosts();
+      // setTimeout(() => RenderPosts(), 2000);
+      setTimelinePosts([response.data.post, ...TimelinePosts]);
+      console.log(response.data);
     });
+
+    console.log(TimelinePosts);
 
     request.catch((error) => {
       alert("Houve um erro ao publicar seu post.");
