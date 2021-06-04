@@ -15,6 +15,7 @@
     "react-dom": "^17.0.2",
     "react-hashtag": "^2.1.2",
     "react-icons": "^4.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-loading": "^2.0.3",
     "react-modal": "^3.14.2",
     "react-player": "^2.9.0",

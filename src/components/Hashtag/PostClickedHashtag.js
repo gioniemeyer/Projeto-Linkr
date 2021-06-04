@@ -17,8 +17,7 @@ import { IoLocationSharp } from "react-icons/io5";
 import ModalLink from "../ModalLink";
 
 export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
-  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } =
-    post;
+  const { id, text, link, linkTitle, linkDescription, linkImage, user } = post;
   const history = useHistory();
   const params = useParams();
   const localUser = JSON.parse(localStorage.getItem("user"));
@@ -30,9 +29,16 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
   const inputRef = useRef();
   const idVideo = getYouTubeID(link);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
+  const [isLiked, setIsLiked] = useState();
+  const [likesQty, setLikesQty] = useState(post.likes.length);
+  const [likes, setLikes] = useState(post.likes);
   const [modalLink, setModalLink] = useState(false);
-  
-  let enabled = false;
+
+  useEffect(() => {
+    likes.forEach((like, i) => {
+      setLikes([...likes], like.username = like['user.username']);
+    });
+  }, []);
 
   function LikeOrDeslike() {
     const body = [];
@@ -41,28 +47,43 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
 
-    if (enabled === false) {
+    if (isLiked === false || likesQty === 0 || isLiked === undefined) {
       const request = axios.post(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
         body,
         config
       );
+
+      request.then(response => {
+        setIsLiked(true);
+        const soma = likesQty + 1;
+        setLikesQty(soma);
+        setLikes(response.data.post.likes);
+      });
+
     } else {
       const request = axios.post(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
         body,
         config
       );
+
+      request.then(response => {
+        setIsLiked(false);
+        const subtrair = likesQty - 1;
+        setLikesQty(subtrair);
+        setLikes(response.data.post.likes);
+      });
     }
-    RenderLikes();
-    RenderPosts();
   }
 
-  likes.forEach((element) => {
-    if (element.userId === localUser.user.id) {
-      enabled = true;
-    }
-  });
+  useEffect(() => {
+    likes.forEach(element => {
+      if(element.userId === localUser.user.id) {
+        setIsLiked(true);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (control) {
@@ -108,12 +129,13 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
 
   return (
     <PostBox>
+      
     <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
-      <SideMenu enabled={enabled}>
+    <SideMenu isLiked={isLiked}>
         <Link to={`/user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
-        {enabled ? (
+        {isLiked ? (
           <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
         ) : (
           <AiFillHeart
@@ -130,26 +152,26 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
               ? ""
               : likes.length !== 1
               ? likes.length >= 3
-                ? enabled
-                  ? `Você, ${likes[0]["user.username"]} e outras ${
+                ? isLiked
+                  ? `Você, ${likes[0]['username']} e outras ${
                       likes.length - 2
                     } pessoas`
-                  : `${likes[0]["user.username"]}, ${
-                      likes[1]["user.username"]
+                  : `${likes[0]['username']}, ${
+                      likes[1]['username']
                     } e outras ${likes.length - 2} pessoas`
-                : enabled
+                : isLiked
                 ? `Você e ${
-                    localUser.user.username === likes[0]["user.username"]
-                      ? likes[1]["user.username"]
-                      : likes[0]["user.username"]
+                    localUser.user.username === likes[0]['username']
+                      ? likes[1]['username']
+                      : likes[0]['username']
                   } curtiram`
-                : `${likes[0]["user.username"]} e ${likes[1]["user.username"]} curtiram`
-              : enabled
+                : `${likes[0]['username']} e ${likes[1]['username']} curtiram`
+              : isLiked
               ? `Você curtiu`
-              : `${likes[0]["user.username"]} curtiu`
+              : `${likes[0]['username']} curtiu`
           }
         >
-          {likes.length} {likes.length === 1 ? "like" : "likes"}
+          {likesQty} {likesQty === 1 || likesQty === 0 ? "like" : "likes"}
         </span>
         <ReactTooltip place="bottom" type="light" effect="float" />
       </SideMenu>
@@ -303,7 +325,7 @@ const SideMenu = styled.div`
     color: #ffffff;
     margin-bottom: 4px;
     margin-top: 19px;
-    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+    color: ${(props) => (props.isLiked ? "#AC0000" : "#BABABA")};
     cursor: pointer;
 
     @media (max-width: 614px) {

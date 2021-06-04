@@ -4,7 +4,7 @@ import axios from "axios";
 import UserContext from "../../contexts/UserContext";
 import { IoLocationOutline } from "react-icons/io5";
 
-export default function NewPost({ RenderPosts }) {
+export default function NewPost({ TimelinePosts, setTimelinePosts, RenderPosts, RenderLikes, CreateLikedPosts, setLikedPosts, LikedPosts }) {
   const { userData } = useContext(UserContext);
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [link, setLink] = useState("");

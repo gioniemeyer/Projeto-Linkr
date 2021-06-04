@@ -16,27 +16,20 @@ import getYouTubeID from "get-youtube-id";
 import SnippetDiv from "./SnippetDiv";
 import ModalLink from "../ModalLink";
 
-export default function Post({
-  TimelinePosts,
-  post,
-  RenderLikes,
-  RenderPosts,
-}) {
+export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } =
-    post;
+  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [control, setControl] = useState(false);
   const [newText, setNewText] = useState(text);
   const [disabler, setDisabler] = useState(false);
-  let enabled = false;
   const inputRef = useRef();
   const [modalOpen, setModalOpen] = useState(false);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
   const history = useHistory();
-
   const idVideo = getYouTubeID(link);
+  let enabled = false;
   const [modalLink, setModalLink] = useState(false);
 
   useEffect(() => {
@@ -52,12 +45,13 @@ export default function Post({
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
 
-    if (enabled === false) {
+    if(enabled === false) {
       const request = axios.post(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/like`,
         body,
         config
       );
+
     } else {
       const request = axios.post(
         `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/dislike`,
@@ -69,16 +63,15 @@ export default function Post({
     RenderPosts();
   }
 
-  likes.forEach((element) => {
-    if (element.userId === localUser.user.id) {
-      enabled = true;
-    }
-  });
+    likes.forEach(element => {
+      if(element.userId === localUser.user.id) {
+        enabled = true;
+      }
+    });
 
   function ShowEdit() {
     if (control) {
       setControl(false);
-
       return;
     } else {
       setControl(true);
@@ -105,7 +98,7 @@ export default function Post({
       RenderPosts();
     });
     request.catch(() => {
-      alert("Não foi possível salvar as alterações");
+      alert("Não foi possível salvar as alterações.");
       setDisabler(false);
     });
   }
@@ -135,25 +128,25 @@ export default function Post({
               : likes.length !== 1
               ? likes.length >= 3
                 ? enabled
-                  ? `Você, ${likes[0]["user.username"]} e outras ${
+                  ? `Você, ${likes[0]['user.username']} e outras ${
                       likes.length - 2
                     } pessoas`
-                  : `${likes[0]["user.username"]}, ${
-                      likes[1]["user.username"]
+                  : `${likes[0]['user.username']}, ${
+                      likes[1]['user.username']
                     } e outras ${likes.length - 2} pessoas`
                 : enabled
                 ? `Você e ${
-                    localUser.user.username === likes[0]["user.username"]
-                      ? likes[1]["user.username"]
-                      : likes[0]["user.username"]
+                    localUser.user.username === likes[0]['user.username']
+                      ? likes[1]['user.username']
+                      : likes[0]['user.username']
                   } curtiram`
-                : `${likes[0]["user.username"]} e ${likes[1]["user.username"]} curtiram`
+                : `${likes[0]['user.username']} e ${likes[1]['user.username']} curtiram`
               : enabled
               ? `Você curtiu`
-              : `${likes[0]["user.username"]} curtiu`
+              : `${likes[0]['user.username']} curtiu`
           }
         >
-          {likes.length} {likes.length === 1 ? "like" : "likes"}
+          {likes.length} {likes.length === 1 || likes.length === 0 ? "like" : "likes"}
         </span>
         <ReactTooltip
           className="react-player"

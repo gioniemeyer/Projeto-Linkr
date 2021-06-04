@@ -6,6 +6,8 @@ import Trending from "../Trending/Trending";
 import UserContext from "../../contexts/UserContext";
 import Header from "../Header";
 import PostClickedUser from "./PostClickedUser";
+import InfiniteScroll from "react-infinite-scroll-component";
+import ReactLoading from 'react-loading';
 
 export default function MyPostsPage() {
   const [MyPosts, setMyPosts] = useState([]);
@@ -14,8 +16,7 @@ export default function MyPostsPage() {
   const { userData } = useContext(UserContext);
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [LikedPosts, setLikedPosts] = useState([]);
-
-  RenderPosts();
+  const [hasMore, setHasMore] = useState(true);
 
   function RenderPosts() {
     const config = {
@@ -72,14 +73,75 @@ export default function MyPostsPage() {
   }
 
   useEffect(() => {
+    RenderPosts();
     RenderLikes();
     CreateLikedPosts();
   }, []);
+
+  function fetchData() {
+    if (MyPosts.length >= 500) {
+      setHasMore(false);
+      return;
+    }
+
+    if (MyPosts.length !== 0) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userData.token || localUser.token}`,
+        },
+      };
+
+      const request = axios.get(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/${
+          localUser.user.id || userData.user.id
+        }/posts?olderThan=${
+          MyPosts[MyPosts.length - 1].id
+        }`,
+        config
+      );
+
+      request.then((response) => {
+        if(response.data.posts.length < 10) {
+          setHasMore(false);
+        }
+        setTimeout(() => {
+          setMyPosts([...MyPosts, ...response.data.posts]);
+        }, 500);
+      });
+
+      request.catch((error) => {
+        alert("Algo deu errado com sua requisição, por favor, tente novamente");
+      });
+    }
+  }
 
   return (
     <>
       <Header />
       <MyPostsBody>
+      <InfiniteScroll
+          dataLength={MyPosts.length}
+          next={fetchData}
+          hasMore={hasMore}
+          loader={
+            <div className="loading-posts">
+              <ReactLoading
+                type="spin"
+                color="#6D6D6D"
+                width={80}
+                height={80}
+              />
+              <span>Loading more posts...</span>
+            </div>
+          }
+          endMessage={
+            <div className="loading-posts">
+              <p className="end-message" style={{ textAlign: "center" }}>
+                <b>Yay! You have seen it all!</b>
+              </p>
+            </div>
+          }
+        >
         <MyPostsContainer>
           <PostsContainer>
             <Title>my posts</Title>
@@ -101,6 +163,7 @@ export default function MyPostsPage() {
             <Trending />
           </div>
         </MyPostsContainer>
+        </InfiniteScroll>
       </MyPostsBody>
     </>
   );
@@ -115,6 +178,23 @@ const MyPostsBody = styled.div`
     flex-direction: column;
     align-items: center;
     margin-top: 50px;
+  }
+
+  .loading-posts {
+    width: 611px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    span, .end-message {
+      margin-top: 16px;
+      margin-bottom: 20px;
+      font-size: 22px;
+      letter-spacing: 0.05em;
+      font-family: 'Lato';
+      color: #6D6D6D;
+    }
   }
 `;
 

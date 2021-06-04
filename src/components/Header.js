@@ -55,7 +55,6 @@ export default function Header() {
           <Title onClick={goToTimeline}>linkr</Title>
           <Search>
             <DebounceInput
-              minLength={3}
               placeholder="Search for people and friends"
               debounceTimeout={300}
               value={nameUser}
