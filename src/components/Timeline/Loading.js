@@ -1,12 +1,12 @@
-import ReactLoading from 'react-loading';
+import ReactLoading from "react-loading";
 
 export default function Loading() {
-    return(
-        <ReactLoading
-            type="spinningBubbles"
-            color="#FFFFFF"
-            width={200}
-            height={500}
-        />
-    );
+  return (
+    <ReactLoading
+      type="spinningBubbles"
+      color="#FFFFFF"
+      width={200}
+      height={500}
+    />
+  );
 }
