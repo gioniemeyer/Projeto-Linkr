@@ -71,7 +71,7 @@ export default function MyPostsPage() {
             <MyPostsContainer>
                 <PostsContainer>
                     <Title>my posts</Title>                    
-                    {MyPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <PostClickedUser RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} />)}
+                    {MyPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <PostClickedUser RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} MyPosts={MyPosts}/>)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">

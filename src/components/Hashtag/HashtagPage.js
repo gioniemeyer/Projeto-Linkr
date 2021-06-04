@@ -79,7 +79,7 @@ export default function HashtagPage() {
                 <PostsContainer>
                     <Title># {name}</Title>                   
 
-                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag LikedPosts={LikedPosts} RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} />)}
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag LikedPosts={LikedPosts} RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} UserPosts={UserPosts}/>)}
                     {enableLoading && <Loading />}
                 </PostsContainer>
                 <div className="trending">

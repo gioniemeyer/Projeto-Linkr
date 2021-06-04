@@ -17,7 +17,7 @@ import { IoLocationSharp } from "react-icons/io5";
 import Comments from "../Comments"
 import CommentBox from "../CommentBox"
 
-export default function LikedPost({ post, RenderPosts }) {
+export default function LikedPost({ post, RenderPosts,LikedPosts }) {
   const { userData } = useContext(UserContext);
   const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, commentCount } =post;
   const texto = text.split(" ");
@@ -149,7 +149,7 @@ function ShowEdit(){
         <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
       }
     </PostBox>
-    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments}/>:''}
+    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments} TimelinePosts={LikedPosts}/>:''}
     </>
   );
 }

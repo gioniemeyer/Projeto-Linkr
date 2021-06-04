@@ -50,7 +50,7 @@ export default function Timeline() {
     })
     ;
   }
-  
+
   function getListOfFollowing() {
     const config = { headers: { Authorization: `Bearer ${localUser.token || userData.token}` } };
     const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/follows`, config);

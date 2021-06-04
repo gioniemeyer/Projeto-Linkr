@@ -33,7 +33,7 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
   const [showComment,setShowComment]=useState(false)
   const history = useHistory();
   const [numberOfComments,setNumberOfComments]=useState(commentCount)
-  
+  const [commentList,setCommentList]=useState([]);
   const idVideo = getYouTubeID(link);
 
   useEffect(()=>{
@@ -43,7 +43,7 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
     setNewText(text)
   },[control])
   
-
+  
   function LikeOrDeslike() {
     const body = [];
     const config = {
@@ -95,14 +95,11 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
     };
     const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
     request.then((response)=>{
-    setDisabler(false)
-    setControl(false)
     RenderPosts()}
     )
     request.catch(()=>{alert('Não foi possível salvar as alterações')
     setDisabler(false)})
   }
-
 
   return (
     <>
@@ -167,7 +164,7 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
       <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
       }
     </PostBox>
-    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments}/>:''}
+    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments} RenderPosts={RenderPosts} TimelinePosts={TimelinePosts}/>:''}
     </>
   );
 }

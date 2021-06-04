@@ -17,7 +17,7 @@ import ReactTooltip from 'react-tooltip';
 import Comments from "../Comments"
 import CommentBox from "../CommentBox"
 
-export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
+export default function PostClickedUser({ post, RenderPosts, RenderLikes,MyPosts }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes,commentCount } = post;   
     const history = useHistory();
     const { userData } = useContext(UserContext);
@@ -161,7 +161,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
             <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
             }
         </PostBox>
-        {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments}/>:''}
+        {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments} TimelinePosts={MyPosts}/>:''}
         </>
     );
 }

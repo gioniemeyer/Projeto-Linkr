@@ -18,7 +18,7 @@ import Comments from "../Comments"
 import CommentBox from "../CommentBox"
 
 
-export default function PostClickedHashtag({ post, RenderPosts, RenderLikes }) {
+export default function PostClickedHashtag({ post, RenderPosts, RenderLikes,UserPosts }) {
     const { id, text, link, linkTitle, linkDescription, linkImage, user, likes,commentCount } = post;  
     const history = useHistory();
     const params = useParams();
@@ -160,7 +160,7 @@ function ShowEdit(){
                 <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
             }
         </PostBox>
-        {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments}/>:''}
+        {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments} TimelinePosts={UserPosts}/>:''}
         </>
     );
 }

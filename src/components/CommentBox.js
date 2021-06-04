@@ -5,25 +5,25 @@ import axios from "axios"
 import Comment from "./Comment"
 import {IoPaperPlaneOutline} from "react-icons/io5"
 
-export default function CommentBox({id,userAuthor,numberOfComments,setNumberOfComments}){
+export default function CommentBox({id,userAuthor,numberOfComments,setNumberOfComments,RenderPosts,TimelinePosts}){
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [message,setMessage]=useState("");
     const [commentList,setCommentList]=useState([]);
    
     
-    function RenderComments(){
-       
+    function RenderComments(){  
         const config = {
             headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
           };
           const request= axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/comments`,config)
           request.then((r)=>{
             setNumberOfComments(r.data.comments.length)
-            setCommentList(r.data.comments)})
+            setCommentList(r.data.comments)
+            })
           request.catch(()=>alert('Erro ao renderizar comentários'))
     }
-    useEffect(RenderComments,[])
+    useEffect(RenderComments,[TimelinePosts])
 
     function PostComment(event){
         event.preventDefault();
@@ -80,7 +80,6 @@ const Box=styled.div`
     margin-bottom: 10px;
     border-radius: 16px;
     padding-top: 30px;
-    
     @media (max-width: 614px) {
             width: 100%;
       }
@@ -116,5 +115,7 @@ const CreateComment=styled.div`
         }
         
     }
-    
+    form{
+        width: 100%;
+    }
 `
