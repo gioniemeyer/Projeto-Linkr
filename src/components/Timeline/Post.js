@@ -35,14 +35,18 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
   const [numberOfComments,setNumberOfComments]=useState(commentCount)
   const [commentList,setCommentList]=useState([]);
   const idVideo = getYouTubeID(link);
+  const [edited,setEdited]=useState(false)
 
   useEffect(()=>{
     if(control){
       inputRef.current.focus()
     }
-    setNewText(text)
   },[control])
   
+  useEffect(()=>{
+    RenderPosts()
+    setNewText(text)
+  },[text])
   
   function LikeOrDeslike() {
     const body = [];
@@ -95,6 +99,9 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
     };
     const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
     request.then((response)=>{
+    setEdited(true)
+    setDisabler(false)
+    setControl(false)
     RenderPosts()}
     )
     request.catch(()=>{alert('Não foi possível salvar as alterações')
@@ -142,7 +149,7 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
               <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
             </form>]
             
-          :<Hashtag text={text} />}
+          :<Hashtag text={edited?newText:text} />}
           
         </h2>
         {idVideo ? 

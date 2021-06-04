@@ -32,13 +32,19 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes,MyPosts
     let enabled = false;  
     const [numberOfComments,setNumberOfComments]=useState(commentCount);
     const [showComment,setShowComment]=useState(false)
+    const [edited,setEdited]=useState(false)
 
     useEffect(()=>{
         if(control){
           inputRef.current.focus()
         }
+      },[control])
+      
+      useEffect(()=>{
+        RenderPosts()
         setNewText(text)
-    },[control]);
+      },[text])
+      
 
     function ShowEdit(){ 
         if(control){
@@ -63,6 +69,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes,MyPosts
        };
        const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
        request.then((response)=>{
+       setEdited(true)
        setDisabler(false)
        setControl(false)
        RenderPosts()}
@@ -141,7 +148,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes,MyPosts
                 [<form onSubmit={Edit}>
                     <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
                 </form>]           
-                :<Hashtag text={text} />}
+                :<Hashtag text={edited?newText:text} />}
                 </h2>
                 {idVideo ? 
                     <SnippetDiv link={link} idVideo={idVideo} /> :
