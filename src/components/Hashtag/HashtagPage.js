@@ -8,7 +8,8 @@ import Header from "../Header";
 import { useParams } from "react-router-dom";
 import PostClickedHashtag from "./PostClickedHashtag";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ReactLoading from 'react-loading';
+import ReactLoading from "react-loading";
+import "../../styles/infinitescroll-styles.css";
 
 export default function HashtagPage() {
   const [UserPosts, setUserPosts] = useState([]);
@@ -78,6 +79,7 @@ export default function HashtagPage() {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     RenderLikes();
     CreateLikedPosts();
   }, [params]);
@@ -95,9 +97,9 @@ export default function HashtagPage() {
         },
       };
       const request = axios.get(
-        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${params.hashtag}/posts?olderThan=${
-            UserPosts[UserPosts.length - 1].id
-          }`,
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/hashtags/${
+          params.hashtag
+        }/posts?olderThan=${UserPosts[UserPosts.length - 1].id}`,
         config
       );
 
@@ -116,55 +118,49 @@ export default function HashtagPage() {
   return (
     <>
       <Header />
-      <UserPostsBody>
       <InfiniteScroll
-          dataLength={UserPosts.length}
-          next={fetchData}
-          hasMore={hasMore}
-          loader={
-            <div className="loading-posts">
-              <ReactLoading
-                type="spin"
-                color="#6D6D6D"
-                width={80}
-                height={80}
-              />
-              <span>Loading more posts...</span>
-            </div>
-          }
-          endMessage={
-            <div className="loading-posts">
-              <p className="end-message" style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all!</b>
-              </p>
-            </div>
-          }
-        >
-        <UserPostsContainer>
-          <PostsContainer>
-            <Title># {name}</Title>
-
-            {UserPosts.length === 0 && !enableLoading ? (
-              <div className="no-post">Nenhum post encontrado :(</div>
-            ) : (
-              UserPosts.map((post, i) => (
-                <PostClickedHashtag
-                  LikedPosts={LikedPosts}
-                  RenderLikes={RenderLikes}
-                  RenderPosts={RenderPosts}
-                  post={post}
-                  key={i}
-                />
-              ))
-            )}
-            {enableLoading && <Loading />}
-          </PostsContainer>
-          <div className="trending">
-            <Trending RenderPosts={RenderPosts} />
+        dataLength={UserPosts.length}
+        next={fetchData}
+        hasMore={hasMore}
+        loader={
+          <div className="loading-posts">
+            <ReactLoading type="spin" color="#6D6D6D" width={80} height={80} />
+            <span className="loading-text">Loading more posts...</span>
           </div>
-        </UserPostsContainer>
-        </InfiniteScroll>
-      </UserPostsBody>
+        }
+        endMessage={
+          <div className="loading-posts">
+            <p className="end-message" style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all!</b>
+            </p>
+          </div>
+        }
+      >
+        <UserPostsBody>
+          <UserPostsContainer>
+            <PostsContainer>
+              <Title># {name}</Title>
+              {UserPosts.length === 0 && !enableLoading ? (
+                <div className="no-post">Nenhum post encontrado :(</div>
+              ) : (
+                UserPosts.map((post, i) => (
+                  <PostClickedHashtag
+                    LikedPosts={LikedPosts}
+                    RenderLikes={RenderLikes}
+                    RenderPosts={RenderPosts}
+                    post={post}
+                    key={i}
+                  />
+                ))
+              )}
+              {enableLoading && <Loading />}
+            </PostsContainer>
+            <div className="trending">
+              <Trending RenderPosts={RenderPosts} />
+            </div>
+          </UserPostsContainer>
+        </UserPostsBody>
+      </InfiniteScroll>
     </>
   );
 }
@@ -178,23 +174,6 @@ const UserPostsBody = styled.div`
     flex-direction: column;
     align-items: center;
     margin-top: 50px;
-  }
-
-  .loading-posts {
-    width: 611px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    span, .end-message {
-      margin-top: 16px;
-      margin-bottom: 20px;
-      font-size: 22px;
-      letter-spacing: 0.05em;
-      font-family: 'Lato';
-      color: #6D6D6D;
-    }
   }
 `;
 

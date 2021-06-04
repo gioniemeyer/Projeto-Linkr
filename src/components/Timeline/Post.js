@@ -19,7 +19,6 @@ import ModalLink from "../ModalLink";
 export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
   const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;
-  const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [control, setControl] = useState(false);
   const [newText, setNewText] = useState(text);
