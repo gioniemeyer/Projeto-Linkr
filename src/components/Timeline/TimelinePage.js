@@ -39,6 +39,7 @@ export default function Timeline() {
   }
 
   function RenderPosts() {
+    if(TimelinePosts.length===0){
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
@@ -52,7 +53,7 @@ export default function Timeline() {
     });
     request.catch(() => {
       alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
-    });
+    });}
   }
 
   function getListOfFollowing() {

@@ -20,6 +20,7 @@ export default function MyPostsPage() {
   const [hasMore, setHasMore] = useState(true);
 
   function RenderPosts() {
+    if(MyPosts.length===0){
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
@@ -39,7 +40,7 @@ export default function MyPostsPage() {
       alert(
         "Houve uma falha ao obter os seus posts, por favor, atualize a página."
       );
-    });
+    });}
   }
 
   function RenderLikes() {
@@ -137,27 +138,16 @@ export default function MyPostsPage() {
         }
       >
         <MyPostsBody>
-          <MyPostsContainer>
-            <PostsContainer>
-              <Title>my posts</Title>
-              {MyPosts.length === 0 && !enableLoading ? (
-                <div className="no-post">Nenhum post encontrado :(</div>
-              ) : (
-                MyPosts.map((post, i) => (
-                  <PostClickedUser
-                    RenderLikes={RenderLikes}
-                    RenderPosts={RenderPosts}
-                    post={post}
-                    key={i}
-                  />
-                ))
-              )}
-              {enableLoading && <Loading />}
-            </PostsContainer>
-            <div className="trending">
-              <Trending />
-            </div>
-          </MyPostsContainer>
+            <MyPostsContainer>
+                <PostsContainer>
+                    <Title>my posts</Title>                    
+                    {MyPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : MyPosts.map((post, i) => <PostClickedUser RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} MyPosts={MyPosts}/>)}
+                    {enableLoading && <Loading />}
+                </PostsContainer>
+                <div className="trending">
+                    <Trending />
+                </div>
+            </MyPostsContainer>
         </MyPostsBody>
       </InfiniteScroll>
     </>

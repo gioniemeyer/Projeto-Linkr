@@ -15,8 +15,10 @@ import SnippetDiv from "../Timeline/SnippetDiv";
 import ModalLink from "../ModalLink";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
+import Comments from "../Comments"
+import CommentBox from "../CommentBox"
 
-export default function LikedPost({ post, RenderPosts }) {
+export default function LikedPost({ post, RenderPosts,LikedPosts }) {
   const { userData } = useContext(UserContext);
   const {
     id,
@@ -27,7 +29,8 @@ export default function LikedPost({ post, RenderPosts }) {
     linkImage,
     user,
     likes,
-    isLiked,
+    isLiked, 
+    commentCount
   } = post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
@@ -40,8 +43,10 @@ export default function LikedPost({ post, RenderPosts }) {
   const idVideo = getYouTubeID(link);
   const [modalLink, setModalLink] = useState(false);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
-
-  let enabled = true;
+  let enabled=true;
+  const [numberOfComments,setNumberOfComments]=useState(commentCount);
+  const [showComment,setShowComment]=useState(false)
+  const [edited,setEdited]=useState(false)
 
   function LikeOrDeslike() {
     const body = [];
@@ -63,95 +68,73 @@ export default function LikedPost({ post, RenderPosts }) {
       );
     }
   }
-
-  useEffect(() => {
-    if (control) {
-      inputRef.current.focus();
-    }
-    setNewText(text);
-  }, [control]);
-
-  function ShowEdit() {
-    if (control) {
-      setControl(false);
-
-      return;
-    } else {
-      setControl(true);
-    }
+useEffect(()=>{
+  if(control){
+    inputRef.current.focus()
   }
+},[control])
 
-  function Edit(event) {
-    event.preventDefault();
-    setDisabler(true);
-    const body = {
-      text: newText,
-    };
-    const config = {
-      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
-    };
-    const request = axios.put(
-      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,
-      body,
-      config
-    );
-    request.then((response) => {
-      setDisabler(false);
-      setControl(false);
-      RenderPosts();
-    });
-    request.catch(() => {
-      alert("Não foi possível salvar as alterações");
-      setDisabler(false);
-    });
-  }
+useEffect(()=>{
+  RenderPosts()
+  setNewText(text)
+},[text])
+
+function ShowEdit(){ 
+    if(control){
+     setControl(false)
+     
+     return
+    }else{
+     setControl(true)
+     
+    }
+    
+}
+  
+ function Edit(event){
+   event.preventDefault();
+   setDisabler(true)
+   const body = {
+     text: newText
+   };
+   const config = {
+     headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+   };
+   const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
+   request.then((response)=>{
+   setEdited(true)
+   setDisabler(false)
+   setControl(false)
+   RenderPosts()}
+   )
+   request.catch(()=>{alert('Não foi possível salvar as alterações')
+   setDisabler(false)})
+}
 
   return (
+    <>
     <PostBox>
       <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
       <SideMenu enabled={enabled}>
         <Link to={`/user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
-        {enabled ? (
-          <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
-        ) : (
-          <AiFillHeart
-            stroke={"white"}
-            strokeWidth={80}
-            fill={"#171717"}
-            className="heart-icon"
-            onClick={LikeOrDeslike}
-          />
-        )}
-        <span
-          data-tip={
-            likes.length === 0
-              ? ""
-              : likes.length !== 1
-              ? likes.length >= 3
-                ? enabled
-                  ? `Você, ${likes[0]["user.username"]} e outras ${
-                      likes.length - 2
-                    } pessoas`
-                  : `${likes[0]["user.username"]}, ${
-                      likes[1]["user.username"]
-                    } e outras ${likes.length - 2} pessoas`
-                : enabled
-                ? `Você e ${
-                    localUser.user.username === likes[0]["user.username"]
-                      ? likes[1]["user.username"]
-                      : likes[0]["user.username"]
-                  } curtiram`
-                : `${likes[0]["user.username"]} e ${likes[1]["user.username"]} curtiram`
-              : enabled
-              ? `Você curtiu`
-              : `${likes[0]["user.username"]} curtiu`
-          }
-        >
-          {likes.length} {likes.length === 1 ? "like" : "likes"}
-        </span>
-        <ReactTooltip place="bottom" type="light" effect="float" />
+        {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
+        <span data-tip={likes.length === 0 ? '' :
+          likes.length !== 1 ?
+            likes.length >= 3 ?
+              enabled ? 
+                `Você, ${likes[0]['user.username']} e outras ${likes.length-2} pessoas` : 
+                `${likes[0]['user.username']}, ${likes[1]['user.username']} e outras ${likes.length-2} pessoas` :
+            enabled ? 
+              `Você e ${localUser.user.username===likes[0]['user.username']?likes[1]['user.username']:likes[0]['user.username']} curtiram` : 
+              `${likes[0]['user.username']} e ${likes[1]['user.username']} curtiram` :
+          enabled ? 
+            `Você curtiu` :
+            `${likes[0]['user.username']} curtiu`}>
+        {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
+        <ReactTooltip place="bottom" type="light" effect="float"/>
+        <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>
@@ -167,23 +150,11 @@ export default function LikedPost({ post, RenderPosts }) {
           )}
         </h1>
         <h2>
-          {control ? (
-            [
-              <form onSubmit={Edit}>
-                <input
-                  type="text"
-                  required
-                  value={newText}
-                  onChange={(e) => setNewText(e.target.value)}
-                  disabled={disabler}
-                  ref={inputRef}
-                  onKeyDown={(e) => (e.keyCode == 27 ? setControl(false) : "")}
-                />
-              </form>,
-            ]
-          ) : (
-            <Hashtag text={text} />
-          )}
+          {control?          
+            [<form onSubmit={Edit}>
+            <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
+           </form>]           
+          :<Hashtag text={edited?newText:text} />}
         </h2>
         {idVideo ? (
           <SnippetDiv link={link} idVideo={idVideo} />
@@ -221,6 +192,8 @@ export default function LikedPost({ post, RenderPosts }) {
         ></GeolocationModal>
       )}
     </PostBox>
+    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments} TimelinePosts={LikedPosts}/>:''}
+    </>
   );
 }
 const PostBox = styled.li`
@@ -294,7 +267,7 @@ const SideMenu = styled.div`
   .heart-icon {
     width: 20px;
     height: 18px;
-    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+    color: ${(props) => (props.enabled ? "#AC0000" : "#FFFFFF")};
     margin-bottom: 4px;
     @media (max-width: 614px) {
       width: 17px;

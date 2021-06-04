@@ -26,6 +26,7 @@ export default function HashtagPage() {
   }
 
   function RenderPosts() {
+    if(UserPosts.length===0){
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
@@ -44,7 +45,7 @@ export default function HashtagPage() {
       alert(
         "Houve uma falha ao obter os posts dessa hashtag, por favor, atualize a página."
       );
-    });
+    });}
   }
 
   function RenderLikes() {
@@ -137,28 +138,17 @@ export default function HashtagPage() {
         }
       >
         <UserPostsBody>
-          <UserPostsContainer>
-            <PostsContainer>
-              <Title># {name}</Title>
-              {UserPosts.length === 0 && !enableLoading ? (
-                <div className="no-post">Nenhum post encontrado :(</div>
-              ) : (
-                UserPosts.map((post, i) => (
-                  <PostClickedHashtag
-                    LikedPosts={LikedPosts}
-                    RenderLikes={RenderLikes}
-                    RenderPosts={RenderPosts}
-                    post={post}
-                    key={i}
-                  />
-                ))
-              )}
-              {enableLoading && <Loading />}
-            </PostsContainer>
-            <div className="trending">
-              <Trending RenderPosts={RenderPosts} />
-            </div>
-          </UserPostsContainer>
+            <UserPostsContainer>
+                <PostsContainer>
+                    <Title># {name}</Title>                   
+
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedHashtag LikedPosts={LikedPosts} RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} UserPosts={UserPosts}/>)}
+                    {enableLoading && <Loading />}
+                </PostsContainer>
+                <div className="trending">
+                    <Trending RenderPosts={RenderPosts} />
+                </div>
+            </UserPostsContainer>
         </UserPostsBody>
       </InfiniteScroll>
     </>
