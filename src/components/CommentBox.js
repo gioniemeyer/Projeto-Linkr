@@ -4,12 +4,14 @@ import styled from "styled-components"
 import axios from "axios"
 import Comment from "./Comment"
 import {IoPaperPlaneOutline} from "react-icons/io5"
+import ReactLoading from 'react-loading';
 
 export default function CommentBox({id,userAuthor,numberOfComments,setNumberOfComments,RenderPosts,TimelinePosts}){
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [message,setMessage]=useState("");
-    const [commentList,setCommentList]=useState([]);
+    const [commentList,setCommentList]=useState(null);
+    const [enableLoading, setEnableLoading] = useState(false);
    
     
     function RenderComments(){  
@@ -42,7 +44,13 @@ export default function CommentBox({id,userAuthor,numberOfComments,setNumberOfCo
 
     return(
         <Box>
-            {commentList.map((e)=>{
+            {commentList===null?<Loading> <ReactLoading
+                    type="bubbles"
+                    color="#FFFFFF"
+                    width={100}
+                    height={125}
+                    /></Loading>
+                    :commentList.map((e)=>{
                 return <Comment id={e.id} text={e.text} user={e.user} userAuthor={userAuthor}/>
             })}
             <CreateComment>
@@ -119,3 +127,6 @@ const CreateComment=styled.div`
         width: 100%;
     }
 `
+const Loading=styled.div`
+    margin-left:40%; 
+    `
