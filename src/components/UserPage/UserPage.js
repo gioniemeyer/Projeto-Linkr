@@ -25,6 +25,7 @@ export default function UserPage() {
   const [hasMore, setHasMore] = useState(true);
 
   function RenderPosts() {
+    if(UserPosts.length===0){
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
@@ -42,7 +43,7 @@ export default function UserPage() {
       alert(
         "Houve uma falha ao obter os posts dessa hashtag, por favor, atualize a página."
       );
-    });
+    });}
   }
 
   function RenderLikes() {
@@ -222,35 +223,22 @@ export default function UserPage() {
         }
       >
         <UserPostsBody>
-          <UserPostsContainer>
-            <PostsContainer habilitado={enabled}>
-              <Title>{name}'s posts</Title>
-              <FollowButton
-                onClick={Follow}
-                disabled={disabler}
-                habilitado={enabled}
-              >
-                {enabled ? "Unfollow" : "Follow"}
-              </FollowButton>
-              {UserPosts.length === 0 && !enableLoading ? (
-                <div className="no-post">Nenhum post encontrado :(</div>
-              ) : (
-                UserPosts.map((post, i) => (
-                  <PostClickedUser
-                    RenderLikes={RenderLikes}
-                    RenderPosts={RenderPosts}
-                    post={post}
-                    key={i}
-                  />
-                ))
-              )}
-              {enableLoading && <Loading />}
-            </PostsContainer>
-
-            <div className="trending">
-              <Trending />
-            </div>
-          </UserPostsContainer>
+            <UserPostsContainer>
+                <PostsContainer habilitado={enabled}>
+                    <Title>{name}'s posts</Title>   
+                    <FollowButton onClick={Follow} disabled={disabler} habilitado={enabled}>
+                    {enabled?'Unfollow':'Follow'}
+                    </FollowButton>
+                    {UserPosts.length === 0 && !enableLoading ? <div className="no-post">Nenhum post encontrado :(</div> : UserPosts.map((post, i) => <PostClickedUser RenderLikes={RenderLikes} RenderPosts={RenderPosts} post={post} key={i} MyPosts={UserPosts}/>)}
+                    {enableLoading && <Loading />}
+                </PostsContainer>
+              
+                
+                <div className="trending">
+                    <Trending />
+                    
+                </div>
+            </UserPostsContainer>
         </UserPostsBody>
       </InfiniteScroll>
     </>

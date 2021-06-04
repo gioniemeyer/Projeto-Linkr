@@ -19,6 +19,7 @@ export default function LikesPage() {
   const [hasMore, setHasMore] = useState(true);
 
   function RenderPosts() {
+    if(LikedPosts.length===0){
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
@@ -34,7 +35,7 @@ export default function LikesPage() {
     request.catch((error) => {
       alert("Houve uma falha ao obter os posts, por favor, atualize a página.");
       setEnableLoading(false);
-    });
+    });}
   }
 
   useEffect(() => {

@@ -12,77 +12,83 @@ import getYouTubeID from "get-youtube-id";
 import SnippetDiv from "../Timeline/SnippetDiv";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
-import { AiFillHeart } from "react-icons/ai";
-import ReactTooltip from "react-tooltip";
+import {AiFillHeart} from 'react-icons/ai';
+import ReactTooltip from 'react-tooltip';
+import Comments from "../Comments"
+import CommentBox from "../CommentBox"
 import ModalLink from "../ModalLink";
 import ModalRepost from "../ModalRepost";
+export default function PostClickedUser({ post, RenderPosts, RenderLikes,MyPosts }) {
+    const { id, text, link, linkTitle, linkDescription, linkImage, user,commentCount, repostCount, repostedBy } = post;   
+    const history = useHistory();
+    const { userData } = useContext(UserContext);
+    const [modalOpen, setModalOpen] = useState(false);
+    const localUser = JSON.parse(localStorage.getItem("user"));  
+    const [control,setControl]=useState(false);
+    const [newText,setNewText]=useState(text);
+    const [disabler,setDisabler]=useState(false);
+    const [geoModalOpen, setGeoModalOpen] = useState(false);
+    const inputRef=useRef();
+    const idVideo = getYouTubeID(link); 
+    const [numberOfComments,setNumberOfComments]=useState(commentCount);
+    const [showComment,setShowComment]=useState(false);
+    const [edited,setEdited]=useState(false);
+    const [isLiked, setIsLiked] = useState();
+    const [likesQty, setLikesQty] = useState(post.likes.length);
+    const [likes, setLikes] = useState(post.likes);
+    const [modalLink, setModalLink] = useState(false);
+    const [modalRepostOpen, setModalRepostOpen] = useState(false);
+    
 
-export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
-  const { id, text, link, linkTitle, linkDescription, linkImage, user, repostCount, repostedBy } =
-    post;
-  const history = useHistory();
-  const { userData } = useContext(UserContext);
-  const [modalOpen, setModalOpen] = useState(false);
-  const localUser = JSON.parse(localStorage.getItem("user"));
-  const [control, setControl] = useState(false);
-  const [newText, setNewText] = useState(text);
-  const [disabler, setDisabler] = useState(false);
-  const [geoModalOpen, setGeoModalOpen] = useState(false);
-  const inputRef = useRef();
-  const idVideo = getYouTubeID(link);
-  const [isLiked, setIsLiked] = useState();
-  const [likesQty, setLikesQty] = useState(post.likes.length);
-  const [likes, setLikes] = useState(post.likes);
-  const [modalLink, setModalLink] = useState(false);
-  const [modalRepostOpen, setModalRepostOpen] = useState(false);
+    useEffect(() => {
+        likes.forEach((like, i) => {
+          setLikes([...likes], like.username = like['user.username']);
+        });
+      }, []);
 
-  useEffect(() => {
-    likes.forEach((like, i) => {
-      setLikes([...likes], like.username = like['user.username']);
-    });
-  }, []);
+    useEffect(()=>{
+        if(control){
+          inputRef.current.focus()
+        }
+      },[control])
+      
+      useEffect(()=>{
+        RenderPosts()
+        setNewText(text)
+      },[text])
+      
 
-  useEffect(() => {
-    if (control) {
-      inputRef.current.focus();
+    function ShowEdit(){ 
+        if(control){
+         setControl(false)
+         
+         return
+        }else{
+         setControl(true)
+        }
     }
-    setNewText(text);
-  }, [control]);
-
-  function ShowEdit() {
-    if (control) {
-      setControl(false);
-      return;
-    } else {
-      setControl(true);
+      
+     function Edit(event){
+       event.preventDefault();
+       setDisabler(true)
+       const body = {
+         text: newText
+       };
+       const config = {
+         headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+       };
+       const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
+       request.then((response)=>{
+       setEdited(true)
+       setDisabler(false)
+       setControl(false)
+       RenderPosts()}
+       )
+       request.catch(()=>{alert('Não foi possível salvar as alterações')
+       setDisabler(false)})
     }
-  }
+  
 
-  function Edit(event) {
-    event.preventDefault();
-    setDisabler(true);
-    const body = {
-      text: newText,
-    };
-    const config = {
-      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
-    };
-    const request = axios.put(
-      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,
-      body,
-      config
-    );
-
-    request.then((response) => {
-      setDisabler(false);
-      setControl(false);
-      RenderPosts();
-    });
-    request.catch(() => {
-      alert("Não foi possível salvar as alterações");
-      setDisabler(false);
-    });
-  }
 
   function LikeOrDeslike() {
     const body = [];
@@ -193,6 +199,9 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
         </span>
         <ReactTooltip place="bottom" type="light" effect="float" />
         <div className="repost-box">
+          <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
+        </div>
+        <div className="repost-box">
           <BiRepost onClick={openModalRepost} className="repost-icon" />
         </div>
         <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>
@@ -228,7 +237,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
               </form>,
             ]
           ) : (
-            <Hashtag text={text} />
+            <Hashtag text={edited?newText:text}/>
           )}
         </h2>
         {idVideo ? (
@@ -267,6 +276,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
         ></GeolocationModal>
       )}
     </PostBox>
+    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments} TimelinePosts={MyPosts}/>:''}
     </>
   );
 }
@@ -361,7 +371,7 @@ const SideMenu = styled.div`
       color: #ffffff;
       margin-bottom: 4px;
       margin-top: 19px;
-      color: ${(props) => (props.isLiked ? "#AC0000" : "#BABABA")};
+      color: ${(props) => (props.isLiked ? "#AC0000" : "#FFFFFF")};
       cursor: pointer;
 
       @media (max-width: 614px) {
@@ -382,15 +392,15 @@ const SideMenu = styled.div`
   .repost-box {
     svg {
       pointer-events: all;
+      cursor: pointer;
     }
     
     .repost-icon {
       color: #FFFFFF;
       margin-top: 22px;
       font-size: 25px;
-      cursor: pointer;
     }
-  }
+  } 
 `;
 
 const Content = styled.div`

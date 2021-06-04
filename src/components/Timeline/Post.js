@@ -14,12 +14,14 @@ import { FaPencilAlt } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import getYouTubeID from "get-youtube-id";
 import SnippetDiv from "./SnippetDiv";
+import Comments from "../Comments"
+import CommentBox from "../CommentBox"
 import ModalLink from "../ModalLink";
 import ModalRepost from "../ModalRepost";
 
 export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes, repostCount, repostedBy } = post;
+  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes, commentCount, repostCount, repostedBy } = post;
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [control, setControl] = useState(false);
   const [newText, setNewText] = useState(text);
@@ -27,8 +29,12 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
   const inputRef = useRef();
   const [modalOpen, setModalOpen] = useState(false);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
+  const [showComment,setShowComment]=useState(false)
   const history = useHistory();
+  const [numberOfComments,setNumberOfComments]=useState(commentCount)
+  const [commentList,setCommentList]=useState([]);
   const idVideo = getYouTubeID(link);
+  const [edited,setEdited]=useState(false)
   let enabled = false;
   const [modalLink, setModalLink] = useState(false);
   const [modalRepostOpen, setModalRepostOpen] = useState(false);
@@ -37,9 +43,13 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
     if (control) {
       inputRef.current.focus();
     }
-    setNewText(text);
-  }, [control]);
-
+  },[control])
+  
+  useEffect(()=>{
+    RenderPosts()
+    setNewText(text)
+  },[text])
+  
   function LikeOrDeslike() {
     const body = [];
     const config = {
@@ -88,20 +98,15 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
     const config = {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
-    const request = axios.put(
-      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,
-      body,
-      config
-    );
-    request.then((response) => {
-      setDisabler(false);
-      setControl(false);
-      RenderPosts();
-    });
-    request.catch(() => {
-      alert("Não foi possível salvar as alterações.");
-      setDisabler(false);
-    });
+    const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
+    request.then((response)=>{
+    setEdited(true)
+    setDisabler(false)
+    setControl(false)
+    RenderPosts()}
+    )
+    request.catch(()=>{alert('Não foi possível salvar as alterações')
+    setDisabler(false)})
   }
 
   function openModalRepost() {
@@ -173,10 +178,13 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
           height="100%"
         />
         <div className="repost-box">
+          <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
+        </div>
+        <div className="repost-box">
           <BiRepost onClick={openModalRepost} className="repost-icon" />
         </div>
-        <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>
-      </SideMenu>
+        <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>  
+        </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>
           {user.username}
@@ -191,23 +199,15 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
           )}
         </h1>
         <h2>
-          {control ? (
-            [
-              <form onSubmit={Edit}>
-                <input
-                  type="text"
-                  required
-                  value={newText}
-                  onChange={(e) => setNewText(e.target.value)}
-                  disabled={disabler}
-                  ref={inputRef}
-                  onKeyDown={(e) => (e.keyCode == 27 ? setControl(false) : "")}
-                />
-              </form>,
-            ]
-          ) : (
-            <Hashtag text={text} />
-          )}
+        
+          {control?
+          
+            [<form onSubmit={Edit}>
+              <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
+            </form>]
+            
+          :<Hashtag text={edited?newText:text} />}
+          
         </h2>
         {idVideo ? 
           <SnippetDiv link={link} idVideo={idVideo} /> :
@@ -244,6 +244,7 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
         ></GeolocationModal>
       )}
     </PostBox>
+    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments} RenderPosts={RenderPosts} TimelinePosts={TimelinePosts}/>:''}
     </>
   );
 }
@@ -320,9 +321,8 @@ const SideMenu = styled.div`
   }
 
   .heart-icon {
-    width: 20px;
-    height: 18px;
-    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+    font-size: 20px;
+    color: ${(props) => (props.enabled ? "#AC0000" : "#FFFFFF")};
     margin-bottom: 4px;
     margin-top: 19px;
     cursor: pointer;
@@ -344,13 +344,13 @@ const SideMenu = styled.div`
   .repost-box {
     svg {
       pointer-events: all;
+      cursor: pointer;
     }
     
     .repost-icon {
       color: #FFFFFF;
       margin-top: 22px;
       font-size: 25px;
-      cursor: pointer;
     }
   } 
 `;

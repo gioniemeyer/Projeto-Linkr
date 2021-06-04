@@ -16,8 +16,10 @@ import ModalLink from "../ModalLink";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
 import ModalRepost from "../ModalRepost";
+import Comments from "../Comments"
+import CommentBox from "../CommentBox"
 
-export default function LikedPost({ post, RenderPosts }) {
+export default function LikedPost({ post, RenderPosts,LikedPosts }) {
   const { userData } = useContext(UserContext);
   const {
     id,
@@ -31,6 +33,7 @@ export default function LikedPost({ post, RenderPosts }) {
     isLiked, 
     repostCount, 
     repostedBy,
+    commentCount
   } = post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
@@ -44,8 +47,10 @@ export default function LikedPost({ post, RenderPosts }) {
   const [modalLink, setModalLink] = useState(false);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
   const [modalRepostOpen, setModalRepostOpen] = useState(false);
-
   let enabled = true;
+  const [numberOfComments,setNumberOfComments]=useState(commentCount);
+  const [showComment,setShowComment]=useState(false)
+  const [edited,setEdited]=useState(false)
 
   function LikeOrDeslike() {
     const body = [];
@@ -67,48 +72,48 @@ export default function LikedPost({ post, RenderPosts }) {
       );
     }
   }
-
-  useEffect(() => {
-    if (control) {
-      inputRef.current.focus();
-    }
-    setNewText(text);
-  }, [control]);
-
-  function ShowEdit() {
-    if (control) {
-      setControl(false);
-
-      return;
-    } else {
-      setControl(true);
-    }
+useEffect(()=>{
+  if(control){
+    inputRef.current.focus()
   }
+},[control])
 
-  function Edit(event) {
-    event.preventDefault();
-    setDisabler(true);
-    const body = {
-      text: newText,
-    };
-    const config = {
-      headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
-    };
-    const request = axios.put(
-      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,
-      body,
-      config
-    );
-    request.then((response) => {
-      setDisabler(false);
-      setControl(false);
-      RenderPosts();
-    });
-    request.catch(() => {
-      alert("Não foi possível salvar as alterações");
-      setDisabler(false);
-    });
-  }
+useEffect(()=>{
+  RenderPosts()
+  setNewText(text)
+},[text])
+
+function ShowEdit(){ 
+    if(control){
+     setControl(false)
+     
+     return
+    }else{
+     setControl(true)
+     
+    }
+    
+}
+  
+ function Edit(event){
+   event.preventDefault();
+   setDisabler(true)
+   const body = {
+     text: newText
+   };
+   const config = {
+     headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
+   };
+   const request= axios.put(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}`,body,config)
+   request.then((response)=>{
+   setEdited(true)
+   setDisabler(false)
+   setControl(false)
+   RenderPosts()}
+   )
+   request.catch(()=>{alert('Não foi possível salvar as alterações')
+   setDisabler(false)})
+}
 
   function openModalRepost() {
     setModalRepostOpen(true);
@@ -174,6 +179,9 @@ export default function LikedPost({ post, RenderPosts }) {
         </span>
         <ReactTooltip place="bottom" type="light" effect="float" />
         <div className="repost-box">
+          <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
+        </div>
+        <div className="repost-box">
           <BiRepost onClick={openModalRepost} className="repost-icon" />
         </div>
         <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>
@@ -192,23 +200,11 @@ export default function LikedPost({ post, RenderPosts }) {
           )}
         </h1>
         <h2>
-          {control ? (
-            [
-              <form onSubmit={Edit}>
-                <input
-                  type="text"
-                  required
-                  value={newText}
-                  onChange={(e) => setNewText(e.target.value)}
-                  disabled={disabler}
-                  ref={inputRef}
-                  onKeyDown={(e) => (e.keyCode == 27 ? setControl(false) : "")}
-                />
-              </form>,
-            ]
-          ) : (
-            <Hashtag text={text} />
-          )}
+          {control?          
+            [<form onSubmit={Edit}>
+            <input type="text" required value={newText} onChange={(e) => setNewText(e.target.value)} disabled={disabler} ref={inputRef} onKeyDown={(e)=>e.keyCode==27?setControl(false):''}/>
+           </form>]           
+          :<Hashtag text={edited?newText:text} />}
         </h2>
         {idVideo ? (
           <SnippetDiv link={link} idVideo={idVideo} />
@@ -246,6 +242,7 @@ export default function LikedPost({ post, RenderPosts }) {
         ></GeolocationModal>
       )}
     </PostBox>
+    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments} TimelinePosts={LikedPosts}/>:''}
     </>
   );
 }
@@ -320,8 +317,10 @@ const SideMenu = styled.div`
   .heart-icon {
     width: 20px;
     height: 18px;
-    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+    color: ${(props) => (props.enabled ? "#AC0000" : "#FFFFFF")};
     margin-bottom: 4px;
+    cursor: pointer;
+    
     @media (max-width: 614px) {
       width: 17px;
       height: 15px;
@@ -338,13 +337,13 @@ const SideMenu = styled.div`
   .repost-box {
     svg {
       pointer-events: all;
+      cursor: pointer;
     }
     
     .repost-icon {
       color: #FFFFFF;
       margin-top: 22px;
       font-size: 25px;
-      cursor: pointer;
     }
   }
 `;
@@ -361,6 +360,7 @@ const Content = styled.div`
     margin-bottom: 7px;
     word-break: break-all;
     width: fit-content;
+    cursor: pointer;
 
     @media (max-width: 614px) {
       font-size: 17px;
