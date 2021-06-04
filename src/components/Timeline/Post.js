@@ -32,7 +32,7 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
   const [geoModalOpen, setGeoModalOpen] = useState(false);
   const [showComment,setShowComment]=useState(false)
   const history = useHistory();
-  
+  const [numberOfComments,setNumberOfComments]=useState(commentCount)
   
   const idVideo = getYouTubeID(link);
 
@@ -129,7 +129,7 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
           url={link}
           width='100%'
           height='100%'/>
-        <Comments numberComment={commentCount} setShowComment={setShowComment} showComment={showComment} />
+        <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`user/${user.id}`)}>{user.username}
@@ -167,7 +167,7 @@ export default function Post({ TimelinePosts, post, RenderLikes, RenderPosts }) 
       <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
       }
     </PostBox>
-    {showComment?<CommentBox id={id} userAuthor={user.id}/>:''}
+    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments}/>:''}
     </>
   );
 }

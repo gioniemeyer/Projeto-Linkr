@@ -14,10 +14,12 @@ import getYouTubeID from 'get-youtube-id';
 import SnippetDiv from "../Timeline/SnippetDiv";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
+import Comments from "../Comments"
+import CommentBox from "../CommentBox"
 
 export default function LikedPost({ post, RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, isLiked } =post;
+  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes, commentCount } =post;
   const texto = text.split(" ");
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [modalOpen, setModalOpen] = useState(false);
@@ -28,8 +30,9 @@ export default function LikedPost({ post, RenderPosts }) {
   const inputRef=useRef();
   const idVideo = getYouTubeID(link);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
-
-  let enabled=true
+  let enabled=true;
+  const [numberOfComments,setNumberOfComments]=useState(commentCount);
+  const [showComment,setShowComment]=useState(false)
   
   function LikeOrDeslike() {
     const body = [];
@@ -92,7 +95,7 @@ function ShowEdit(){
 }
 
   return (
-    
+    <>
     <PostBox>
       <SideMenu enabled={enabled}>
         <Link to={`user/${user.id}`}>
@@ -113,6 +116,7 @@ function ShowEdit(){
             `${likes[0]['user.username']} curtiu`}>
         {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
         <ReactTooltip place="bottom" type="light" effect="float"/>
+        <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>{user.username}
@@ -145,6 +149,8 @@ function ShowEdit(){
         <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
       }
     </PostBox>
+    {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments}/>:''}
+    </>
   );
 }
 const PostBox = styled.li`
@@ -209,7 +215,7 @@ const SideMenu = styled.div`
   .heart-icon {
     width: 20px;
     height: 18px;
-    color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+    color: ${(props) => (props.enabled ? "#AC0000" : "#FFFFFF")};
     margin-bottom: 4px;
     @media (max-width: 614px) {
       width: 17px;

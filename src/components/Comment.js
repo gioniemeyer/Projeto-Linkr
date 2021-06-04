@@ -6,8 +6,6 @@ export default function Comment({id,text,user,userAuthor}){
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [followList,setFollowList]=useState('')
-    // console.log(userAuthor)
-    // console.log(user.id)
     let FollowId=[]
 
     function CheckFollow(){
@@ -15,7 +13,7 @@ export default function Comment({id,text,user,userAuthor}){
             headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
           };
         const request = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/users/follows`,config)
-        request.then((r)=>{console.log(r.data.users)
+        request.then((r)=>{
         setFollowList(r.data.users)}
         )
     }
@@ -56,9 +54,13 @@ const Box=styled.div`
         border-radius: 50%;
         margin-right: 18px;
     }
+    @media (max-width: 614px) {
+        margin:7px 20px;
+      }
 `
 const TextBox=styled.div`
     font-size: 14px;
+    word-break: break-all;
     h2{     
     font-weight: 700;
     color:#F3F3F3;

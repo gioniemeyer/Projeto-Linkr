@@ -14,9 +14,11 @@ import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
 import {AiFillHeart} from 'react-icons/ai';
 import ReactTooltip from 'react-tooltip';
+import Comments from "../Comments"
+import CommentBox from "../CommentBox"
 
 export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
-    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes } = post;   
+    const { id, text, link, linkTitle, linkDescription, linkImage, user, likes,commentCount } = post;   
     const history = useHistory();
     const { userData } = useContext(UserContext);
     const [modalOpen, setModalOpen] = useState(false);
@@ -28,6 +30,8 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
     const inputRef=useRef();
     const idVideo = getYouTubeID(link);
     let enabled = false;  
+    const [numberOfComments,setNumberOfComments]=useState(commentCount);
+    const [showComment,setShowComment]=useState(false)
 
     useEffect(()=>{
         if(control){
@@ -99,6 +103,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
   });
       
     return(
+        <>
         <PostBox>
             <SideMenu enabled={enabled}>
                 <Link to={`/user/${user.id}`}> 
@@ -119,6 +124,7 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
                         `${likes[0]['user.username']} curtiu`}>
                 {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
                 <ReactTooltip place="bottom" type="light" effect="float"/> 
+                <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
             </SideMenu>
             <Content>
                 <Wrapper>
@@ -155,6 +161,8 @@ export default function PostClickedUser({ post, RenderPosts, RenderLikes }) {
             <GeolocationModal latitude={post.geolocation.latitude} longitude={post.geolocation.longitude} RenderPosts={RenderPosts} geoModalOpen={geoModalOpen} setGeoModalOpen={setGeoModalOpen} post={post}></GeolocationModal>
             }
         </PostBox>
+        {showComment?<CommentBox id={id} userAuthor={user.id} numberOfComments={numberOfComments} setNumberOfComments={setNumberOfComments}/>:''}
+        </>
     );
 }
 
@@ -229,7 +237,7 @@ const SideMenu = styled.div`
         color: #FFFFFF;
         margin-bottom: 4px;
         margin-top: 19px;
-        color: ${(props) => (props.enabled ? "#AC0000" : "#BABABA")};
+        color: ${(props) => (props.enabled ? "#AC0000" : "#FFFFFF")};
         cursor: pointer;
 
         @media (max-width: 614px){

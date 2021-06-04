@@ -5,7 +5,7 @@ import axios from "axios"
 import Comment from "./Comment"
 import {IoPaperPlaneOutline} from "react-icons/io5"
 
-export default function CommentBox({id,userAuthor}){
+export default function CommentBox({id,userAuthor,numberOfComments,setNumberOfComments}){
     const { userData } = useContext(UserContext);
     const localUser = JSON.parse(localStorage.getItem("user"));
     const [message,setMessage]=useState("");
@@ -19,6 +19,7 @@ export default function CommentBox({id,userAuthor}){
           };
           const request= axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/comments`,config)
           request.then((r)=>{
+            setNumberOfComments(r.data.comments.length)
             setCommentList(r.data.comments)})
           request.catch(()=>alert('Erro ao renderizar comentários'))
     }
@@ -33,9 +34,10 @@ export default function CommentBox({id,userAuthor}){
             headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
           };
         const request = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/posts/${id}/comment`,body,config)
-        request.then(()=>setMessage(''))
+        request.then(()=>{setMessage('')
+        RenderComments()})
         request.catch(()=>alert('erro ao enviar comentário'))
-        RenderComments()
+        
     }
 
     return(
@@ -44,10 +46,10 @@ export default function CommentBox({id,userAuthor}){
                 return <Comment id={e.id} text={e.text} user={e.user} userAuthor={userAuthor}/>
             })}
             <CreateComment>
-            <img src={userData.user?userData.user.id:  localUser.user.avatar}/>
+            <img src={localUser.user.avatar || userData.user.avatar}/>
             <form onSubmit={PostComment}>
                 <InputBox>
-                    <input type="text" placeholder="write a comment..." value={message} onChange={e => setMessage(e.target.value)}/>
+                    <input type="text" required placeholder="write a comment..." value={message} onChange={e => setMessage(e.target.value)}/>
                     <IoPaperPlaneOutline className="plane-icon" onClick={PostComment}/>
                 </InputBox>
             </form>
@@ -58,6 +60,7 @@ export default function CommentBox({id,userAuthor}){
 
 const InputBox=styled.div`
     position: relative;
+    width: 510px; 
     .plane-icon{
         color: #F3F3F3;
         position: absolute;
@@ -65,19 +68,28 @@ const InputBox=styled.div`
         bottom:11px;
         font-size: 16.5px;
     }
+    @media (max-width: 614px) {
+            width: 100%;
+      }
+  
 `
 const Box=styled.div`
     width: 611px;
-    
     background: #1E1E1E;
     margin-top: -50px;
     margin-bottom: 10px;
     border-radius: 16px;
     padding-top: 30px;
+    
+    @media (max-width: 614px) {
+            width: 100%;
+      }
 `
 const CreateComment=styled.div`
     display: flex;
     margin:15px 20px;
+    
+    
      img{
         width: 40px;
         height: 40px;
@@ -85,7 +97,7 @@ const CreateComment=styled.div`
         margin-right: 18px;
     }
     input{
-        width: 510px;
+        width: 100%;
         height: 39px;
         background: #252525;
         border-radius: 8px;
@@ -93,7 +105,7 @@ const CreateComment=styled.div`
         padding-left: 15px;
         color:#ACACAC;
         ::placeholder{
-            color:#575757;
+        color:#575757;
         font-style: italic;
         font-size: 14px;
         letter-spacing: 0.05em;
@@ -101,6 +113,8 @@ const CreateComment=styled.div`
         :focus{
         outline: none;
         box-shadow: 0px 0px 1px 1px rgba(255,255,255,0.2);
+        }
+        
     }
-    }
+    
 `
