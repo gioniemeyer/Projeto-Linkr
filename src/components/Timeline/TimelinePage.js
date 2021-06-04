@@ -144,12 +144,16 @@ export default function Timeline() {
       headers: { Authorization: `Bearer ${userData.token || localUser.token}` },
     };
     const request = axios.get(
-      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts?earlierThan=${TimelinePosts[0].id}`,
+      `https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/following/posts?earlierThan=${
+        TimelinePosts[0].id
+      }`,
       config
     );
 
     request.then((response) => {
-      setTimelinePosts([...response.data.posts, ...TimelinePosts]);
+      if(response.data.posts !== undefined) {
+        setTimelinePosts([...response.data.posts, ...TimelinePosts]);
+      }
     });
 
     request.catch((error) => {

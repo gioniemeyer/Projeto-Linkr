@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineHeart } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import { useState, useContext, useRef, useEffect } from "react";
 import Hashtag from "../Timeline/Hashtag";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -15,11 +15,12 @@ import SnippetDiv from "../Timeline/SnippetDiv";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
 import ModalLink from "../ModalLink";
-import Comments from "../Comments"
-import CommentBox from "../CommentBox"
+import Comments from "../Comments";
+import CommentBox from "../CommentBox";
+import ModalRepost from "../ModalRepost";
 
 export default function PostClickedHashtag({ post, RenderPosts, RenderLikes,UserPosts }) {
-    const { id, text, link, linkTitle, linkDescription, linkImage, user,commentCount } = post;  
+    const { id, text, link, linkTitle, linkDescription, linkImage, user,commentCount, repostCount, repostedBy } = post;  
     const history = useHistory();
     const params = useParams();
     const localUser = JSON.parse(localStorage.getItem("user"));    
@@ -38,6 +39,7 @@ export default function PostClickedHashtag({ post, RenderPosts, RenderLikes,User
     const [likesQty, setLikesQty] = useState(post.likes.length);
     const [likes, setLikes] = useState(post.likes);
     const [modalLink, setModalLink] = useState(false);
+    const [modalRepostOpen, setModalRepostOpen] = useState(false);
 
     useEffect(() => {
         likes.forEach((like, i) => {
@@ -130,11 +132,26 @@ function ShowEdit(){
    setDisabler(false)})
 }
 
+  function openModalRepost() {
+    setModalRepostOpen(true);
+  }
+
   return (
-      <>
+    <>
+    {
+      repostedBy === undefined
+      ? ""
+      :
+        <RepostHeader>
+          <div>
+            <BiRepost className="repost-icon-header" />
+            <span>Re-posted by <strong>{repostedBy.id === (userData.id || localUser.user.id) ? "you" : repostedBy.username}</strong></span>
+          </div>
+        </RepostHeader>
+    }
     <PostBox>
-      
     <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
+    <ModalRepost modalRepostOpen={modalRepostOpen} setModalRepostOpen={setModalRepostOpen} RenderPosts={RenderPosts} postID={id} />
     <SideMenu isLiked={isLiked}>
         <Link to={`/user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
@@ -178,7 +195,13 @@ function ShowEdit(){
           {likesQty} {likesQty === 1 || likesQty === 0 ? "like" : "likes"}
         </span>
         <ReactTooltip place="bottom" type="light" effect="float" />
-        <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />  
+        <div className="repost-box">
+          <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
+        </div>
+        <div className="repost-box">
+          <BiRepost onClick={openModalRepost} className="repost-icon" />
+        </div>
+        <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>  
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>
@@ -349,6 +372,19 @@ const SideMenu = styled.div`
       font-size: 9px;
     }
   }
+
+  .repost-box {
+    svg {
+      pointer-events: all;
+      cursor: pointer;
+    }
+    
+    .repost-icon {
+      color: #FFFFFF;
+      margin-top: 22px;
+      font-size: 25px;
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -488,5 +524,31 @@ const Snippet = styled.div`
       height: 115px;
       object-fit: cover;
     }
+  }
+`;
+
+const RepostHeader = styled.header`
+  width: 611px;
+  height: 100px;
+  font-size: 11px;
+  color: white;
+  background-color: #1E1E1E;
+  border-radius: 16px;
+  padding: 4px 0 0 13px;
+  margin-bottom: -67px;
+
+  @media (max-width: 614px) {
+    width: 100vw;
+    border-radius: 0;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .repost-icon-header {
+    font-size: 25px;
+    margin-right: 5px;
   }
 `;

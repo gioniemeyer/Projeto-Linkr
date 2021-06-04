@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineHeart } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
 import UserContext from "../../contexts/UserContext";
 import { useContext, useState, useRef, useEffect } from "react";
@@ -17,10 +17,11 @@ import SnippetDiv from "./SnippetDiv";
 import Comments from "../Comments"
 import CommentBox from "../CommentBox"
 import ModalLink from "../ModalLink";
+import ModalRepost from "../ModalRepost";
 
 export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, RenderLikes, RenderPosts }) {
   const { userData } = useContext(UserContext);
-  const {  id, text, link, linkTitle, linkDescription, linkImage, user, likes,commentCount } =post;
+  const { id, text, link, linkTitle, linkDescription, linkImage, user, likes, commentCount, repostCount, repostedBy } = post;
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [control, setControl] = useState(false);
   const [newText, setNewText] = useState(text);
@@ -36,6 +37,7 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
   const [edited,setEdited]=useState(false)
   let enabled = false;
   const [modalLink, setModalLink] = useState(false);
+  const [modalRepostOpen, setModalRepostOpen] = useState(false);
 
   useEffect(() => {
     if (control) {
@@ -107,10 +109,26 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
     setDisabler(false)})
   }
 
+  function openModalRepost() {
+    setModalRepostOpen(true);
+  }
+
   return (
     <>
+    {
+      repostedBy === undefined
+      ? ""
+      :
+        <RepostHeader>
+          <div>
+            <BiRepost className="repost-icon-header" />
+            <span>Re-posted by <strong>{repostedBy.id === (userData.id || localUser.user.id) ? "you" : repostedBy.username}</strong></span>
+          </div>
+        </RepostHeader>
+    }
     <PostBox>
       <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
+      <ModalRepost modalRepostOpen={modalRepostOpen} setModalRepostOpen={setModalRepostOpen} RenderPosts={RenderPosts} postID={id} />
       <SideMenu enabled={enabled}>
         <Link to={`/user/${user.id}`} className="link-user-name">
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
@@ -156,10 +174,17 @@ export default function Post({ setUpdateLike, updateLike, TimelinePosts, post, R
         <ReactTooltip
           className="react-player"
           url={link}
-          width='100%'
-          height='100%'/>
-        <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
-      </SideMenu>
+          width="100%"
+          height="100%"
+        />
+        <div className="repost-box">
+          <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
+        </div>
+        <div className="repost-box">
+          <BiRepost onClick={openModalRepost} className="repost-icon" />
+        </div>
+        <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>  
+        </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>
           {user.username}
@@ -315,6 +340,19 @@ const SideMenu = styled.div`
       font-size: 9px;
     }
   }
+
+  .repost-box {
+    svg {
+      pointer-events: all;
+      cursor: pointer;
+    }
+    
+    .repost-icon {
+      color: #FFFFFF;
+      margin-top: 22px;
+      font-size: 25px;
+    }
+  } 
 `;
 
 const Content = styled.div`
@@ -452,5 +490,31 @@ const Snippet = styled.div`
       height: 115px;
       object-fit: cover;
     }
+  }
+`;
+
+const RepostHeader = styled.header`
+  width: 611px;
+  height: 100px;
+  font-size: 11px;
+  color: white;
+  background-color: #1E1E1E;
+  border-radius: 16px;
+  padding: 4px 0 0 13px;
+  margin-bottom: -67px;
+
+  @media (max-width: 614px) {
+    width: 100vw;
+    border-radius: 0;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .repost-icon-header {
+    font-size: 25px;
+    margin-right: 5px;
   }
 `;

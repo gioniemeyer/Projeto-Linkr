@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineHeart } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState, useRef, useEffect } from "react";
@@ -15,6 +15,7 @@ import SnippetDiv from "../Timeline/SnippetDiv";
 import ModalLink from "../ModalLink";
 import GeolocationModal from "../GeolocationModal";
 import { IoLocationSharp } from "react-icons/io5";
+import ModalRepost from "../ModalRepost";
 import Comments from "../Comments"
 import CommentBox from "../CommentBox"
 
@@ -30,6 +31,8 @@ export default function LikedPost({ post, RenderPosts,LikedPosts }) {
     user,
     likes,
     isLiked, 
+    repostCount, 
+    repostedBy,
     commentCount
   } = post;
   const texto = text.split(" ");
@@ -43,7 +46,8 @@ export default function LikedPost({ post, RenderPosts,LikedPosts }) {
   const idVideo = getYouTubeID(link);
   const [modalLink, setModalLink] = useState(false);
   const [geoModalOpen, setGeoModalOpen] = useState(false);
-  let enabled=true;
+  const [modalRepostOpen, setModalRepostOpen] = useState(false);
+  let enabled = true;
   const [numberOfComments,setNumberOfComments]=useState(commentCount);
   const [showComment,setShowComment]=useState(false)
   const [edited,setEdited]=useState(false)
@@ -111,30 +115,76 @@ function ShowEdit(){
    setDisabler(false)})
 }
 
+  function openModalRepost() {
+    setModalRepostOpen(true);
+  }
+
   return (
     <>
+    {
+      repostedBy === undefined
+      ? ""
+      :
+        <RepostHeader>
+          <div>
+            <BiRepost className="repost-icon-header" />
+            <span>Re-posted by <strong>{repostedBy.id === (userData.id || localUser.user.id) ? "you" : repostedBy.username}</strong></span>
+          </div>
+        </RepostHeader>
+    }
     <PostBox>
       <ModalLink modalLink={modalLink} setModalLink={setModalLink} postID={id} link={link} linkTitle={linkTitle} />
+      <ModalRepost modalRepostOpen={modalRepostOpen} setModalRepostOpen={setModalRepostOpen} RenderPosts={RenderPosts} postID={id} />
       <SideMenu enabled={enabled}>
         <Link to={`/user/${user.id}`}>
           <img src={user.avatar} alt="Imagem de avatar do usuário" />
         </Link>
-        {enabled?<AiFillHeart className="heart-icon" onClick={LikeOrDeslike}/>:<AiOutlineHeart className="heart-icon" onClick={LikeOrDeslike}/>}
-        <span data-tip={likes.length === 0 ? '' :
-          likes.length !== 1 ?
-            likes.length >= 3 ?
-              enabled ? 
-                `Você, ${likes[0]['user.username']} e outras ${likes.length-2} pessoas` : 
-                `${likes[0]['user.username']}, ${likes[1]['user.username']} e outras ${likes.length-2} pessoas` :
-            enabled ? 
-              `Você e ${localUser.user.username===likes[0]['user.username']?likes[1]['user.username']:likes[0]['user.username']} curtiram` : 
-              `${likes[0]['user.username']} e ${likes[1]['user.username']} curtiram` :
-          enabled ? 
-            `Você curtiu` :
-            `${likes[0]['user.username']} curtiu`}>
-        {likes.length} {likes.length === 1 ? "like" : "likes"}</span>
-        <ReactTooltip place="bottom" type="light" effect="float"/>
-        <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
+        {enabled ? (
+          <AiFillHeart className="heart-icon" onClick={LikeOrDeslike} />
+        ) : (
+          <AiFillHeart
+            stroke={"white"}
+            strokeWidth={80}
+            fill={"#171717"}
+            className="heart-icon"
+            onClick={LikeOrDeslike}
+          />
+        )}
+        <span
+          data-tip={
+            likes.length === 0
+              ? ""
+              : likes.length !== 1
+              ? likes.length >= 3
+                ? enabled
+                  ? `Você, ${likes[0]["user.username"]} e outras ${
+                      likes.length - 2
+                    } pessoas`
+                  : `${likes[0]["user.username"]}, ${
+                      likes[1]["user.username"]
+                    } e outras ${likes.length - 2} pessoas`
+                : enabled
+                ? `Você e ${
+                    localUser.user.username === likes[0]["user.username"]
+                      ? likes[1]["user.username"]
+                      : likes[0]["user.username"]
+                  } curtiram`
+                : `${likes[0]["user.username"]} e ${likes[1]["user.username"]} curtiram`
+              : enabled
+              ? `Você curtiu`
+              : `${likes[0]["user.username"]} curtiu`
+          }
+        >
+          {likes.length} {likes.length === 1 ? "like" : "likes"}
+        </span>
+        <ReactTooltip place="bottom" type="light" effect="float" />
+        <div className="repost-box">
+          <Comments numberComment={numberOfComments} setShowComment={setShowComment} showComment={showComment} />
+        </div>
+        <div className="repost-box">
+          <BiRepost onClick={openModalRepost} className="repost-icon" />
+        </div>
+        <span>{repostCount} {repostCount === 1 || repostCount === 0 ? "re-post" : "re-posts"}</span>
       </SideMenu>
       <Content>
         <h1 onClick={() => history.push(`/user/${user.id}`)}>
@@ -269,6 +319,8 @@ const SideMenu = styled.div`
     height: 18px;
     color: ${(props) => (props.enabled ? "#AC0000" : "#FFFFFF")};
     margin-bottom: 4px;
+    cursor: pointer;
+    
     @media (max-width: 614px) {
       width: 17px;
       height: 15px;
@@ -279,6 +331,19 @@ const SideMenu = styled.div`
     color: #ffffff;
     @media (max-width: 614px) {
       font-size: 9px;
+    }
+  }
+
+  .repost-box {
+    svg {
+      pointer-events: all;
+      cursor: pointer;
+    }
+    
+    .repost-icon {
+      color: #FFFFFF;
+      margin-top: 22px;
+      font-size: 25px;
     }
   }
 `;
@@ -295,6 +360,7 @@ const Content = styled.div`
     margin-bottom: 7px;
     word-break: break-all;
     width: fit-content;
+    cursor: pointer;
 
     @media (max-width: 614px) {
       font-size: 17px;
@@ -417,5 +483,31 @@ const Snippet = styled.div`
       height: 115px;
       object-fit: cover;
     }
+  }
+`;
+
+const RepostHeader = styled.header`
+  width: 611px;
+  height: 100px;
+  font-size: 11px;
+  color: white;
+  background-color: #1E1E1E;
+  border-radius: 16px;
+  padding: 4px 0 0 13px;
+  margin-bottom: -67px;
+
+  @media (max-width: 614px) {
+    width: 100vw;
+    border-radius: 0;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .repost-icon-header {
+    font-size: 25px;
+    margin-right: 5px;
   }
 `;
